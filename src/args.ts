@@ -2,10 +2,11 @@ import yargs from "yargs";
 import { initializeLemna } from "./init";
 import { build } from "./build";
 import { deployProject } from "./deploy";
+import version from "./version";
 
 export default yargs
   .scriptName("lemna")
-  .version("0.0.1")
+  .version(version)
   .option({
     config: {
       alias: ["c"],
