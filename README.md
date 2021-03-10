@@ -1,6 +1,7 @@
 ## Lemna
 
-Quickly scaffold and deploy Lambda handlers powered by Typescript
+Quickly scaffold and deploy Lambda handlers powered by Typescript.
+Lemna will transpile, bundle and upload your code, no complex setup required!
 
 ### Installation
 
@@ -38,3 +39,18 @@ If your working directory is different from the project fold, use the --config f
 lemna deploy --config ./my-app/lemna.config.json
 ```
 
+### Use in existing project
+
+- Create a `lemna.config.json`, including:
+
+```json
+{
+  "entryPoint": "js file",
+  "functionName": "lambda function name"
+}
+```
+
+### TODO
+
+- --create-missing-function
+- Local testing
