@@ -1,8 +1,7 @@
 import yargs from "yargs";
 import { initializeLemna } from "./init";
-import { build } from "./bundle";
-import { updateFunctionCode } from "./deploy";
-import { getConfig } from "./config";
+import { build } from "./build";
+import { deployProject } from "./deploy";
 
 export default yargs
   .scriptName("lemna")
@@ -53,7 +52,7 @@ export default yargs
   .command(
     "build",
     "Bundles project into .zip file",
-    (_yargs) => {},
+    () => {},
     async (argv) => {
       await build(argv.config);
     },
@@ -61,14 +60,9 @@ export default yargs
   .command(
     "deploy",
     "Builds and deploys project",
-    (_yargs) => {},
+    () => {},
     async (argv) => {
-      const { zipFile } = await build(argv.config);
-      const config = getConfig();
-
-      await updateFunctionCode(config.functionName, zipFile);
-
-      console.error("Deployment successful");
+      await deployProject(argv.config);
     },
   )
   .strictCommands()

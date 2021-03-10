@@ -5,6 +5,7 @@ import { parse, resolve } from "path";
 const configSchema = yxc.object({
   functionName: yxc.string().notEmpty(),
   entryPoint: yxc.string().notEmpty(),
+  bundle: yxc.array(yxc.string().notEmpty()).optional(),
 });
 
 export type IConfig = Infer<typeof configSchema>;
@@ -24,11 +25,11 @@ export function getProjectDirectory(): string {
   return projectDir;
 }
 
-export function getTempFolder(folder: string) {
+export function getTempFolder(folder: string): string {
   return resolve(folder, ".lemna");
 }
 
-export function loadConfig(file: string) {
+export function loadConfig(file: string): void {
   const path = resolve(file);
   console.log(`Loading config at ${path}`);
 
@@ -37,6 +38,7 @@ export function loadConfig(file: string) {
     process.exit(1);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   let content = require(path);
 
   if (typeof content === "function") {
@@ -50,7 +52,8 @@ export function loadConfig(file: string) {
   }
 
   config = content;
-  projectDir = parse(path).dir;
+  projectDir = resolve(parse(path).dir);
+  console.log("Project dir", projectDir);
 
   const tmpFolder = getTempFolder(projectDir);
 

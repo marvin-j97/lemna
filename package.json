@@ -16,24 +16,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dotvirus/lemna.git"
+    "url": "git+https://github.com/marvin-j97/lemna.git"
   },
   "keywords": [],
-  "author": "dotvirus",
+  "author": "marvin-j97",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dotvirus/lemna/issues"
+    "url": "https://github.com/marvin-j97/lemna/issues"
   },
-  "homepage": "https://github.com/dotvirus/lemna#readme",
+  "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
+    "@types/glob": "^7.1.3",
     "@types/inquirer": "^7.3.1",
     "@types/jszip": "^3.4.1",
     "@types/node": "^14.14.20",
     "@types/yargs": "^16.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.0.0",
-    "@typescript-eslint/parser": "^3.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.17.0",
+    "@typescript-eslint/parser": "^4.17.0",
     "ava": "^3.15.0",
-    "eslint": "^7.17.0",
+    "eslint": "^7.21.0",
     "eslint-config-prettier": "^7.1.0",
     "nyc": "^15.1.0",
     "ts-node": "^9.1.1",
@@ -60,9 +61,11 @@
     "@rollup/plugin-node-resolve": "^11.2.0",
     "aws-sdk": "^2.860.0",
     "dotenv": "^8.2.0",
+    "glob": "^7.1.6",
     "inquirer": "^8.0.0",
     "jszip": "^3.6.0",
     "rollup": "^2.41.0",
+    "rollup-plugin-uglify": "^6.0.4",
     "yargs": "^16.2.0"
   }
 }

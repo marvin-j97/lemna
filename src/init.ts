@@ -8,6 +8,7 @@ function composeLemnaConfig(name: string): IConfig {
   return {
     entryPoint: "./build/index.js",
     functionName: name,
+    bundle: [],
   };
 }
 
@@ -70,7 +71,10 @@ exports.handler = handler;
 `;
 }
 
-export async function initializeLemna(path: string, functionName: string) {
+export async function initializeLemna(
+  path: string,
+  functionName: string,
+): Promise<void> {
   console.error("Initializing project...");
 
   const projectDir = resolve(path);

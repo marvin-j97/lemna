@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     eqeqeq: "error",
     yoda: "error",
-    curly: "error"
-  }
+    curly: "error",
+    "@typescript-eslint/no-empty-function": "warn",
+  },
 };

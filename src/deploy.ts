@@ -1,17 +1,12 @@
-import aws from "aws-sdk";
-import { readFileSync } from "fs";
+import { build } from "./build";
+import { getConfig } from "./config";
+import { updateFunctionCode } from "./upload";
 
-export async function updateFunctionCode(
-  functionName: string,
-  zipFile: string,
-) {
-  const lambda = new aws.Lambda();
+export async function deployProject(configPath: string): Promise<void> {
+  const { zipFile } = await build(configPath);
+  const config = getConfig();
 
-  console.log("lambda update function code");
-  await lambda
-    .updateFunctionCode({
-      FunctionName: functionName,
-      ZipFile: readFileSync(zipFile),
-    })
-    .promise();
+  await updateFunctionCode(config.functionName, zipFile);
+
+  console.error("Deployment successful");
 }
