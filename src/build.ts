@@ -35,7 +35,7 @@ export async function build(configPath: string): Promise<IBuildResult> {
 
   // Transpile
   console.error("tsc");
-  execSync("tsc", { cwd: projectDir });
+  execSync("npx tsc", { cwd: projectDir });
 
   // Bundle
   const entryPoint = resolve(projectDir, config.entryPoint);
