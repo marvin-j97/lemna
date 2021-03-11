@@ -1,7 +1,9 @@
 ## Lemna
 
 Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript.
+
 Lemna will transpile, bundle and upload your code, no more tedious code deploying to Lambda.
+
 Dependencies will be bundled into your code by Rollup, so only required code is uploaded (dev dependencies will be ignored).
 
 ### Installation
