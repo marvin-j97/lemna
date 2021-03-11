@@ -26,14 +26,14 @@ This will setup a project folder with:
 ### Deploying
 
 Be sure to create a Lambda function with the given name before deploying the first time.
-Create a .env file and place your AWS credentials in it.
+Create a `.env` file and place your AWS credentials in it.
 Then run:
 
 ```
 lemna deploy
 ```
 
-If your working directory is different from the folder containing the Lemna config, use the --config flag:
+If your working directory is different from the folder containing the Lemna config, use the `--config` flag:
 
 ```
 lemna deploy --config ./my-app/lemna.config.json
