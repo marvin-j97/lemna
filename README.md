@@ -45,7 +45,7 @@ lemna deploy --config ./my-app/lemna.config.json
 
 ```json
 {
-  "entryPoint": "js file",
+  "entryPoint": "path to file",
   "functionName": "lambda function name"
 }
 ```
