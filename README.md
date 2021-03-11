@@ -56,3 +56,4 @@ lemna deploy --config ./my-app/lemna.config.json
 ### TODO
 
 - Local testing
+- flag: Bundle file name (default: index.js)
