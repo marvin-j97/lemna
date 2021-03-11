@@ -55,5 +55,4 @@ lemna deploy --config ./my-app/lemna.config.json
 
 ### TODO
 
-- --create-missing-function
 - Local testing
