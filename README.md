@@ -33,7 +33,7 @@ Then run:
 lemna deploy
 ```
 
-If your working directory is different from the project fold, use the --config flag:
+If your working directory is different from the folder containing the Lemna config, use the --config flag:
 
 ```
 lemna deploy --config ./my-app/lemna.config.json
