@@ -8,6 +8,7 @@ function composeLemnaConfig(name: string): IConfig {
   return {
     entryPoint: "./build/index.js",
     functionName: name,
+    buildSteps: ["tsc"],
     bundle: [],
   };
 }

@@ -1,9 +1,4 @@
-import {
-  getConfig,
-  getProjectDirectory,
-  getTempFolder,
-  loadConfig,
-} from "./config";
+import { getProjectDirectory, getTempFolder, IConfig } from "./config";
 import { execSync } from "child_process";
 import { resolve } from "path";
 import crypto from "crypto";
@@ -25,17 +20,16 @@ interface IBuildResult {
   zipFile: string;
 }
 
-export async function build(configPath: string): Promise<IBuildResult> {
-  loadConfig(configPath);
-
-  const config = getConfig();
+export async function build(config: IConfig): Promise<IBuildResult> {
   const projectDir = getProjectDirectory();
 
   const hash = buildHash();
 
   // Transpile
-  console.error("tsc");
-  execSync("tsc", { cwd: projectDir });
+  for (const step of config.buildSteps || []) {
+    console.log(`Build step: ${step}`);
+    execSync(step, { cwd: projectDir });
+  }
 
   // Bundle
   const entryPoint = resolve(projectDir, config.entryPoint);

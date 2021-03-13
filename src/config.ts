@@ -6,6 +6,7 @@ const configSchema = yxc.object({
   functionName: yxc.string().notEmpty(),
   entryPoint: yxc.string().notEmpty(),
   bundle: yxc.array(yxc.string().notEmpty()).optional(),
+  buildSteps: yxc.array(yxc.string().notEmpty()).optional(),
 });
 
 export type IConfig = Infer<typeof configSchema>;
@@ -29,7 +30,7 @@ export function getTempFolder(folder: string): string {
   return resolve(folder, ".lemna");
 }
 
-export function loadConfig(file: string): void {
+export function loadConfig(file: string): IConfig {
   const path = resolve(file);
   console.log(`Loading config at ${path}`);
 
@@ -68,4 +69,6 @@ export function loadConfig(file: string): void {
   }
 
   console.error("Loaded config");
+
+  return getConfig();
 }

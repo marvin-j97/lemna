@@ -3,6 +3,8 @@ import { initializeLemna } from "./init";
 import { build } from "./build";
 import { deployProject } from "./deploy";
 import version from "./version";
+import { loadConfig } from "./config";
+import { updateFunctionCode } from "./upload";
 
 export default yargs
   .scriptName("lemna")
@@ -55,7 +57,8 @@ export default yargs
     "Bundles project into .zip file",
     () => {},
     async (argv) => {
-      await build(argv.config);
+      const result = await build(loadConfig(argv.config));
+      console.log(`Built zip file: ${result.zipFile}`);
     },
   )
   .command(
@@ -63,7 +66,22 @@ export default yargs
     "Builds and deploys project",
     () => {},
     async (argv) => {
-      await deployProject(argv.config);
+      await deployProject(loadConfig(argv.config));
+    },
+  )
+  .command(
+    "upload <zip>",
+    "Updates lambda function code using zip file",
+    (yargs) => {
+      return yargs.positional("zip", {
+        description: "Zip file to upload",
+        type: "string",
+      });
+    },
+    async (argv) => {
+      const { functionName } = loadConfig(argv.config);
+      await updateFunctionCode(functionName, <string>argv.zip);
+      console.error("Deployment successful");
     },
   )
   .strictCommands()

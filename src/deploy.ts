@@ -1,12 +1,9 @@
 import { build } from "./build";
-import { getConfig } from "./config";
+import { IConfig } from "./config";
 import { updateFunctionCode } from "./upload";
 
-export async function deployProject(configPath: string): Promise<void> {
-  const { zipFile } = await build(configPath);
-  const config = getConfig();
-
+export async function deployProject(config: IConfig): Promise<void> {
+  const { zipFile } = await build(config);
   await updateFunctionCode(config.functionName, zipFile);
-
   console.error("Deployment successful");
 }
