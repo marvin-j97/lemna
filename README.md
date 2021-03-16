@@ -23,7 +23,7 @@ This will setup a project folder with:
 - package.json
 - Typescript (+ tsconfig)
 - Lambda typings
-- Basic entry point (src/index.ts)
+- Basic Lambda handler (src/index.ts)
 - Lemna config
 
 ### Deploying
@@ -52,8 +52,3 @@ lemna deploy --config ./my-app/lemna.config.json
   "functionName": "lambda function name"
 }
 ```
-
-### TODO
-
-- Local testing
-- flag: Bundle file name (default: index.js)
