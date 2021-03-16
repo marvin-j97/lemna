@@ -12,5 +12,5 @@ test("Is valid config", (t) => {
 });
 
 test("Is invalid config", (t) => {
-  t.false(!isValidConfig({}));
+  t.false(isValidConfig({}));
 });
