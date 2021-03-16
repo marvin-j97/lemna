@@ -23,7 +23,7 @@ This will setup a project folder with:
 - package.json
 - Typescript (+ tsconfig)
 - Lambda typings
-- Basic entry point (src/index.ts)
+- Basic Lambda handler (src/index.ts)
 - Lemna config
 
 ### Deploying
