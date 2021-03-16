@@ -5,6 +5,7 @@ import { deployProject } from "./deploy";
 import version from "./version";
 import { loadConfig } from "./config";
 import { updateFunctionCode } from "./upload";
+import { logger } from "./logger";
 
 export default yargs
   .scriptName("lemna")
@@ -35,6 +36,7 @@ export default yargs
             "working-directory",
             "project-dir",
             "project-directory",
+            "folder",
           ],
           description: "Folder in which to initialize the project",
           default: ".",
@@ -45,11 +47,12 @@ export default yargs
     async (argv) => {
       const functionName = argv["function-name"];
       if (!functionName) {
-        console.error("--function-name required");
+        logger.error("--function-name required");
         process.exit(1);
       }
 
       await initializeLemna(argv.path, functionName);
+      logger.info("Setup successful");
     },
   )
   .command(
@@ -58,7 +61,7 @@ export default yargs
     () => {},
     async (argv) => {
       const result = await build(loadConfig(argv.config));
-      console.log(`Built zip file: ${result.zipFile}`);
+      logger.info(`Built zip file: ${result.zipFile}`);
     },
   )
   .command(
@@ -67,6 +70,7 @@ export default yargs
     () => {},
     async (argv) => {
       await deployProject(loadConfig(argv.config));
+      logger.info("Deployment successful");
     },
   )
   .command(
@@ -81,7 +85,7 @@ export default yargs
     async (argv) => {
       const { functionName } = loadConfig(argv.config);
       await updateFunctionCode(functionName, <string>argv.zip);
-      console.error("Deployment successful");
+      logger.info("Upload successful");
     },
   )
   .strictCommands()

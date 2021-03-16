@@ -4,14 +4,15 @@ import json from "@rollup/plugin-json";
 import { rollup } from "rollup";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { uglify } = require("rollup-plugin-uglify");
+import { logger } from "./logger";
 
 export async function bundleCode(input: string, output: string): Promise<void> {
-  console.error("rollup");
+  logger.verbose(`Bundling ${input}`);
   const bundle = await rollup({
     input,
     plugins: [json(), nodeResolve(), commonjs(), uglify()],
   });
-  console.error("rollup write");
+  logger.verbose(`Writing bundle to ${output}`);
   await bundle.write({
     file: output,
     format: "cjs",

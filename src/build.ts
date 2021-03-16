@@ -8,6 +8,7 @@ import { saveZip } from "./zip";
 import { bundleCode } from "./bundle";
 import glob from "glob";
 import { promisify } from "util";
+import { logger } from "./logger";
 
 const globPromise = promisify(glob);
 
@@ -21,13 +22,15 @@ interface IBuildResult {
 }
 
 export async function build(config: IConfig): Promise<IBuildResult> {
+  logger.info(`Building project`);
+
   const projectDir = getProjectDirectory();
 
   const hash = buildHash();
 
-  // Transpile
+  // Build steps
   for (const step of config.buildSteps || []) {
-    console.log(`Build step: ${step}`);
+    logger.debug(`Build step: ${step}`);
     execSync(step, { cwd: projectDir });
   }
 
@@ -43,7 +46,7 @@ export async function build(config: IConfig): Promise<IBuildResult> {
   const zipFile = resolve(outputFolder, "bundle.zip");
 
   // Zip
-  console.error("zip");
+  logger.debug(`Composing zip file`);
   const zip = new jszip();
 
   zip.file(
@@ -66,15 +69,12 @@ export async function build(config: IConfig): Promise<IBuildResult> {
     ];
     for (const file of files) {
       const path = resolve(projectDir, file);
-      console.error(`Adding ${path} to zip at ${file}`);
+      logger.silly(`Adding ${path} to zip at ${file}`);
       zip.file(file, createReadStream(path));
     }
   }
 
   await saveZip(zip, zipFile);
-
-  // Done
-  console.error(`Build done: ${zipFile}`);
 
   return {
     buildHash: hash,

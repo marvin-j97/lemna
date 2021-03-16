@@ -3,8 +3,15 @@ import { IConfig } from "./config";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { formatJson } from "./util";
+import { logger } from "./logger";
+
+function loggedWriteFile(path: string, content: string): void {
+  logger.silly(`Writing to file ${path} with ${content.length} characters`);
+  writeFileSync(path, content);
+}
 
 function composeLemnaConfig(name: string): IConfig {
+  logger.silly(`Composing lemna config for ${name}`);
   return {
     entryPoint: "./build/index.js",
     functionName: name,
@@ -14,6 +21,7 @@ function composeLemnaConfig(name: string): IConfig {
 }
 
 function composeTsConfig(): unknown {
+  logger.silly(`Composing tsconfig`);
   return {
     exclude: ["node_modules", "test", "build"],
     compilerOptions: {
@@ -44,13 +52,14 @@ function composeTsConfig(): unknown {
 }
 
 function composePackageJson(name: string): unknown {
+  logger.silly(`Composing package json for ${name}`);
   return {
     name,
     version: "1.0.0",
     description: "Created by Lemna",
     main: "build/index.js",
     scripts: {
-      // deploy: `lemna deploy --entry-point build --function-name "${name}"`,
+      deploy: `lemna deploy`,
       test: 'echo "Error: no test specified" && exit 1',
     },
     keywords: ["lambda", "lemna"],
@@ -60,6 +69,7 @@ function composePackageJson(name: string): unknown {
 }
 
 function composeIndexFile(): string {
+  logger.silly(`Composing index.handler`);
   return `import { Handler } from "aws-lambda";
 
 const handler: Handler = async function (event, context) {
@@ -76,42 +86,44 @@ export async function initializeLemna(
   path: string,
   functionName: string,
 ): Promise<void> {
-  console.error("Initializing project...");
+  logger.info("Initializing Lemna project");
 
   const projectDir = resolve(path);
   const srcFolder = resolve(path, "src");
 
   if (!existsSync(projectDir)) {
-    console.error(`mkdir ${projectDir}`);
+    logger.debug(`Creating project folder at ${projectDir}`);
     mkdirSync(projectDir, {
       recursive: true,
     });
-
+    logger.debug(`Creating src folder at ${projectDir}`);
     mkdirSync(srcFolder, {
       recursive: true,
     });
   } else {
     // TODO: overwrite?
-    console.error("Folder already in use");
+    logger.error(`Folder ${projectDir} already in use`);
     process.exit(2);
   }
 
   const packageJsonPath = resolve(projectDir, "package.json");
-  console.error(`write ${packageJsonPath}`);
-  writeFileSync(packageJsonPath, formatJson(composePackageJson(functionName)));
+  loggedWriteFile(
+    packageJsonPath,
+    formatJson(composePackageJson(functionName)),
+  );
 
   const tsconfigPath = resolve(projectDir, "tsconfig.json");
-  console.error(`write ${tsconfigPath}`);
-  writeFileSync(tsconfigPath, formatJson(composeTsConfig()));
+  loggedWriteFile(tsconfigPath, formatJson(composeTsConfig()));
 
   const lemnaConfigPath = resolve(projectDir, "lemna.config.json");
-  console.error(`write ${lemnaConfigPath}`);
-  writeFileSync(lemnaConfigPath, formatJson(composeLemnaConfig(functionName)));
+  loggedWriteFile(
+    lemnaConfigPath,
+    formatJson(composeLemnaConfig(functionName)),
+  );
 
   const indexFile = resolve(srcFolder, "index.ts");
-  console.error(`write ${indexFile}`);
-  writeFileSync(indexFile, composeIndexFile());
+  loggedWriteFile(indexFile, composeIndexFile());
 
-  console.error(`npm install`);
-  execSync("npm i @types/aws-lambda typescript -D", { cwd: projectDir });
+  logger.verbose("Installing dependencies");
+  execSync("npm i lemna @types/aws-lambda typescript -D", { cwd: projectDir });
 }

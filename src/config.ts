@@ -1,6 +1,7 @@
 import yxc, { Infer, is } from "@dotvirus/yxc";
 import { existsSync, mkdirSync } from "fs";
 import { parse, resolve } from "path";
+import { logger } from "./logger";
 
 const configSchema = yxc.object({
   functionName: yxc.string().notEmpty(),
@@ -32,10 +33,10 @@ export function getTempFolder(folder: string): string {
 
 export function loadConfig(file: string): IConfig {
   const path = resolve(file);
-  console.log(`Loading config at ${path}`);
+  logger.debug(`Loading config at ${path}`);
 
   if (!existsSync(path)) {
-    console.error(`Config not found at ${path}`);
+    logger.error(`Config not found at ${path}`);
     process.exit(1);
   }
 
@@ -43,9 +44,11 @@ export function loadConfig(file: string): IConfig {
   let content = require(path);
 
   if (typeof content === "function") {
-    console.error(`Config is a function, executing`);
+    logger.error(`Config is a function, executing`);
     content = content();
   }
+
+  logger.silly(JSON.stringify(content, null, 2));
 
   if (!isValidConfig(content)) {
     console.error(`Invalid config at ${path}`);
@@ -54,21 +57,14 @@ export function loadConfig(file: string): IConfig {
 
   config = content;
   projectDir = resolve(parse(path).dir);
-  console.log("Project dir", projectDir);
+  logger.debug(`Project directory: ${projectDir}`);
 
   const tmpFolder = getTempFolder(projectDir);
 
-  // if (existsSync(tmpFolder)) {
-  //   console.error(`rm -rf ${tmpFolder}`);
-  //   rmSync(tmpFolder, { force: true, recursive: true });
-  // }
-
   if (!existsSync(tmpFolder)) {
-    console.error(`mkdir ${tmpFolder}`);
+    logger.verbose(`Creating folder ${tmpFolder}`);
     mkdirSync(tmpFolder, { recursive: true });
   }
-
-  console.error("Loaded config");
 
   return getConfig();
 }
