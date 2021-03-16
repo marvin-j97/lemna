@@ -52,8 +52,3 @@ lemna deploy --config ./my-app/lemna.config.json
   "functionName": "lambda function name"
 }
 ```
-
-### TODO
-
-- Local testing
-- flag: Bundle file name (default: index.js)
