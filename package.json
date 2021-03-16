@@ -1,7 +1,7 @@
 {
   "name": "lemna",
-  "version": "0.0.1",
-  "description": "AWS Lambda Typescript Bundler",
+  "version": "0.0.2",
+  "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript",
   "main": "dist/bin.js",
   "bin": {
     "lemna": "cli.js"
