@@ -2,7 +2,7 @@
   "name": "lemna",
   "version": "0.0.1",
   "description": "AWS Lambda Typescript Bundler",
-  "main": "dist/index.js",
+  "main": "dist/bin.js",
   "bin": {
     "lemna": "cli.js"
   },
