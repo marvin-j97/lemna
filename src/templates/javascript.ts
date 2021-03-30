@@ -1,8 +1,9 @@
 import { mkdirSync } from "fs";
-import { resolve, relative } from "path";
-import { loggedWriteFile } from "../util";
+import { relative, resolve } from "path";
+
 import { logger } from "../logger";
-import { TemplateFunction } from "./index";
+import { loggedWriteFile } from "../util";
+import { ITemplateResult, TemplateFunction } from "./index";
 
 function composeIndexFile(): string {
   logger.silly(`Composing index.handler`);
@@ -18,7 +19,7 @@ exports.handler = handler;
 
 export const runJavascriptTemplate: TemplateFunction = async (
   projectDir: string,
-): Promise<{ entryPoint: string; buildSteps: string[] }> => {
+): Promise<ITemplateResult> => {
   const srcFolder = resolve(projectDir, "src");
   logger.debug(`Creating src folder at ${projectDir}`);
   mkdirSync(srcFolder, {

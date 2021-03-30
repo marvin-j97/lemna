@@ -4,7 +4,7 @@ import { resolve } from "path";
 
 import { IConfig } from "./config";
 import { logger } from "./logger";
-import { templateMap, TemplateType } from "./templates/index";
+import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
 
 function composeLemnaConfig(
@@ -68,7 +68,7 @@ export async function initializeLemna(
   logger.verbose("Installing dependencies");
   execSync("npm i lemna -D", { cwd: projectDir });
 
-  const { entryPoint, buildSteps } = await templateMap[template](projectDir);
+  const { entryPoint, buildSteps } = await runTemplate(template, projectDir);
 
   const lemnaConfigPath = resolve(projectDir, "lemna.config.json");
   loggedWriteFile(

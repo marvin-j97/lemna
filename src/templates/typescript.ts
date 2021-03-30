@@ -1,10 +1,10 @@
 import { execSync } from "child_process";
 import { mkdirSync } from "fs";
-import { resolve, relative } from "path";
+import { relative, resolve } from "path";
 
 import { logger } from "../logger";
 import { formatJson, loggedWriteFile } from "../util";
-import { TemplateFunction } from "./index";
+import { ITemplateResult, TemplateFunction } from "./index";
 
 function composeTsConfig(): unknown {
   logger.silly(`Composing tsconfig`);
@@ -53,7 +53,7 @@ exports.handler = handler;
 
 export const runTypescriptTemplate: TemplateFunction = async (
   projectDir: string,
-): Promise<{ entryPoint: string; buildSteps: string[] }> => {
+): Promise<ITemplateResult> => {
   const srcFolder = resolve(projectDir, "src");
   logger.debug(`Creating src folder at ${projectDir}`);
   mkdirSync(srcFolder, {
