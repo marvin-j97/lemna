@@ -5,6 +5,7 @@ import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
+import { TemplateType } from "./templates/index";
 import { updateFunctionCode } from "./upload";
 import version from "./version";
 
@@ -24,6 +25,11 @@ export default yargs
     "Initialize new project",
     (yargs) => {
       return yargs.option({
+        template: {
+          description: "Template to use",
+          choices: Object.values(TemplateType),
+          default: TemplateType.Typescript,
+        },
         "function-name": {
           alias: ["function"],
           description: "Lambda function name",
@@ -52,7 +58,7 @@ export default yargs
         process.exit(1);
       }
 
-      await initializeLemna(argv.path, functionName);
+      await initializeLemna(argv.path, functionName, argv.template);
       logger.info("Setup successful");
     },
   )
@@ -61,8 +67,9 @@ export default yargs
     "Bundles project into .zip file",
     (yargs) => yargs,
     async (argv) => {
-      const result = await build(loadConfig(argv.config));
-      logger.info(`Built zip file: ${result.zipFile}`);
+      const { zipFile } = await build(loadConfig(argv.config));
+      logger.info(`Built zip file: ${zipFile}`);
+      console.log({ zipFile });
     },
   )
   .command(
