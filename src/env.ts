@@ -1,5 +1,6 @@
-import { existsSync } from "fs";
 import dotenv from "dotenv";
+import { existsSync } from "fs";
+
 import { logger } from "./logger";
 
 export function tryLoadEnv(path = ".env"): void {

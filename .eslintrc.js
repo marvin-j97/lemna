@@ -5,7 +5,7 @@ module.exports = {
     ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
     sourceType: "module", // Allows for the use of imports
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "prettier", "simple-import-sort"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -15,6 +15,10 @@ module.exports = {
     eqeqeq: "error",
     yoda: "error",
     curly: "error",
-    "@typescript-eslint/no-empty-function": "warn",
+
+    "prettier/prettier": "error",
+
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
   },
 };

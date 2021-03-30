@@ -1,9 +1,10 @@
 import { execSync } from "child_process";
-import { IConfig } from "./config";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { formatJson } from "./util";
+
+import { IConfig } from "./config";
 import { logger } from "./logger";
+import { formatJson } from "./util";
 
 function loggedWriteFile(path: string, content: string): void {
   logger.silly(`Writing to file ${path} with ${content.length} characters`);

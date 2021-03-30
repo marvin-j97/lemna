@@ -1,5 +1,6 @@
 import aws from "aws-sdk";
 import { existsSync, readFileSync, statSync } from "fs";
+
 import { logger } from "./logger";
 
 export async function updateFunctionCode(

@@ -1,14 +1,15 @@
-import { getProjectDirectory, getTempFolder, IConfig } from "./config";
 import { execSync } from "child_process";
-import { resolve } from "path";
 import crypto from "crypto";
 import { createReadStream, mkdirSync } from "fs";
-import jszip from "jszip";
-import { saveZip } from "./zip";
-import { bundleCode } from "./bundle";
 import glob from "glob";
+import jszip from "jszip";
+import { resolve } from "path";
 import { promisify } from "util";
+
+import { bundleCode } from "./bundle";
+import { getProjectDirectory, getTempFolder, IConfig } from "./config";
 import { logger } from "./logger";
+import { saveZip } from "./zip";
 
 const globPromise = promisify(glob);
 

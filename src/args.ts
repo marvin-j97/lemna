@@ -1,11 +1,12 @@
 import yargs from "yargs";
-import { initializeLemna } from "./init";
+
 import { build } from "./build";
-import { deployProject } from "./deploy";
-import version from "./version";
 import { loadConfig } from "./config";
-import { updateFunctionCode } from "./upload";
+import { deployProject } from "./deploy";
+import { initializeLemna } from "./init";
 import { logger } from "./logger";
+import { updateFunctionCode } from "./upload";
+import version from "./version";
 
 export default yargs
   .scriptName("lemna")
@@ -58,7 +59,7 @@ export default yargs
   .command(
     "build",
     "Bundles project into .zip file",
-    () => {},
+    (yargs) => yargs,
     async (argv) => {
       const result = await build(loadConfig(argv.config));
       logger.info(`Built zip file: ${result.zipFile}`);
@@ -67,7 +68,7 @@ export default yargs
   .command(
     "deploy",
     "Builds and deploys project",
-    () => {},
+    (yargs) => yargs,
     async (argv) => {
       await deployProject(loadConfig(argv.config));
       logger.info("Deployment successful");

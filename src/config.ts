@@ -1,6 +1,7 @@
 import yxc, { Infer, is } from "@dotvirus/yxc";
 import { existsSync, mkdirSync } from "fs";
 import { parse, resolve } from "path";
+
 import { logger } from "./logger";
 
 const configSchema = yxc.object({
