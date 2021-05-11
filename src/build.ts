@@ -50,10 +50,7 @@ export async function build(config: IConfig): Promise<IBuildResult> {
   logger.debug(`Composing zip file`);
   const zip = new jszip();
 
-  zip.file(
-    "package.json",
-    createReadStream(resolve(projectDir, "package.json")),
-  );
+  zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
   zip.file("index.js", createReadStream(output));
 
   if (config.bundle && config.bundle.length) {
@@ -61,9 +58,7 @@ export async function build(config: IConfig): Promise<IBuildResult> {
       ...new Set(
         (
           await Promise.all(
-            config.bundle.map((item) =>
-              globPromise(item, { cwd: projectDir, nodir: true }),
-            ),
+            config.bundle.map((item) => globPromise(item, { cwd: projectDir, nodir: true })),
           )
         ).flat(),
       ),

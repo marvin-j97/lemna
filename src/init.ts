@@ -7,11 +7,7 @@ import { logger } from "./logger";
 import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
 
-function composeLemnaConfig(
-  name: string,
-  entryPoint: string,
-  buildSteps: string[] = [],
-): IConfig {
+function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string[] = []): IConfig {
   logger.silly(`Composing lemna.config.json for ${name}`);
   return {
     entryPoint,
@@ -60,10 +56,7 @@ export async function initializeLemna(
   }
 
   const packageJsonPath = resolve(projectDir, "package.json");
-  loggedWriteFile(
-    packageJsonPath,
-    formatJson(composePackageJson(functionName)),
-  );
+  loggedWriteFile(packageJsonPath, formatJson(composePackageJson(functionName)));
 
   logger.verbose("Installing dependencies");
   execSync("npm i lemna -D", { cwd: projectDir });

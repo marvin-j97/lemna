@@ -18,9 +18,6 @@ const templateMap: Record<TemplateType, TemplateFunction> = {
   [TemplateType.Typescript]: runTypescriptTemplate,
 };
 
-export function runTemplate(
-  template: TemplateType,
-  projectDir: string,
-): Promise<ITemplateResult> {
+export function runTemplate(template: TemplateType, projectDir: string): Promise<ITemplateResult> {
   return templateMap[template](projectDir);
 }

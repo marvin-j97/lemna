@@ -14,9 +14,9 @@ export default yargs
   .version(version)
   .option({
     config: {
-      alias: ["c"],
+      alias: ["c", "p"],
       type: "string",
-      default: "./lemna.config.json",
+      default: "lemna.config.json",
       description: "Config path",
     },
   })

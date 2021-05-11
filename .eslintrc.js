@@ -5,20 +5,30 @@ module.exports = {
     ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
     sourceType: "module", // Allows for the use of imports
   },
-  plugins: ["@typescript-eslint", "prettier", "simple-import-sort"],
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-  ],
+  plugins: ["@typescript-eslint", "simple-import-sort", "prettier"],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   rules: {
     eqeqeq: "error",
     yoda: "error",
     curly: "error",
-
-    "prettier/prettier": "error",
+    "prefer-template": "error",
+    "max-lines-per-function": ["warn", 50],
+    "@typescript-eslint/explicit-function-return-type": "off",
 
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
+
+    "prettier/prettier": "error",
+
+    "require-jsdoc": [
+      "warn",
+      {
+        require: {
+          ClassDeclaration: true,
+          FunctionDeclaration: true,
+          MethodDefinition: true,
+        },
+      },
+    ],
   },
 };
