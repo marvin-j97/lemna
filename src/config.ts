@@ -1,5 +1,5 @@
 import yxc, { Infer, is } from "@dotvirus/yxc";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, statSync } from "fs";
 import { parse, resolve } from "path";
 
 import { logger } from "./logger";
@@ -41,11 +41,16 @@ export function loadConfig(file: string): IConfig {
     process.exit(1);
   }
 
+  if (statSync(path).isDirectory()) {
+    logger.error(`${path} is a directory`);
+    process.exit(1);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   let content = require(path);
 
   if (typeof content === "function") {
-    logger.error(`Config is a function, executing`);
+    logger.verbose(`Config is a function, executing`);
     content = content();
   }
 

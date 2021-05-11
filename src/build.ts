@@ -31,7 +31,7 @@ export async function build(config: IConfig): Promise<IBuildResult> {
 
   // Build steps
   for (const step of config.buildSteps || []) {
-    logger.debug(`Build step: ${step}`);
+    logger.debug(`Build step, EXEC: ${step} @ ${projectDir}`);
     execSync(step, { cwd: projectDir });
   }
 

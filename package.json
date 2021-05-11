@@ -11,14 +11,18 @@
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --fix --ext .ts",
     "test": "ava -c 1 test/**/*.spec.ts",
-    "coverage": "nyc npm test",
+    "coverage": "cross-env LEMNA_LOG_LEVEL=debug nyc npm test",
     "postcoverage": "nyc report --reporter=json"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/marvin-j97/lemna.git"
   },
-  "keywords": [],
+  "keywords": [
+    "lambda",
+    "aws",
+    "scaffold"
+  ],
   "author": "marvin-j97",
   "license": "ISC",
   "bugs": {
@@ -32,6 +36,7 @@
     "@typescript-eslint/eslint-plugin": "^4.17.0",
     "@typescript-eslint/parser": "^4.17.0",
     "ava": "^3.15.0",
+    "cross-env": "^7.0.3",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-jsdoc": "^34.0.1",

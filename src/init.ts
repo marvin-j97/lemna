@@ -59,7 +59,9 @@ export async function initializeLemna(
   loggedWriteFile(packageJsonPath, formatJson(composePackageJson(functionName)));
 
   logger.verbose("Installing dependencies");
-  execSync("npm i lemna -D", { cwd: projectDir });
+  const cmd = "npm i lemna -D";
+  logger.debug(`EXEC ${cmd} @ ${projectDir}`);
+  execSync(cmd, { cwd: projectDir });
 
   const { entryPoint, buildSteps } = await runTemplate(template, projectDir);
 

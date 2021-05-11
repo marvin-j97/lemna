@@ -67,7 +67,9 @@ export const runTypescriptTemplate: TemplateFunction = async (
   loggedWriteFile(indexFile, composeIndexFile());
 
   logger.verbose("Installing Typescript dependencies");
-  execSync("npm i @types/aws-lambda typescript -D", { cwd: projectDir });
+  const cmd = "npm i @types/aws-lambda typescript -D";
+  logger.debug(`EXEC ${cmd} @ ${projectDir}`);
+  execSync(cmd, { cwd: projectDir });
 
   const buildIndex = resolve(projectDir, "./build/index.js");
 

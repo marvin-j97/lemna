@@ -1,3 +1,4 @@
+import { registerModules } from "./register";
 import yargs from "yargs";
 
 import { build } from "./build";
@@ -14,10 +15,16 @@ export default yargs
   .version(version)
   .option({
     config: {
-      alias: ["c", "p"],
+      alias: ["c", "p", "project"],
       type: "string",
       default: "lemna.config.json",
       description: "Config path",
+    },
+    register: {
+      alias: ["r"],
+      type: "array",
+      default: [],
+      description: "Register node modules",
     },
   })
   .command(
@@ -52,6 +59,8 @@ export default yargs
       });
     },
     async (argv) => {
+      registerModules(argv.register);
+
       const functionName = argv["function-name"];
       if (!functionName) {
         logger.error("--function-name required");
@@ -67,6 +76,8 @@ export default yargs
     "Bundles project into .zip file",
     (yargs) => yargs,
     async (argv) => {
+      registerModules(argv.register);
+
       const { zipFile } = await build(loadConfig(argv.config));
       logger.info(`Built zip file: ${zipFile}`);
       console.log({ zipFile });
@@ -77,6 +88,8 @@ export default yargs
     "Builds and deploys project",
     (yargs) => yargs,
     async (argv) => {
+      registerModules(argv.register);
+
       await deployProject(loadConfig(argv.config));
       logger.info("Deployment successful");
     },
@@ -91,6 +104,8 @@ export default yargs
       });
     },
     async (argv) => {
+      registerModules(argv.register);
+
       const { functionName } = loadConfig(argv.config);
       await updateFunctionCode(functionName, <string>argv.zip);
       logger.info("Upload successful");
