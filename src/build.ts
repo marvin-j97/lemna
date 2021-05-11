@@ -25,6 +25,13 @@ interface IBuildResult {
   zipFile: string;
 }
 
+function runBuildSteps(steps: string[], cwd: string): void {
+  for (const step of steps) {
+    logger.debug(`Build step, EXEC: ${step} @ ${cwd}`);
+    execSync(step, { cwd });
+  }
+}
+
 /**
  * Builds a project according to the given config
  * Returns a build result
@@ -33,14 +40,10 @@ export async function build(config: IConfig): Promise<IBuildResult> {
   logger.info(`Building project`);
 
   const projectDir = getProjectDirectory();
-
   const hash = buildHash();
 
   // Build steps
-  for (const step of config.buildSteps || []) {
-    logger.debug(`Build step, EXEC: ${step} @ ${projectDir}`);
-    execSync(step, { cwd: projectDir });
-  }
+  runBuildSteps(config.buildSteps || [], projectDir);
 
   // Bundle
   const entryPoint = resolve(projectDir, config.entryPoint);
@@ -51,9 +54,8 @@ export async function build(config: IConfig): Promise<IBuildResult> {
   const output = resolve(outputFolder, "index.js");
   await bundleCode(entryPoint, output);
 
-  const zipFile = resolve(outputFolder, "bundle.zip");
-
   // Zip
+  const zipFile = resolve(outputFolder, "bundle.zip");
   logger.debug(`Composing zip file`);
   const zip = new jszip();
 
