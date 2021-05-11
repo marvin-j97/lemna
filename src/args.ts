@@ -1,7 +1,7 @@
 import yargs from "yargs";
 
 import { build } from "./build";
-import { loadConfig } from "./config";
+import { IConfig, loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
@@ -9,6 +9,11 @@ import { registerModules } from "./register";
 import { TemplateType } from "./templates/index";
 import { updateFunctionCode } from "./upload";
 import version from "./version";
+
+function preload(config: string, register: string[]): IConfig {
+  registerModules(register);
+  return loadConfig(config);
+}
 
 export default yargs
   .scriptName("lemna")
@@ -76,9 +81,9 @@ export default yargs
     "Bundles project into .zip file",
     (yargs) => yargs,
     async (argv) => {
-      registerModules(argv.register);
+      const config = preload(argv.config, argv.register);
 
-      const { zipFile } = await build(loadConfig(argv.config));
+      const { zipFile } = await build(config);
       logger.info(`Built zip file: ${zipFile}`);
       console.log({ zipFile });
     },
@@ -88,9 +93,9 @@ export default yargs
     "Builds and deploys project",
     (yargs) => yargs,
     async (argv) => {
-      registerModules(argv.register);
+      const config = preload(argv.config, argv.register);
 
-      await deployProject(loadConfig(argv.config));
+      await deployProject(config);
       logger.info("Deployment successful");
     },
   )
@@ -104,9 +109,9 @@ export default yargs
       });
     },
     async (argv) => {
-      registerModules(argv.register);
+      const config = preload(argv.config, argv.register);
 
-      const { functionName } = loadConfig(argv.config);
+      const { functionName } = config;
       await updateFunctionCode(functionName, <string>argv.zip);
       logger.info("Upload successful");
     },
