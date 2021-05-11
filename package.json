@@ -65,7 +65,7 @@
     "@dotvirus/yxc": "^2.0.2",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.2.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
     "aws-sdk": "^2.860.0",
     "dotenv": "^8.2.0",
     "glob": "^7.1.6",
