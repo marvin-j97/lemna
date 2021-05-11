@@ -1,4 +1,3 @@
-import { registerModules } from "./register";
 import yargs from "yargs";
 
 import { build } from "./build";
@@ -6,6 +5,7 @@ import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
+import { registerModules } from "./register";
 import { TemplateType } from "./templates/index";
 import { updateFunctionCode } from "./upload";
 import version from "./version";
