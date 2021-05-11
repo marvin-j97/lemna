@@ -14,6 +14,7 @@ module.exports = {
     "prefer-template": "error",
     "max-lines-per-function": ["warn", 50],
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
 
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",

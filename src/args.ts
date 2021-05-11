@@ -10,6 +10,9 @@ import { TemplateType } from "./templates/index";
 import { updateFunctionCode } from "./upload";
 import version from "./version";
 
+/**
+ * Loads config and modules before running a command
+ */
 function preload(config: string, register: string[]): IConfig {
   registerModules(register);
   return loadConfig(config);

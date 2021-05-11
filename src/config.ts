@@ -13,6 +13,9 @@ const configSchema = yxc.object({
 
 export type IConfig = Infer<typeof configSchema>;
 
+/**
+ * Returns if the given input is a valid Lemna config
+ */
 export function isValidConfig(val: unknown): val is IConfig {
   return is(val, configSchema);
 }
@@ -20,18 +23,31 @@ export function isValidConfig(val: unknown): val is IConfig {
 let config: IConfig;
 let projectDir: string;
 
+/**
+ * Returns the loaded config
+ */
 export function getConfig(): IConfig {
   return JSON.parse(JSON.stringify(config));
 }
 
+/**
+ * Returns the path of the project directory (directory of config)
+ */
 export function getProjectDirectory(): string {
   return projectDir;
 }
 
+/**
+ * Returns the path of the temp folder (.lemna)
+ */
 export function getTempFolder(folder: string): string {
   return resolve(folder, ".lemna");
 }
 
+/**
+ * Loads a config from file (.json or .js)
+ * Automatically creates temp folder next to the config
+ */
 export function loadConfig(file: string): IConfig {
   const path = resolve(file);
   logger.debug(`Loading config at ${path}`);

@@ -3,6 +3,9 @@ import { existsSync, readFileSync, statSync } from "fs";
 
 import { logger } from "./logger";
 
+/**
+ * Uploads a zip file to a Lambda function
+ */
 export async function updateFunctionCode(functionName: string, zipFile: string): Promise<void> {
   if (!existsSync(zipFile) || statSync(zipFile).isDirectory()) {
     logger.error(`${zipFile} not found`);

@@ -7,6 +7,9 @@ import { logger } from "./logger";
 import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
 
+/**
+ * Creates a Lemna config file
+ */
 function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string[] = []): IConfig {
   logger.silly(`Composing lemna.config.json for ${name}`);
   return {
@@ -17,6 +20,9 @@ function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string
   };
 }
 
+/**
+ * Creates a package.json
+ */
 function composePackageJson(name: string): unknown {
   logger.silly(`Composing package.json for ${name}`);
   return {
@@ -34,6 +40,9 @@ function composePackageJson(name: string): unknown {
   };
 }
 
+/**
+ * Initializes a project
+ */
 export async function initializeLemna(
   path: string,
   functionName: string,

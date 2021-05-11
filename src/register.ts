@@ -1,6 +1,9 @@
 import { logger } from "./logger";
 
-export function registerModules(register: string[]) {
+/**
+ * Registers node modules
+ */
+export function registerModules(register: string[]): void {
   register.forEach((pkg) => {
     logger.debug(`Registering ${pkg}`);
     require(pkg);

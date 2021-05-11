@@ -3,6 +3,9 @@ import { existsSync } from "fs";
 
 import { logger } from "./logger";
 
+/**
+ * Loads an environment variable file if it exists
+ */
 export function tryLoadEnv(path = ".env"): void {
   if (existsSync(path)) {
     logger.debug(`Loading env: ${path}`);

@@ -5,6 +5,9 @@ import { logger } from "../logger";
 import { loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
 
+/**
+ * Creates handler entry point
+ */
 function composeIndexFile(): string {
   logger.silly(`Composing index.handler`);
   return `const handler = async function (event, context) {
@@ -17,6 +20,9 @@ exports.handler = handler;
 `;
 }
 
+/**
+ * Creates the Javascript template
+ */
 export const runJavascriptTemplate: TemplateFunction = async (
   projectDir: string,
 ): Promise<ITemplateResult> => {

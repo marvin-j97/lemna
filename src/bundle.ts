@@ -6,6 +6,9 @@ import { rollup } from "rollup";
 const { uglify } = require("rollup-plugin-uglify");
 import { logger } from "./logger";
 
+/**
+ * Bundles code with rollup into a file
+ */
 export async function bundleCode(input: string, output: string): Promise<void> {
   logger.verbose(`Bundling ${input}`);
   const bundle = await rollup({

@@ -6,6 +6,9 @@ import { logger } from "../logger";
 import { formatJson, loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
 
+/**
+ * Creates tsconfig.json
+ */
 function composeTsConfig(): unknown {
   logger.silly(`Composing tsconfig`);
   return {
@@ -37,6 +40,9 @@ function composeTsConfig(): unknown {
   };
 }
 
+/**
+ * Creates handler entry point
+ */
 function composeIndexFile(): string {
   logger.silly(`Composing index.handler`);
   return `import { Handler } from "aws-lambda";
@@ -51,6 +57,9 @@ exports.handler = handler;
 `;
 }
 
+/**
+ * Creates the Typescript template
+ */
 export const runTypescriptTemplate: TemplateFunction = async (
   projectDir: string,
 ): Promise<ITemplateResult> => {

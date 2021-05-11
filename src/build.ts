@@ -13,6 +13,9 @@ import { saveZip } from "./zip";
 
 const globPromise = promisify(glob);
 
+/**
+ * Generates a random hash for build artifacts
+ */
 function buildHash(): string {
   return crypto.randomBytes(20).toString("hex");
 }
@@ -22,6 +25,10 @@ interface IBuildResult {
   zipFile: string;
 }
 
+/**
+ * Builds a project according to the given config
+ * Returns a build result
+ */
 export async function build(config: IConfig): Promise<IBuildResult> {
   logger.info(`Building project`);
 
