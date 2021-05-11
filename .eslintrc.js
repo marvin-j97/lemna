@@ -12,7 +12,7 @@ module.exports = {
     yoda: "error",
     curly: "error",
     "prefer-template": "error",
-    "max-lines-per-function": ["warn", 50],
+    "max-lines-per-function": ["error", 50],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "error",
 
@@ -22,7 +22,7 @@ module.exports = {
     "prettier/prettier": "error",
 
     "require-jsdoc": [
-      "warn",
+      "error",
       {
         require: {
           ClassDeclaration: true,

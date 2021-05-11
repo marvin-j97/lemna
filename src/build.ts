@@ -25,6 +25,9 @@ interface IBuildResult {
   zipFile: string;
 }
 
+/**
+ * Runs a series of build steps
+ */
 function runBuildSteps(steps: string[], cwd: string): void {
   for (const step of steps) {
     logger.debug(`Build step, EXEC: ${step} @ ${cwd}`);
