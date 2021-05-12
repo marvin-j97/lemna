@@ -36,35 +36,26 @@ export default yargs
     },
   })
   .command(
-    "init",
+    "init <dir>",
     "Initialize new project",
     (yargs) => {
-      return yargs.option({
-        template: {
-          description: "Template to use",
-          choices: Object.values(TemplateType),
-          default: TemplateType.Typescript,
-        },
-        "function-name": {
-          alias: ["function"],
-          description: "Lambda function name",
+      return yargs
+        .positional("dir", {
+          description: "Directory in which to initialize the project",
           type: "string",
-        },
-        path: {
-          alias: [
-            "dir",
-            "directory",
-            "working-dir",
-            "working-directory",
-            "project-dir",
-            "project-directory",
-            "folder",
-          ],
-          description: "Folder in which to initialize the project",
-          default: ".",
-          type: "string",
-        },
-      });
+        })
+        .option({
+          template: {
+            description: "Template to use",
+            choices: Object.values(TemplateType),
+            default: TemplateType.Typescript,
+          },
+          "function-name": {
+            alias: ["function"],
+            description: "Lambda function name",
+            type: "string",
+          },
+        });
     },
     async (argv) => {
       registerModules(argv.register);
@@ -75,7 +66,7 @@ export default yargs
         process.exit(1);
       }
 
-      await initializeLemna(argv.path, functionName, argv.template);
+      await initializeLemna(<string>argv.path, functionName, argv.template);
       logger.info("Setup successful");
     },
   )

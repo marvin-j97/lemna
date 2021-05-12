@@ -19,7 +19,7 @@ npm i lemna -g
 ### Scaffold new project
 
 ```
-lemna init --directory my-folder --function-name my-lambda
+lemna init <directory> --function-name my-lambda
 ```
 
 This will setup a project folder with:
