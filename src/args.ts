@@ -65,19 +65,16 @@ export default yargs
     },
   )
   .command(
-    "build",
+    "build <dir>",
     "Bundles project into .zip file",
-    (yargs) =>
-      yargs.option({
-        config: {
-          alias: ["c", "p", "project"],
-          type: "string",
-          default: "lemna.config.json",
-          description: "Config path",
-        },
-      }),
+    (yargs) => {
+      return yargs.positional("dir", {
+        description: "Config path of project to build",
+        type: "string",
+      });
+    },
     async (argv) => {
-      const config = preload(argv.config, argv.register);
+      const config = preload(<string>argv.dir, argv.register);
 
       const { zipFile } = await build(config);
       logger.info(`Built zip file: ${zipFile}`);
