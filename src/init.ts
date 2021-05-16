@@ -48,10 +48,10 @@ export async function initializeLemna(
   functionName: string,
   template: TemplateType,
 ): Promise<void> {
-  logger.info("Initializing Lemna project");
-  logger.verbose(`Using template "${template}"`);
-
   const projectDir = resolve(path);
+
+  logger.info(`Initializing Lemna project at ${projectDir}`);
+  logger.verbose(`Using template "${template}"`);
 
   if (!existsSync(projectDir)) {
     logger.debug(`Creating project folder at ${projectDir}`);

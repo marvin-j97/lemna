@@ -53,13 +53,11 @@ export function loadConfig(file: string): IConfig {
   logger.debug(`Loading config at ${path}`);
 
   if (!existsSync(path)) {
-    logger.error(`Config not found at ${path}`);
-    process.exit(1);
+    throw new Error(`Config not found at ${path}`);
   }
 
   if (statSync(path).isDirectory()) {
-    logger.error(`${path} is a directory`);
-    process.exit(1);
+    throw new Error(`${path} is a directory`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -70,6 +68,7 @@ export function loadConfig(file: string): IConfig {
     content = content();
   }
 
+  logger.silly("Loaded config:");
   logger.silly(JSON.stringify(content, null, 2));
 
   if (!isValidConfig(content)) {

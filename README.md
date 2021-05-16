@@ -2,21 +2,21 @@
 [![codecov](https://codecov.io/gh/marvin-j97/lemna/branch/master/graph/badge.svg?token=T6L95TZZXA)](https://codecov.io/gh/marvin-j97/lemna)
 ![npm](https://img.shields.io/npm/v/lemna)
 
-## Lemna
+# Lemna
 
 Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript.
 
 Lemna will transpile, bundle and upload your code, no more tedious code deploying to Lambda.
 
-Dependencies will be bundled into your code by Rollup, so only required code is uploaded (dev dependencies will be ignored).
+Dependencies will be bundled into your code using Rollup, so only required code is uploaded (dev dependencies will be ignored).
 
-### Installation
+## Installation
 
 ```
 npm i lemna -g
 ```
 
-### Scaffold new project
+## Scaffold new project
 
 ```
 lemna init <directory> --function-name my-lambda
@@ -30,7 +30,7 @@ This will setup a project folder with:
 - Basic Lambda handler (src/index.ts)
 - Lemna config
 
-### Deploying
+## Deploying
 
 Be sure to create a Lambda function with the given name before deploying the first time.
 Create a `.env` file and place your AWS credentials in it.
@@ -40,13 +40,33 @@ Then run:
 lemna deploy
 ```
 
-If your working directory is different from the folder containing the Lemna config, use the `--config` flag:
+### Use a custom path
 
 ```
-lemna deploy --config ./my-app/lemna.config.json
+lemna deploy my-app/lemna.config.json
 ```
 
-### Use in existing project
+### Use CommonJS module as config
+
+```js
+// lemna.config.js
+module.exports = {
+  entryPoint: "path to file",
+  functionName: "lambda function name",
+};
+```
+
+```
+lemna deploy lemna.config.js
+```
+
+### Deploy multiple functions
+
+```
+lemna deploy firstconfig.json secondconfig.json [...]
+```
+
+## Use in existing project
 
 - Create a `lemna.config.json`, including:
 

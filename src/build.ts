@@ -40,16 +40,16 @@ function runBuildSteps(steps: string[], cwd: string): void {
  * Returns a build result
  */
 export async function build(config: IConfig): Promise<IBuildResult> {
-  logger.info(`Building project`);
-
   const projectDir = getProjectDirectory();
+  const entryPoint = resolve(projectDir, config.entryPoint);
   const hash = buildHash();
+
+  logger.info(`Building project with entrypoint ${entryPoint}`);
 
   // Build steps
   runBuildSteps(config.buildSteps || [], projectDir);
 
   // Bundle
-  const entryPoint = resolve(projectDir, config.entryPoint);
 
   const outputFolder = resolve(getTempFolder(projectDir), hash);
   mkdirSync(outputFolder, { recursive: true });
