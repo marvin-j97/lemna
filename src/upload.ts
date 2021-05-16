@@ -12,7 +12,7 @@ export async function updateFunctionCode(functionName: string, zipFile: string):
     process.exit(1);
   }
 
-  logger.info(`Uploading project`);
+  logger.info(`Uploading project ${zipFile} -> ${functionName}`);
   logger.verbose(`Updating Lambda function (${functionName}) code using ${zipFile}`);
   await new aws.Lambda()
     .updateFunctionCode({
