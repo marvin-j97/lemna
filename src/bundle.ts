@@ -13,7 +13,14 @@ export async function bundleCode(input: string, output: string): Promise<void> {
   logger.verbose(`Bundling ${input}`);
   const bundle = await rollup({
     input,
-    plugins: [json(), nodeResolve(), commonjs(), uglify()],
+    plugins: [
+      json(),
+      nodeResolve({
+        resolveOnly: [/^(?!(aws-sdk)$).+$/],
+      }),
+      commonjs(),
+      uglify(),
+    ],
   });
   logger.verbose(`Writing bundle to ${output}`);
   await bundle.write({
