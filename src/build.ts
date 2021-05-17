@@ -17,7 +17,7 @@ const globPromise = promisify(glob);
  * Generates a random hash for build artifacts
  */
 function buildHash(): string {
-  return crypto.randomBytes(20).toString("hex");
+  return crypto.randomBytes(12).toString("hex");
 }
 
 interface IBuildResult {
