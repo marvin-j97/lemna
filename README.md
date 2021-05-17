@@ -1,8 +1,12 @@
-[![Node.js CI](https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml/badge.svg)](https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml)
-[![codecov](https://codecov.io/gh/marvin-j97/lemna/branch/master/graph/badge.svg?token=T6L95TZZXA)](https://codecov.io/gh/marvin-j97/lemna)
-![npm](https://img.shields.io/npm/v/lemna)
+<h1 align="center">Lemna</h1>
 
-# Lemna
+<p align="center">
+  <img src="https://badge.fury.io/js/lemna.svg" alt="Version">
+  <a href="https://codecov.io/gh/marvin-j97/lemna">
+    <img src="https://codecov.io/gh/marvin-j97/lemna/branch/master/graph/badge.svg?token=T6L95TZZXA"/>
+  </a>
+  <img src="https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml/badge.svg" alt="Build Status">
+</p>
 
 Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript.
 
