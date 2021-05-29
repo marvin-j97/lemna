@@ -14,9 +14,15 @@ function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string
   logger.silly(`Composing lemna.config.json for ${name}`);
   return {
     entryPoint,
-    functionName: name,
     buildSteps,
     bundle: [],
+    function: {
+      name,
+      description: "Created by Lemna",
+      handler: "index.handler",
+      memorySize: 128,
+      runtime: "nodejs14.x",
+    },
   };
 }
 

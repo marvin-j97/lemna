@@ -7,5 +7,5 @@ import { updateFunctionCode } from "./upload";
  */
 export async function deployProject(config: IConfig): Promise<void> {
   const { zipFile } = await build(config);
-  await updateFunctionCode(config.functionName, zipFile);
+  await updateFunctionCode(config.function, zipFile);
 }

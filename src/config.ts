@@ -1,14 +1,24 @@
-import yxc, { Infer, is } from "@dotvirus/yxc";
+import yxc, { createExecutableSchema, Infer } from "@dotvirus/yxc";
 import { existsSync, mkdirSync, statSync } from "fs";
 import { parse, resolve } from "path";
 
 import { logger } from "./logger";
 
+const functionSettingsSchema = yxc.object({
+  name: yxc.string().notEmpty(),
+  description: yxc.string().optional(),
+  memorySize: yxc.number().integer().min(1).optional(),
+  handler: yxc.string().optional(),
+  runtime: yxc.string().notEmpty(),
+});
+
+export type IFunctionSettings = Infer<typeof functionSettingsSchema>;
+
 const configSchema = yxc.object({
-  functionName: yxc.string().notEmpty(),
   entryPoint: yxc.string().notEmpty(),
   bundle: yxc.array(yxc.string().notEmpty()).optional(),
   buildSteps: yxc.array(yxc.string().notEmpty()).optional(),
+  function: functionSettingsSchema,
 });
 
 export type IConfig = Infer<typeof configSchema>;
@@ -17,7 +27,11 @@ export type IConfig = Infer<typeof configSchema>;
  * Returns if the given input is a valid Lemna config
  */
 export function isValidConfig(val: unknown): val is IConfig {
-  return is(val, configSchema);
+  const { ok, errors } = createExecutableSchema(configSchema)(val);
+  if (errors.length) {
+    logger.error(`${errors.length} validation errors: ${JSON.stringify(errors, null, 2)}`);
+  }
+  return ok;
 }
 
 let config: IConfig;
