@@ -3,10 +3,16 @@ import { resolve } from "path";
 import { getConfig, IConfig, isValidConfig, loadConfig } from "../src/config";
 
 const validConfig: IConfig = {
-  functionName: "function",
   entryPoint: "entrypoint",
   buildSteps: undefined,
   bundle: undefined,
+  function: {
+    name: "function name",
+    runtime: "nodejs14.x",
+    handler: undefined,
+    description: undefined,
+    memorySize: undefined,
+  },
 };
 
 test("Is valid config", (t) => {
@@ -19,7 +25,7 @@ test("Is invalid config", (t) => {
 
 test("Load config from path", (t) => {
   const config = loadConfig(resolve(__dirname, "config.function.js"));
-  t.deepEqual(config.functionName, validConfig.functionName);
+  t.deepEqual(config.function.name, validConfig.function.name);
 
   const cachedConfig = getConfig();
   t.deepEqual(config, cachedConfig);
