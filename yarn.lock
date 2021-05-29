@@ -196,9 +196,9 @@
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@dotvirus/yxc/-/yxc-2.0.3.tgz#4dd7603077f2e25eece36f4c0a1a1ba9e416ccff"
 
-"@es-joy/jsdoccomment@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.6.0.tgz#8926a8184df0968860f8c69b3bfc52efa6aeaa30"
+"@es-joy/jsdoccomment@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@es-joy/jsdoccomment/-/jsdoccomment-0.7.2.tgz#5c0802982b28e7dcd381fbb1f52e6fd088525a31"
   dependencies:
     comment-parser "^1.1.5"
     esquery "^1.4.0"
@@ -1148,11 +1148,11 @@ eslint-config-prettier@^8.1.0:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.3.0.tgz#f7471b20b6fe8a9a9254cc684454202886a2dd7a"
 
-eslint-plugin-jsdoc@^34.0.1:
-  version "34.8.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-34.8.1.tgz#d617663136d65cccbbd398be4bb87dc22f584d25"
+eslint-plugin-jsdoc@^35.0.0:
+  version "35.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-35.0.0.tgz#12634f12d1882a4f77b49aba2c4a17a7bc88cfcd"
   dependencies:
-    "@es-joy/jsdoccomment" "^0.6.0"
+    "@es-joy/jsdoccomment" "^0.7.2"
     comment-parser "1.1.5"
     debug "^4.3.1"
     esquery "^1.4.0"
