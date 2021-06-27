@@ -16,6 +16,7 @@ export async function bundleCode(input: string, output: string): Promise<void> {
     plugins: [
       json(),
       nodeResolve({
+        // aws-sdk is pre-installed on Lambda, so no need to bundle it
         resolveOnly: [/^(?!(aws-sdk)$).+$/],
       }),
       commonjs(),
