@@ -35,7 +35,9 @@ async function createFunctionWithZip(
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
-      Environment: env,
+      Environment: {
+        Variables: env,
+      },
     })
     .promise();
 }
@@ -94,7 +96,9 @@ export async function updateFunctionCode(
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
-      Environment: env,
+      Environment: {
+        Variables: env,
+      },
     })
     .promise();
 }
