@@ -18,7 +18,7 @@ async function createFunctionWithZip(
   zipFile: string,
   arn: string,
 ): Promise<void> {
-  const { name, description, memorySize, handler, runtime } = functionSettings;
+  const { name, description, memorySize, handler, runtime, env } = functionSettings;
 
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Creating Lambda function (${name}) code using ${zipFile} and ARN ${arn}`);
@@ -35,6 +35,7 @@ async function createFunctionWithZip(
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
+      Environment: env,
     })
     .promise();
 }
@@ -51,7 +52,7 @@ export async function updateFunctionCode(
     process.exit(1);
   }
 
-  const { name, description, memorySize, handler, runtime } = functionSettings;
+  const { name, description, memorySize, handler, runtime, env } = functionSettings;
 
   try {
     await lambda
@@ -93,6 +94,7 @@ export async function updateFunctionCode(
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
+      Environment: env,
     })
     .promise();
 }

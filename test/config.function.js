@@ -8,5 +8,6 @@ module.exports = () => ({
     handler: undefined,
     description: undefined,
     memorySize: undefined,
+    env: undefined,
   },
 });

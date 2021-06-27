@@ -10,6 +10,7 @@ const functionSettingsSchema = yxc.object({
   memorySize: yxc.number().integer().min(1).optional(),
   handler: yxc.string().optional(),
   runtime: yxc.string().notEmpty(),
+  env: yxc.record(yxc.string()).optional(),
 });
 
 export type IFunctionSettings = Infer<typeof functionSettingsSchema>;

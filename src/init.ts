@@ -22,6 +22,7 @@ function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string
       handler: "index.handler",
       memorySize: 128,
       runtime: "nodejs14.x",
+      env: undefined,
     },
   };
 }

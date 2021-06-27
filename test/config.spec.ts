@@ -12,6 +12,7 @@ const validConfig: IConfig = {
     handler: undefined,
     description: undefined,
     memorySize: undefined,
+    env: undefined,
   },
 };
 
