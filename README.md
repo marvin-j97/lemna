@@ -36,7 +36,6 @@ This will setup a project folder with:
 
 ## Deploying
 
-Be sure to create a Lambda function with the given name before deploying the first time.
 Create a `.env` file and place your AWS credentials in it.
 Then run:
 
