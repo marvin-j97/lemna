@@ -101,7 +101,7 @@ export default yargs
           const config = loadConfig(path);
           await deployProject(config);
           successCount++;
-        } catch (error) {
+        } catch (error: any) {
           logger.warn(`Error deploying ${path}: ${error.message}`);
         }
       }
