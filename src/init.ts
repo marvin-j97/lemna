@@ -23,7 +23,9 @@ function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string
       memorySize: 128,
       runtime: "nodejs14.x",
       env: undefined,
+      timeout: undefined,
     },
+    rollup: undefined,
   };
 }
 

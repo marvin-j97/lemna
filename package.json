@@ -1,6 +1,6 @@
 {
   "name": "lemna",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript",
   "main": "dist/bin.js",
   "bin": {

@@ -18,7 +18,7 @@ async function createFunctionWithZip(
   zipFile: string,
   arn: string,
 ): Promise<void> {
-  const { name, description, memorySize, handler, runtime, env } = functionSettings;
+  const { name, description, memorySize, handler, runtime, env, timeout } = functionSettings;
 
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Creating Lambda function (${name}) code using ${zipFile} and ARN ${arn}`);
@@ -35,6 +35,7 @@ async function createFunctionWithZip(
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
+      Timeout: timeout,
       Environment: {
         Variables: env,
       },
@@ -54,7 +55,7 @@ export async function updateFunctionCode(
     process.exit(1);
   }
 
-  const { name, description, memorySize, handler, runtime, env } = functionSettings;
+  const { name, description, memorySize, handler, runtime, env, timeout } = functionSettings;
 
   try {
     await lambda
@@ -62,7 +63,7 @@ export async function updateFunctionCode(
         FunctionName: name,
       })
       .promise();
-  } catch (error) {
+  } catch (error: any) {
     const arn = process.env.LEMNA_ARN;
 
     if (error.statusCode === 404 && arn) {
@@ -96,6 +97,7 @@ export async function updateFunctionCode(
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
+      Timeout: timeout,
       Environment: {
         Variables: env,
       },

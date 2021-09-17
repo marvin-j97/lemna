@@ -11,6 +11,7 @@ const functionSettingsSchema = yxc.object({
   handler: yxc.string().optional(),
   runtime: yxc.string().notEmpty(),
   env: yxc.record(yxc.string()).optional(),
+  timeout: yxc.number().optional(),
 });
 
 export type IFunctionSettings = Infer<typeof functionSettingsSchema>;
@@ -20,6 +21,15 @@ const configSchema = yxc.object({
   bundle: yxc.array(yxc.string().notEmpty()).optional(),
   buildSteps: yxc.array(yxc.string().notEmpty()).optional(),
   function: functionSettingsSchema,
+  rollup: yxc
+    .object({
+      jsonOptions: yxc.record(yxc.any()),
+      nodeResolveOptions: yxc.record(yxc.any()),
+      commonjsOptions: yxc.record(yxc.any()),
+      plugins: yxc.array(yxc.any()),
+    })
+    .partial()
+    .optional(),
 });
 
 export type IConfig = Infer<typeof configSchema>;

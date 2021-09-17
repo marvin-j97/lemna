@@ -13,7 +13,9 @@ const validConfig: IConfig = {
     description: undefined,
     memorySize: undefined,
     env: undefined,
+    timeout: undefined,
   },
+  rollup: undefined,
 };
 
 test("Is valid config", (t) => {

@@ -55,7 +55,12 @@ export async function build(config: IConfig): Promise<IBuildResult> {
   mkdirSync(outputFolder, { recursive: true });
 
   const output = resolve(outputFolder, "index.js");
-  await bundleCode(entryPoint, output);
+  await bundleCode(entryPoint, output, {
+    commonjs: config.rollup?.commonjsOptions,
+    json: config.rollup?.jsonOptions,
+    nodeResolve: config.rollup?.nodeResolveOptions,
+    plugins: config.rollup?.plugins,
+  });
 
   // Zip
   const zipFile = resolve(outputFolder, "bundle.zip");
