@@ -24,14 +24,14 @@ export async function bundleCode(
   logger.verbose(`Bundling ${input}`);
   const bundle = await rollup({
     input,
+    // aws-sdk is pre-installed on Lambda, so no need to bundle it
+    external: ["aws-sdk"],
     plugins: [
       json({ ...opts?.json }),
+      commonjs({ ...opts?.commonjs }),
       nodeResolve({
-        // aws-sdk is pre-installed on Lambda, so no need to bundle it
-        resolveOnly: [/^(?!(aws-sdk)$).+$/],
         ...opts?.nodeResolve,
       }),
-      commonjs({ ...opts?.commonjs }),
       uglify(),
       ...(opts?.plugins || []),
     ],
