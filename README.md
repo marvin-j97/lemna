@@ -10,7 +10,7 @@
 
 Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript.
 
-Lemna will transpile, bundle and upload your code, no more tedious code deploying to Lambda.
+Lemna will transpile, bundle and upload your code - no more tedious code deploying to Lambda.
 
 Dependencies will be bundled into your code using Rollup, so only required code is uploaded (dev dependencies will be ignored).
 
@@ -30,9 +30,9 @@ This will setup a project folder with:
 
 - package.json
 - Typescript (+ tsconfig)
-- Lambda typings
+- Lambda typings (@types/aws-lambda)
 - Basic Lambda handler (src/index.ts)
-- Lemna config
+- Lemna config (lemna.config.json)
 
 ## Deploying
 
@@ -84,4 +84,12 @@ lemna deploy firstconfig.json secondconfig.json [...]
     "runtime": "nodejs14.x"
   }
 }
+```
+
+## Debugging/Tracing
+
+Run with LEMNA_LOG_LEVEL=debug/silly/verbose
+
+```
+LEMNA_LOG_LEVEL=silly lemna deploy
 ```
