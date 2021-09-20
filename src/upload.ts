@@ -28,17 +28,13 @@ async function createFunctionWithZip(
     .createFunction({
       FunctionName: name,
       Role: arn,
-      Code: {
-        ZipFile: readFileSync(zipFile),
-      },
+      Code: { ZipFile: readFileSync(zipFile) },
       Description: description,
       MemorySize: memorySize,
       Handler: handler,
       Runtime: runtime,
       Timeout: timeout,
-      Environment: {
-        Variables: env,
-      },
+      Environment: { Variables: env },
     })
     .promise();
 }

@@ -7,7 +7,6 @@ import { initializeLemna } from "./init";
 import { logger } from "./logger";
 import { registerModules } from "./register";
 import { TemplateType } from "./templates/index";
-// import { updateFunctionCode } from "./upload";
 import version from "./version";
 
 /**
@@ -109,31 +108,5 @@ export default yargs
       logger.info(`Successfully deployed ${successCount}/${argv.paths.length} functions`);
     },
   )
-  // .command(
-  //   "upload <zip>",
-  //   "Updates lambda function code using zip file",
-  //   (yargs) => {
-  //     return yargs
-  //       .option({
-  //         config: {
-  //           alias: ["c", "p", "project"],
-  //           type: "string",
-  //           default: "lemna.config.json",
-  //           description: "Config path",
-  //         },
-  //       })
-  //       .positional("zip", {
-  //         description: "Zip file to upload",
-  //         type: "string",
-  //       });
-  //   },
-  //   async (argv) => {
-  //     const config = preload(argv.config, argv.register);
-
-  //     const { functionName } = config;
-  //     await updateFunctionCode(functionName, <string>argv.zip);
-  //     logger.info("Upload successful");
-  //   },
-  // )
   .strictCommands()
   .demandCommand(1).argv;

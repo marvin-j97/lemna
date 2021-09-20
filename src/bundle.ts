@@ -7,12 +7,14 @@ const { uglify } = require("rollup-plugin-uglify");
 import { logger } from "./logger";
 
 export interface ILemnaBundleOptions {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   overridePlugins?: any[];
 
   rollupOptions?: RollupOptions;
   json?: RollupJsonOptions;
   nodeResolve?: RollupNodeResolveOptions;
   commonjs?: RollupCommonJSOptions;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   additionalPlugins?: any[];
 }
 

@@ -54,8 +54,11 @@ lemna deploy my-app/lemna.config.json
 ```js
 // lemna.config.js
 module.exports = {
-  entryPoint: "path to file",
-  functionName: "lambda function name",
+  entryPoint: "path to .js file",
+  function: {
+    name: "lambda-function-name",
+    runtime: "nodejs14.x",
+  },
 };
 ```
 
@@ -71,11 +74,14 @@ lemna deploy firstconfig.json secondconfig.json [...]
 
 ## Use in existing project
 
-- Create a `lemna.config.json`, including:
+- Create a `lemna.config.json`, including at least:
 
 ```json
 {
-  "entryPoint": "path to file",
-  "functionName": "lambda function name"
+  "entryPoint": "path to .js file",
+  "function": {
+    "name": "lambda-function-name",
+    "runtime": "nodejs14.x"
+  }
 }
 ```
