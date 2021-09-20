@@ -34,12 +34,12 @@ const configSchema = yxc.object({
     .optional(),
 });
 
-export type IConfig = Infer<typeof configSchema>;
+export type ILemnaConfig = Infer<typeof configSchema>;
 
 /**
  * Returns if the given input is a valid Lemna config
  */
-export function isValidConfig(val: unknown): val is IConfig {
+export function isValidConfig(val: unknown): val is ILemnaConfig {
   const { ok, errors } = createExecutableSchema(configSchema)(val);
   if (errors.length) {
     logger.error(`${errors.length} validation errors: ${JSON.stringify(errors, null, 2)}`);
@@ -47,13 +47,13 @@ export function isValidConfig(val: unknown): val is IConfig {
   return ok;
 }
 
-let config: IConfig;
+let config: ILemnaConfig;
 let projectDir: string;
 
 /**
  * Returns the loaded config
  */
-export function getConfig(): IConfig {
+export function getConfig(): ILemnaConfig {
   return JSON.parse(JSON.stringify(config));
 }
 
@@ -75,7 +75,7 @@ export function getTempFolder(folder: string): string {
  * Loads a config from file (.json or .js)
  * Automatically creates temp folder next to the config
  */
-export function loadConfig(file: string): IConfig {
+export function loadConfig(file: string): ILemnaConfig {
   const path = resolve(file);
   logger.debug(`Loading config at ${path}`);
 
@@ -89,6 +89,10 @@ export function loadConfig(file: string): IConfig {
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   let content = require(path);
+
+  if (content.default) {
+    content = content.default;
+  }
 
   if (typeof content === "function") {
     logger.verbose(`Config is a function, executing`);

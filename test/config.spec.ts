@@ -1,8 +1,8 @@
 import test from "ava";
 import { resolve } from "path";
-import { getConfig, IConfig, isValidConfig, loadConfig } from "../src/config";
+import { getConfig, ILemnaConfig, isValidConfig, loadConfig } from "../src/config";
 
-const validConfig: IConfig = {
+const validConfig: ILemnaConfig = {
   entryPoint: "entrypoint",
   buildSteps: undefined,
   bundle: undefined,

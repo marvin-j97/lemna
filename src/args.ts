@@ -1,7 +1,7 @@
 import yargs from "yargs";
 
 import { build } from "./build";
-import { IConfig, loadConfig } from "./config";
+import { ILemnaConfig, loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
@@ -12,7 +12,7 @@ import version from "./version";
 /**
  * Loads config and modules before running a command
  */
-function preload(config: string, register: string[]): IConfig {
+function preload(config: string, register: string[]): ILemnaConfig {
   registerModules(register);
   return loadConfig(config);
 }

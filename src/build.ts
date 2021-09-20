@@ -7,7 +7,7 @@ import { resolve } from "path";
 import { promisify } from "util";
 
 import { bundleCode } from "./bundle";
-import { getProjectDirectory, getTempFolder, IConfig } from "./config";
+import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";
 import { logger } from "./logger";
 import { saveZip } from "./zip";
 
@@ -39,7 +39,7 @@ function runBuildSteps(steps: string[], cwd: string): void {
  * Builds a project according to the given config
  * Returns a build result
  */
-export async function build(config: IConfig): Promise<IBuildResult> {
+export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   const projectDir = getProjectDirectory();
   const entryPoint = resolve(projectDir, config.entryPoint);
   const hash = buildHash();

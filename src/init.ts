@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { existsSync, mkdirSync } from "fs";
 import { resolve } from "path";
 
-import { IConfig } from "./config";
+import { ILemnaConfig } from "./config";
 import { logger } from "./logger";
 import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
@@ -10,7 +10,11 @@ import { formatJson, loggedWriteFile } from "./util";
 /**
  * Creates a Lemna config file
  */
-function composeLemnaConfig(name: string, entryPoint: string, buildSteps: string[] = []): IConfig {
+function composeLemnaConfig(
+  name: string,
+  entryPoint: string,
+  buildSteps: string[] = [],
+): ILemnaConfig {
   logger.silly(`Composing lemna.config.json for ${name}`);
   return {
     entryPoint,
