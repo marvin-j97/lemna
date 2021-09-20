@@ -1,16 +1,19 @@
 import commonjs, { RollupCommonJSOptions } from "@rollup/plugin-commonjs";
 import json, { RollupJsonOptions } from "@rollup/plugin-json";
 import { nodeResolve, RollupNodeResolveOptions } from "@rollup/plugin-node-resolve";
-import { rollup } from "rollup";
+import { rollup, RollupOptions } from "rollup";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { uglify } = require("rollup-plugin-uglify");
 import { logger } from "./logger";
 
 export interface ILemnaBundleOptions {
+  overridePlugins?: any[];
+
+  rollupOptions?: RollupOptions;
   json?: RollupJsonOptions;
   nodeResolve?: RollupNodeResolveOptions;
   commonjs?: RollupCommonJSOptions;
-  plugins?: any[];
+  additionalPlugins?: any[];
 }
 
 /**
@@ -26,15 +29,20 @@ export async function bundleCode(
     input,
     // aws-sdk is pre-installed on Lambda, so no need to bundle it
     external: ["aws-sdk"],
-    plugins: [
-      json({ ...opts?.json }),
-      commonjs({ ...opts?.commonjs }),
+    plugins: opts?.overridePlugins || [
+      json({
+        ...opts?.json,
+      }),
+      commonjs({
+        ...opts?.commonjs,
+      }),
       nodeResolve({
         ...opts?.nodeResolve,
       }),
       uglify(),
-      ...(opts?.plugins || []),
+      ...(opts?.additionalPlugins || []),
     ],
+    ...opts?.rollupOptions,
   });
   logger.verbose(`Writing bundle to ${output}`);
   await bundle.write({

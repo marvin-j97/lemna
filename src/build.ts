@@ -59,7 +59,9 @@ export async function build(config: IConfig): Promise<IBuildResult> {
     commonjs: config.rollup?.commonjsOptions,
     json: config.rollup?.jsonOptions,
     nodeResolve: config.rollup?.nodeResolveOptions,
-    plugins: config.rollup?.plugins,
+    additionalPlugins: config.rollup?.additionalPlugins,
+    overridePlugins: config.rollup?.overridePlugins,
+    rollupOptions: config.rollup?.options,
   });
 
   // Zip

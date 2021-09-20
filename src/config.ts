@@ -23,10 +23,12 @@ const configSchema = yxc.object({
   function: functionSettingsSchema,
   rollup: yxc
     .object({
+      options: yxc.record(yxc.any()),
       jsonOptions: yxc.record(yxc.any()),
       nodeResolveOptions: yxc.record(yxc.any()),
       commonjsOptions: yxc.record(yxc.any()),
-      plugins: yxc.array(yxc.any()),
+      additionalPlugins: yxc.array(yxc.any()),
+      overridePlugins: yxc.array(yxc.any()),
     })
     .partial()
     .optional(),
