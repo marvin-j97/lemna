@@ -27,7 +27,7 @@ export async function bundleCode(
   opts?: ILemnaBundleOptions,
 ): Promise<void> {
   logger.verbose(`Bundling ${input}`);
-  const bundle = await rollup({
+  const options = {
     input,
     // aws-sdk is pre-installed on Lambda, so no need to bundle it
     external: ["aws-sdk"],
@@ -45,7 +45,10 @@ export async function bundleCode(
       ...(opts?.additionalPlugins || []),
     ],
     ...opts?.rollupOptions,
-  });
+  };
+  logger.silly(JSON.stringify(options, null, 2));
+  const bundle = await rollup(options);
+
   logger.verbose(`Writing bundle to ${output}`);
   await bundle.write({
     file: output,
