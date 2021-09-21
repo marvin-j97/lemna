@@ -23,14 +23,13 @@ const configSchema = yxc.object({
   function: functionSettingsSchema,
   rollup: yxc
     .object({
-      options: yxc.record(yxc.any()),
-      jsonOptions: yxc.record(yxc.any()),
-      nodeResolveOptions: yxc.record(yxc.any()),
-      commonjsOptions: yxc.record(yxc.any()),
-      additionalPlugins: yxc.array(yxc.any()),
-      overridePlugins: yxc.array(yxc.any()),
+      options: yxc.record(yxc.any()).optional(),
+      jsonOptions: yxc.record(yxc.any()).optional(),
+      nodeResolveOptions: yxc.record(yxc.any()).optional(),
+      commonjsOptions: yxc.record(yxc.any()).optional(),
+      additionalPlugins: yxc.array(yxc.any()).optional(),
+      overridePlugins: yxc.array(yxc.any()).optional(),
     })
-    .partial()
     .optional(),
 });
 
