@@ -2550,8 +2550,8 @@ rollup-plugin-uglify@^6.0.4:
     uglify-js "^3.4.9"
 
 rollup@^2.41.0:
-  version "2.56.3"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.56.3.tgz#b63edadd9851b0d618a6d0e6af8201955a77aeff"
+  version "2.58.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.58.0.tgz#a643983365e7bf7f5b7c62a8331b983b7c4c67fb"
   optionalDependencies:
     fsevents "~2.3.2"
 
