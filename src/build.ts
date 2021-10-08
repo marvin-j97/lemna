@@ -1,17 +1,14 @@
 import { execSync } from "child_process";
 import crypto from "crypto";
 import { createReadStream, mkdirSync } from "fs";
-import glob from "glob";
 import jszip from "jszip";
 import { resolve } from "path";
-import { promisify } from "util";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";
 import { logger } from "./logger";
+import { globFiles } from "./util";
 import { saveZip } from "./zip";
-
-const globPromise = promisify(glob);
 
 /**
  * Generates a random hash for build artifacts
@@ -73,15 +70,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   zip.file("index.js", createReadStream(output));
 
   if (config.bundle && config.bundle.length) {
-    const files = [
-      ...new Set(
-        (
-          await Promise.all(
-            config.bundle.map((item) => globPromise(item, { cwd: projectDir, nodir: true })),
-          )
-        ).flat(),
-      ),
-    ];
+    const files = await globFiles(config.bundle, projectDir);
     for (const file of files) {
       const path = resolve(projectDir, file);
       logger.silly(`Adding ${path} to zip at ${file}`);

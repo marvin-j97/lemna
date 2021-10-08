@@ -1,4 +1,6 @@
 import { writeFileSync } from "fs";
+import glob from "glob";
+import { promisify } from "util";
 
 import { logger } from "./logger";
 
@@ -15,4 +17,18 @@ export function formatJson<T>(json: T): string {
 export function loggedWriteFile(path: string, content: string): void {
   logger.silly(`Writing to file ${path} with ${content.length} characters`);
   writeFileSync(path, content);
+}
+
+const globPromise = promisify(glob);
+
+/**
+ * Finds all files described by multiple glob patterns
+ */
+export async function globFiles(input: string[], cwd: string): Promise<string[]> {
+  const files = [
+    ...new Set(
+      (await Promise.all(input.map((item) => globPromise(item, { cwd, nodir: true })))).flat(),
+    ),
+  ];
+  return files;
 }

@@ -1,5 +1,6 @@
 import test from "ava";
 import { resolve } from "path";
+
 import { getConfig, ILemnaConfig, isValidConfig, loadConfig } from "../src/config";
 
 const validConfigs: ILemnaConfig[] = [

@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
-    "@types/glob": "^7.1.3",
+    "@types/glob": "^7.1.4",
     "@types/node": "^16.3.2",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
