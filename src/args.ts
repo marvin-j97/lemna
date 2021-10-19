@@ -67,17 +67,36 @@ export default yargs
     "build <dir>",
     "Bundles project into .zip file",
     (yargs) => {
-      return yargs.positional("dir", {
-        description: "Config path of project to build",
-        type: "string",
-      });
+      return yargs
+        .positional("dir", {
+          description: "Config path of project to build",
+          type: "string",
+        })
+        .option({
+          format: {
+            alias: ["output-format"],
+            description: "Output format",
+            type: "string",
+            default: "raw",
+            choices: ["raw", "json"],
+          },
+          output: {
+            description: "Output path of zip",
+            type: "string",
+          },
+        });
     },
     async (argv) => {
       const config = preload(<string>argv.dir, argv.register);
 
-      const { zipFile } = await build(config);
+      const { zipFile, buildHash } = await build(config, argv.output);
       logger.info(`Built zip file: ${zipFile}`);
-      console.log({ zipFile });
+
+      if (argv.format === "raw") {
+        console.log(zipFile);
+      } else {
+        console.log(JSON.stringify({ buildHash, zipFile }));
+      }
     },
   )
   .command(

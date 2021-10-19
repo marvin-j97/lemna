@@ -36,7 +36,7 @@ function runBuildSteps(steps: string[], cwd: string): void {
  * Builds a project according to the given config
  * Returns a build result
  */
-export async function build(config: ILemnaConfig): Promise<IBuildResult> {
+export async function build(config: ILemnaConfig, output?: string | null): Promise<IBuildResult> {
   const projectDir = getProjectDirectory();
   const entryPoint = resolve(projectDir, config.entryPoint);
   const hash = buildHash();
@@ -47,12 +47,11 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   runBuildSteps(config.buildSteps || [], projectDir);
 
   // Bundle
+  const bundleOutputFolder = resolve(getTempFolder(projectDir), hash);
+  mkdirSync(bundleOutputFolder, { recursive: true });
 
-  const outputFolder = resolve(getTempFolder(projectDir), hash);
-  mkdirSync(outputFolder, { recursive: true });
-
-  const output = resolve(outputFolder, "index.js");
-  await bundleCode(entryPoint, output, {
+  const bundleOutput = resolve(bundleOutputFolder, "index.js");
+  await bundleCode(entryPoint, bundleOutput, {
     commonjs: config.rollup?.commonjsOptions,
     json: config.rollup?.jsonOptions,
     nodeResolve: config.rollup?.nodeResolveOptions,
@@ -62,12 +61,12 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   });
 
   // Zip
-  const zipFile = resolve(outputFolder, "bundle.zip");
+  const zipFile = resolve(bundleOutputFolder, "bundle.zip");
   logger.debug(`Composing zip file`);
   const zip = new jszip();
 
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
-  zip.file("index.js", createReadStream(output));
+  zip.file("index.js", createReadStream(bundleOutput));
 
   if (config.bundle && config.bundle.length) {
     const files = await globFiles(config.bundle, projectDir);
@@ -78,10 +77,11 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
     }
   }
 
-  await saveZip(zip, zipFile);
+  const zipPath = output || zipFile;
+  await saveZip(zip, zipPath);
 
   return {
     buildHash: hash,
-    zipFile,
+    zipFile: zipPath,
   };
 }

@@ -8,5 +8,9 @@ const formatter = printf(({ level, message, timestamp }) => {
 export const logger = winston.createLogger({
   level: process.env.LEMNA_LOG_LEVEL || "info",
   format: combine(timestamp(), colorize(), formatter),
-  transports: [new winston.transports.Console()],
+  transports: [
+    new winston.transports.Console({
+      stderrLevels: ["silly", "debug", "verbose", "info", "warn", "error"],
+    }),
+  ],
 });
