@@ -123,7 +123,8 @@ export default yargs
           logger.warn(`Error deploying ${path}: ${error.message}`);
         }
       }
-
+      
+      // TODO: if successCount === 0, process.exit(0); else:
       logger.info(`Successfully deployed ${successCount}/${argv.paths.length} functions`);
     },
   )
