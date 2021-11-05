@@ -640,8 +640,8 @@ ava@^3.15.0:
     yargs "^16.2.0"
 
 aws-sdk@^2.860.0:
-  version "2.991.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.991.0.tgz#ba858c65cb71e1eeea39523463cf5ef258a73e8f"
+  version "2.1022.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1022.0.tgz#b8c83e7bae0cbf5d937316aaf10719d1db72546b"
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
