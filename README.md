@@ -49,6 +49,12 @@ lemna deploy
 lemna deploy my-app/lemna.config.json
 ```
 
+### Use glob patterns
+
+```
+lemna deploy lambdas/**/lemna.config.json
+```
+
 ### Use CommonJS module as config
 
 ```js

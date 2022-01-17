@@ -6,7 +6,6 @@ import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
 import { registerModules } from "./register";
-import { TemplateType } from "./templates/index";
 import { globPromise } from "./util";
 import version from "./version";
 
@@ -25,34 +24,15 @@ export default yargs
     "init <dir>",
     "Initialize new project",
     (yargs) => {
-      return yargs
-        .positional("dir", {
-          description: "Directory in which to initialize the project",
-          type: "string",
-        })
-        .option({
-          template: {
-            description: "Template to use",
-            choices: Object.values(TemplateType),
-            default: TemplateType.Typescript,
-          },
-          "function-name": {
-            alias: ["function"],
-            description: "Lambda function name",
-            type: "string",
-          },
-        });
+      return yargs.positional("dir", {
+        description: "Directory in which to initialize the project",
+        type: "string",
+      });
     },
     async (argv) => {
       registerModules(argv.register);
 
-      const functionName = argv["function-name"];
-      if (!functionName) {
-        logger.error("--function-name required");
-        process.exit(1);
-      }
-
-      await initializeLemna(<string>argv.dir, functionName, argv.template);
+      await initializeLemna(<string>argv.dir);
       logger.info("Setup successful");
     },
   )
