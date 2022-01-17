@@ -54,12 +54,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
 
   const bundleOutput = resolve(bundleOutputFolder, "index.js");
   await bundleCode(entryPoint, bundleOutput, {
-    commonjs: config.rollup?.commonjsOptions,
-    json: config.rollup?.jsonOptions,
-    nodeResolve: config.rollup?.nodeResolveOptions,
-    additionalPlugins: config.rollup?.additionalPlugins,
-    overridePlugins: config.rollup?.overridePlugins,
-    rollupOptions: config.rollup?.options,
+    minify: config.buildOptions?.minify || false,
   });
 
   // Zip
@@ -70,7 +65,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
   zip.file("index.js", createReadStream(bundleOutput));
 
-  for (const [base, patterns] of Object.entries(config.bundle)) {
+  for (const [base, patterns] of Object.entries(config.bundle || {})) {
     const files = await globFiles(patterns, projectDir);
     const folder = resolve(globParent(files[0]));
 

@@ -19,17 +19,12 @@ export type IFunctionSettings = Infer<typeof functionSettingsSchema>;
 const configSchema = yxc.object({
   entryPoint: yxc.string().notEmpty(),
   output: yxc.string().notEmpty().optional(),
-  bundle: yxc.record(yxc.array(yxc.string())),
+  bundle: yxc.record(yxc.array(yxc.string())).optional(),
   buildSteps: yxc.array(yxc.string().notEmpty()).optional(),
   function: functionSettingsSchema,
-  rollup: yxc
+  buildOptions: yxc
     .object({
-      options: yxc.record(yxc.any()).optional(),
-      jsonOptions: yxc.record(yxc.any()).optional(),
-      nodeResolveOptions: yxc.record(yxc.any()).optional(),
-      commonjsOptions: yxc.record(yxc.any()).optional(),
-      additionalPlugins: yxc.array(yxc.any()).optional(),
-      overridePlugins: yxc.array(yxc.any()).optional(),
+      minify: yxc.boolean().optional(),
     })
     .optional(),
 });

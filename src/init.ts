@@ -30,7 +30,9 @@ function composeLemnaConfig(
       env: undefined,
       timeout: undefined,
     },
-    rollup: undefined,
+    buildOptions: {
+      minify: false,
+    },
   };
 }
 
