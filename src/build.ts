@@ -2,7 +2,8 @@ import { execSync } from "child_process";
 import crypto from "crypto";
 import { createReadStream, mkdirSync } from "fs";
 import jszip from "jszip";
-import { resolve } from "path";
+import { relative, resolve, join } from "path";
+import globParent from "glob-parent";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";
@@ -36,12 +37,13 @@ function runBuildSteps(steps: string[], cwd: string): void {
  * Builds a project according to the given config
  * Returns a build result
  */
-export async function build(config: ILemnaConfig, output?: string | null): Promise<IBuildResult> {
+export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   const projectDir = getProjectDirectory();
   const entryPoint = resolve(projectDir, config.entryPoint);
   const hash = buildHash();
 
   logger.info(`Building project with entrypoint ${entryPoint}`);
+  logger.silly(JSON.stringify(config, null, 2));
 
   // Build steps
   runBuildSteps(config.buildSteps || [], projectDir);
@@ -68,16 +70,20 @@ export async function build(config: ILemnaConfig, output?: string | null): Promi
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
   zip.file("index.js", createReadStream(bundleOutput));
 
-  if (config.bundle && config.bundle.length) {
-    const files = await globFiles(config.bundle, projectDir);
+  for (const [base, patterns] of Object.entries(config.bundle)) {
+    const files = await globFiles(patterns, projectDir);
+    const folder = resolve(globParent(files[0]));
+
     for (const file of files) {
-      const path = resolve(projectDir, file);
-      logger.silly(`Adding ${path} to zip at ${file}`);
-      zip.file(file, createReadStream(path));
+      const relativePath = relative(folder, file);
+      console.log(relativePath);
+      const redirectedPath = join(base, relativePath);
+      logger.silly(`Adding ${file} to zip at ${redirectedPath}`);
+      zip.file(redirectedPath, createReadStream(file));
     }
   }
 
-  const zipPath = output || zipFile;
+  const zipPath = resolve(projectDir, config.output || zipFile);
   await saveZip(zip, zipPath);
 
   return {

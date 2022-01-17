@@ -18,7 +18,8 @@ export type IFunctionSettings = Infer<typeof functionSettingsSchema>;
 
 const configSchema = yxc.object({
   entryPoint: yxc.string().notEmpty(),
-  bundle: yxc.array(yxc.string().notEmpty()).optional(),
+  output: yxc.string().notEmpty().optional(),
+  bundle: yxc.record(yxc.array(yxc.string())),
   buildSteps: yxc.array(yxc.string().notEmpty()).optional(),
   function: functionSettingsSchema,
   rollup: yxc

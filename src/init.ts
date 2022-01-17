@@ -18,8 +18,9 @@ function composeLemnaConfig(
   logger.silly(`Composing lemna.config.json for ${name}`);
   return {
     entryPoint,
+    output: undefined,
     buildSteps,
-    bundle: [],
+    bundle: {},
     function: {
       name,
       description: "Created by Lemna",

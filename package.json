@@ -6,6 +6,9 @@
   "bin": {
     "lemna": "cli.js"
   },
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "eslint src --ext .ts",
@@ -31,6 +34,7 @@
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
     "@types/glob": "^7.1.4",
+    "@types/glob-parent": "^5.1.1",
     "@types/node": "^16.3.2",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
@@ -69,6 +73,7 @@
     "aws-sdk": "^2.860.0",
     "dotenv": "^10.0.0",
     "glob": "^7.1.6",
+    "glob-parent": "^6.0.2",
     "jszip": "^3.6.0",
     "rollup": "^2.41.0",
     "rollup-plugin-uglify": "^6.0.4",
