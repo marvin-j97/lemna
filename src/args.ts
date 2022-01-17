@@ -1,21 +1,13 @@
 import yargs from "yargs";
 
 import { build } from "./build";
-import { ILemnaConfig, loadConfig } from "./config";
+import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
 import { registerModules } from "./register";
-import { TemplateType } from "./templates/index";
+import { globPromise } from "./util";
 import version from "./version";
-
-/**
- * Loads config and modules before running a command
- */
-function preload(config: string, register: string[]): ILemnaConfig {
-  registerModules(register);
-  return loadConfig(config);
-}
 
 export default yargs
   .scriptName("lemna")
@@ -32,71 +24,71 @@ export default yargs
     "init <dir>",
     "Initialize new project",
     (yargs) => {
-      return yargs
-        .positional("dir", {
-          description: "Directory in which to initialize the project",
-          type: "string",
-        })
-        .option({
-          template: {
-            description: "Template to use",
-            choices: Object.values(TemplateType),
-            default: TemplateType.Typescript,
-          },
-          "function-name": {
-            alias: ["function"],
-            description: "Lambda function name",
-            type: "string",
-          },
-        });
+      return yargs.positional("dir", {
+        description: "Directory in which to initialize the project",
+        type: "string",
+      });
     },
     async (argv) => {
       registerModules(argv.register);
 
-      const functionName = argv["function-name"];
-      if (!functionName) {
-        logger.error("--function-name required");
-        process.exit(1);
-      }
-
-      await initializeLemna(<string>argv.dir, functionName, argv.template);
-      logger.info("Setup successful");
+      await initializeLemna(<string>argv.dir);
+      logger.info("Setup successful, run:");
+      logger.info(`cd ${argv.dir}`);
+      logger.info("yarn lemna deploy");
     },
   )
   .command(
-    "build <dir>",
-    "Bundles project into .zip file",
+    "build [paths..]",
+    "Builds one or multiple projects",
     (yargs) => {
-      return yargs
-        .positional("dir", {
-          description: "Config path of project to build",
-          type: "string",
-        })
-        .option({
-          format: {
-            alias: ["output-format"],
-            description: "Output format",
-            type: "string",
-            default: "raw",
-            choices: ["raw", "json"],
-          },
-          output: {
-            description: "Output path of zip",
-            type: "string",
-          },
-        });
+      return yargs.positional("paths", {
+        description: "Paths of Lemna configs to deploy",
+        default: ["lemna.config.json"],
+      });
     },
     async (argv) => {
-      const config = preload(<string>argv.dir, argv.register);
+      registerModules(argv.register);
 
-      const { zipFile, buildHash } = await build(config, argv.output);
-      logger.info(`Built zip file: ${zipFile}`);
+      logger.silly(`Build paths:`);
+      logger.silly(JSON.stringify(argv.paths));
 
-      if (argv.format === "raw") {
-        console.log(zipFile);
-      } else {
-        console.log(JSON.stringify({ buildHash, zipFile }));
+      let successCount = 0;
+      let errorCount = 0;
+      const results: { built: { zipFile: string; buildHash: string }[] } = {
+        built: [],
+      };
+
+      for (const globExp of argv.paths) {
+        const files = await globPromise(globExp, { cwd: process.cwd() });
+
+        for (const path of files) {
+          try {
+            const config = loadConfig(path);
+            const { zipFile, buildHash } = await build(config);
+            logger.verbose(`Built zip file: ${zipFile}`);
+            results.built.push({ zipFile, buildHash });
+            successCount++;
+          } catch (error: any) {
+            logger.warn(`Error building ${path}: ${error.message}`);
+            errorCount++;
+          }
+        }
       }
+
+      const matchedCount = successCount + errorCount;
+      if (!matchedCount) {
+        logger.error("No files matched the inputs");
+        process.exit(1);
+      }
+
+      console.log(JSON.stringify(results, null, 2));
+      logger.info(
+        `Successfully built ${successCount}/${matchedCount} (${(
+          (successCount / matchedCount) *
+          100
+        ).toFixed(0)}%) functions`,
+      );
     },
   )
   .command(
@@ -109,23 +101,44 @@ export default yargs
       });
     },
     async (argv) => {
+      registerModules(argv.register);
+
       logger.silly(`Deploy paths:`);
       logger.silly(JSON.stringify(argv.paths));
 
       let successCount = 0;
+      let errorCount = 0;
 
-      for (const path of argv.paths) {
-        try {
-          const config = loadConfig(path);
-          await deployProject(config);
-          successCount++;
-        } catch (error: any) {
-          logger.warn(`Error deploying ${path}: ${error.message}`);
+      for (const globExp of argv.paths) {
+        const files = await globPromise(globExp, { cwd: process.cwd() });
+
+        logger.silly("Glob result");
+        logger.silly(JSON.stringify(files));
+
+        for (const path of files) {
+          try {
+            const config = loadConfig(path);
+            await deployProject(config);
+            successCount++;
+          } catch (error: any) {
+            logger.warn(`Error deploying ${path}: ${error.message}`);
+            errorCount++;
+          }
         }
       }
 
-      // TODO: if successCount === 0, process.exit(0); else:
-      logger.info(`Successfully deployed ${successCount}/${argv.paths.length} functions`);
+      const matchedCount = successCount + errorCount;
+      if (!matchedCount) {
+        logger.error("No files matched the inputs");
+        process.exit(1);
+      }
+
+      logger.info(
+        `Successfully deployed ${successCount}/${matchedCount} (${(
+          (successCount / matchedCount) *
+          100
+        ).toFixed(0)}%) functions`,
+      );
     },
   )
   .strictCommands()

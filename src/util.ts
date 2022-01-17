@@ -19,7 +19,7 @@ export function loggedWriteFile(path: string, content: string): void {
   writeFileSync(path, content);
 }
 
-const globPromise = promisify(glob);
+export const globPromise = promisify(glob);
 
 /**
  * Finds all files described by multiple glob patterns
@@ -27,7 +27,11 @@ const globPromise = promisify(glob);
 export async function globFiles(input: string[], cwd: string): Promise<string[]> {
   const files = [
     ...new Set(
-      (await Promise.all(input.map((item) => globPromise(item, { cwd, nodir: true })))).flat(),
+      (
+        await Promise.all(
+          input.map((item) => globPromise(item, { cwd, nodir: true, absolute: true })),
+        )
+      ).flat(),
     ),
   ];
   return files;

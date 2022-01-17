@@ -6,6 +6,7 @@ import { getConfig, ILemnaConfig, isValidConfig, loadConfig } from "../src/confi
 const validConfigs: ILemnaConfig[] = [
   {
     entryPoint: "entrypoint",
+    output: undefined,
     buildSteps: undefined,
     bundle: undefined,
     function: {
@@ -17,10 +18,11 @@ const validConfigs: ILemnaConfig[] = [
       env: undefined,
       timeout: undefined,
     },
-    rollup: undefined,
+    buildOptions: { minify: false },
   },
   {
     entryPoint: "entrypoint",
+    output: undefined,
     buildSteps: undefined,
     bundle: undefined,
     function: {
@@ -32,16 +34,7 @@ const validConfigs: ILemnaConfig[] = [
       env: undefined,
       timeout: undefined,
     },
-    rollup: {
-      options: {
-        external: ["aws-sdk", "test"],
-      },
-      additionalPlugins: undefined,
-      commonjsOptions: undefined,
-      jsonOptions: undefined,
-      nodeResolveOptions: undefined,
-      overridePlugins: undefined,
-    },
+    buildOptions: undefined,
   },
 ];
 
