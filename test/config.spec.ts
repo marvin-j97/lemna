@@ -18,7 +18,7 @@ const validConfigs: ILemnaConfig[] = [
       env: undefined,
       timeout: undefined,
     },
-    rollup: undefined,
+    buildOptions: { minify: false },
   },
   {
     entryPoint: "entrypoint",
@@ -34,16 +34,7 @@ const validConfigs: ILemnaConfig[] = [
       env: undefined,
       timeout: undefined,
     },
-    rollup: {
-      options: {
-        external: ["aws-sdk", "test"],
-      },
-      additionalPlugins: undefined,
-      commonjsOptions: undefined,
-      jsonOptions: undefined,
-      nodeResolveOptions: undefined,
-      overridePlugins: undefined,
-    },
+    buildOptions: undefined,
   },
 ];
 

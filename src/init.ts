@@ -12,7 +12,7 @@ import { formatJson, loggedWriteFile } from "./util";
  * Creates a Lemna config file
  */
 function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaConfig {
-  logger.silly(`Composing lemna.config.json for ${name}`);
+  logger.silly(`Composing lemna.config.json for ${functionName}`);
   return {
     entryPoint,
     output: undefined,
@@ -27,7 +27,9 @@ function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaCon
       env: undefined,
       timeout: undefined,
     },
-    rollup: undefined,
+    buildOptions: {
+      minify: false,
+    },
   };
 }
 

@@ -33,7 +33,9 @@ export default yargs
       registerModules(argv.register);
 
       await initializeLemna(<string>argv.dir);
-      logger.info("Setup successful");
+      logger.info("Setup successful, run:");
+      logger.info(`cd ${argv.dir}`);
+      logger.info("yarn lemna deploy");
     },
   )
   .command(
