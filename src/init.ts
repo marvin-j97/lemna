@@ -1,5 +1,6 @@
 import { execSync } from "child_process";
 import { existsSync, mkdirSync } from "fs";
+import inquirer from "inquirer";
 import { resolve } from "path";
 
 import { ILemnaConfig } from "./config";
@@ -10,19 +11,15 @@ import { formatJson, loggedWriteFile } from "./util";
 /**
  * Creates a Lemna config file
  */
-function composeLemnaConfig(
-  name: string,
-  entryPoint: string,
-  buildSteps: string[] = [],
-): ILemnaConfig {
+function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaConfig {
   logger.silly(`Composing lemna.config.json for ${name}`);
   return {
     entryPoint,
     output: undefined,
-    buildSteps,
+    buildSteps: [],
     bundle: {},
     function: {
-      name,
+      name: functionName,
       description: "Created by Lemna",
       handler: "index.handler",
       memorySize: 128,
@@ -57,12 +54,35 @@ function composePackageJson(name: string): unknown {
 /**
  * Initializes a project
  */
-export async function initializeLemna(
-  path: string,
-  functionName: string,
-  template: TemplateType,
-): Promise<void> {
+export async function initializeLemna(path: string): Promise<void> {
   const projectDir = resolve(path);
+
+  const { functionName, template, memorySize } = await inquirer.prompt([
+    {
+      name: "functionName",
+      type: "input",
+      message: "Enter function name",
+    },
+    {
+      name: "memorySize",
+      type: "number",
+      message: "Enter function memory size (in MB)",
+      default: 128,
+    },
+    {
+      name: "timeout",
+      type: "number",
+      message: "Enter function timeout seconds",
+      default: 15,
+    },
+    {
+      name: "template",
+      choices: Object.values(TemplateType),
+      type: "list",
+      message: "Select template",
+      default: TemplateType.Typescript,
+    },
+  ]);
 
   logger.info(`Initializing Lemna project at ${projectDir}`);
   logger.verbose(`Using template "${template}"`);
@@ -89,8 +109,8 @@ export async function initializeLemna(
   const { entryPoint, buildSteps } = await runTemplate(template, projectDir);
 
   const lemnaConfigPath = resolve(projectDir, "lemna.config.json");
-  loggedWriteFile(
-    lemnaConfigPath,
-    formatJson(composeLemnaConfig(functionName, entryPoint, buildSteps)),
-  );
+  const config = composeLemnaConfig(functionName, entryPoint);
+  config.buildSteps = buildSteps;
+  config.function.memorySize = memorySize;
+  loggedWriteFile(lemnaConfigPath, formatJson(config));
 }
