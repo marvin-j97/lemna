@@ -6,6 +6,7 @@ import { getConfig, ILemnaConfig, isValidConfig, loadConfig } from "../src/confi
 const validConfigs: ILemnaConfig[] = [
   {
     entryPoint: "entrypoint",
+    output: undefined,
     buildSteps: undefined,
     bundle: undefined,
     function: {
@@ -21,6 +22,7 @@ const validConfigs: ILemnaConfig[] = [
   },
   {
     entryPoint: "entrypoint",
+    output: undefined,
     buildSteps: undefined,
     bundle: undefined,
     function: {
