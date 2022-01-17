@@ -1,9 +1,9 @@
 import { execSync } from "child_process";
 import crypto from "crypto";
 import { createReadStream, mkdirSync } from "fs";
-import jszip from "jszip";
-import { relative, resolve, join } from "path";
 import globParent from "glob-parent";
+import jszip from "jszip";
+import { join, relative, resolve } from "path";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";

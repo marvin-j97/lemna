@@ -1,6 +1,5 @@
 import yargs from "yargs";
 
-import { globPromise } from "./util";
 import { build } from "./build";
 import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
@@ -8,6 +7,7 @@ import { initializeLemna } from "./init";
 import { logger } from "./logger";
 import { registerModules } from "./register";
 import { TemplateType } from "./templates/index";
+import { globPromise } from "./util";
 import version from "./version";
 
 export default yargs
@@ -73,7 +73,7 @@ export default yargs
 
       let successCount = 0;
       let errorCount = 0;
-      let results: { built: { zipFile: string; buildHash: string }[] } = {
+      const results: { built: { zipFile: string; buildHash: string }[] } = {
         built: [],
       };
 
