@@ -70,7 +70,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
   zip.file("index.js", createReadStream(bundleOutput));
 
-  for (const [base, patterns] of Object.entries(config.bundle)) {
+  for (const [base, patterns] of Object.entries(config.bundle || {})) {
     const files = await globFiles(patterns, projectDir);
     const folder = resolve(globParent(files[0]));
 
