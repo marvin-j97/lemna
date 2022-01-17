@@ -106,3 +106,7 @@ dist
 # TernJS port file
 .tern-port
 lambda.zip
+
+lambda_builds
+unzip
+init_lambda

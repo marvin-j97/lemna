@@ -12,7 +12,7 @@ Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescr
 
 Lemna will transpile, bundle and upload your code - no more tedious code deploying to Lambda.
 
-Dependencies will be bundled into your code using Rollup, so only required code is uploaded (dev dependencies will be ignored).
+Dependencies will be bundled into your code using esbuild (https://esbuild.github.io/), so only required code is uploaded (dev dependencies will be ignored).
 
 ## Installation
 
@@ -23,7 +23,7 @@ npm i lemna -g
 ## Scaffold new project
 
 ```
-lemna init <directory> --function-name my-lambda
+lemna init <directory>
 ```
 
 This will setup a project folder with:
@@ -47,6 +47,12 @@ lemna deploy
 
 ```
 lemna deploy my-app/lemna.config.json
+```
+
+### Use glob patterns
+
+```
+lemna deploy lambdas/**/lemna.config.json
 ```
 
 ### Use CommonJS module as config
