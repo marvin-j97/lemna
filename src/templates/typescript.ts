@@ -2,8 +2,8 @@ import { execSync } from "child_process";
 import { mkdirSync } from "fs";
 import { relative, resolve } from "path";
 
-import { execCommand, installCommand, NPMClient } from "../npm_client";
 import { logger } from "../logger";
+import { execCommand, installCommand, NPMClient } from "../npm_client";
 import { formatJson, loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
 

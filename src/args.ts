@@ -1,11 +1,11 @@
 import yargs from "yargs";
 
-import { execCommand } from "./npm_client";
 import { build } from "./build";
 import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { logger } from "./logger";
+import { execCommand } from "./npm_client";
 import { registerModules } from "./register";
 import { globPromise } from "./util";
 import version from "./version";

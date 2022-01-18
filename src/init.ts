@@ -3,9 +3,9 @@ import { existsSync, mkdirSync } from "fs";
 import inquirer from "inquirer";
 import { resolve } from "path";
 
-import { installCommand, NPMClient } from "./npm_client";
 import { ILemnaConfig } from "./config";
 import { logger } from "./logger";
+import { installCommand, NPMClient } from "./npm_client";
 import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
 

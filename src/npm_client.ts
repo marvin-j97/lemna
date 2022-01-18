@@ -4,6 +4,9 @@ export enum NPMClient {
   Pnpm = "pnpm",
 }
 
+/**
+ * Gets the install command of the chosen NPM client
+ */
 export function installCommand(client: NPMClient): string {
   if (client === NPMClient.Npm) {
     return `${client} i`;
@@ -11,6 +14,9 @@ export function installCommand(client: NPMClient): string {
   return `${client} add`;
 }
 
+/**
+ * Gets the exec command of the chosen NPM client
+ */
 export function execCommand(client: NPMClient, cmd: string): string {
   if (client === NPMClient.Pnpm) {
     return `pnpm exec ${cmd}`;
