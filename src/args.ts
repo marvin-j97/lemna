@@ -1,5 +1,6 @@
 import yargs from "yargs";
 
+import { execCommand } from "./npm_client";
 import { build } from "./build";
 import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
@@ -32,10 +33,10 @@ export default yargs
     async (argv) => {
       registerModules(argv.register);
 
-      await initializeLemna(<string>argv.dir);
+      const { npmClient } = await initializeLemna(<string>argv.dir);
       logger.info("Setup successful, run:");
       logger.info(`cd ${argv.dir}`);
-      logger.info("yarn lemna deploy");
+      logger.info(execCommand(npmClient, "lemna deploy"));
     },
   )
   .command(

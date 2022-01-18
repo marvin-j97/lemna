@@ -28,7 +28,7 @@ interface IBuildResult {
  */
 function runBuildSteps(steps: string[], cwd: string): void {
   for (const step of steps) {
-    logger.debug(`Build step, EXEC: ${step} @ ${cwd}`);
+    logger.debug(`Build step, EXEC: ${cwd}:${step}`);
     execSync(step, { cwd, stdio: "inherit" });
   }
 }

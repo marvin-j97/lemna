@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { mkdirSync } from "fs";
 import { relative, resolve } from "path";
 
+import { execCommand, installCommand, NPMClient } from "../npm_client";
 import { logger } from "../logger";
 import { formatJson, loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
@@ -62,6 +63,7 @@ exports.handler = handler;
  */
 export const runTypescriptTemplate: TemplateFunction = async (
   projectDir: string,
+  npmClient: NPMClient,
 ): Promise<ITemplateResult> => {
   const srcFolder = resolve(projectDir, "src");
   logger.debug(`Creating src folder at ${projectDir}`);
@@ -76,14 +78,14 @@ export const runTypescriptTemplate: TemplateFunction = async (
   loggedWriteFile(indexFile, composeIndexFile());
 
   logger.verbose("Installing Typescript dependencies");
-  const cmd = "npm i @types/aws-lambda typescript -D";
-  logger.debug(`EXEC ${cmd} @ ${projectDir}`);
-  execSync(cmd, { cwd: projectDir });
+  const cmd = `${installCommand(npmClient)} -D @types/aws-lambda typescript`;
+  logger.debug(`EXEC ${projectDir}:${cmd}`);
+  execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 
   const buildIndex = resolve(projectDir, "./build/index.js");
 
   return {
     entryPoint: relative(projectDir, buildIndex),
-    buildSteps: ["npx tsc"],
+    buildSteps: [execCommand(npmClient, "tsc")],
   };
 };

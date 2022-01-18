@@ -3,6 +3,7 @@ import { existsSync, mkdirSync } from "fs";
 import inquirer from "inquirer";
 import { resolve } from "path";
 
+import { installCommand, NPMClient } from "./npm_client";
 import { ILemnaConfig } from "./config";
 import { logger } from "./logger";
 import { runTemplate, TemplateType } from "./templates/index";
@@ -56,10 +57,17 @@ function composePackageJson(name: string): unknown {
 /**
  * Initializes a project
  */
-export async function initializeLemna(path: string): Promise<void> {
+export async function initializeLemna(path: string): Promise<{ npmClient: NPMClient }> {
   const projectDir = resolve(path);
 
-  const { functionName, template, memorySize } = await inquirer.prompt([
+  const { functionName, template, memorySize, npmClient } = await inquirer.prompt([
+    {
+      name: "npmClient",
+      type: "list",
+      message: "Select NPM client",
+      choices: Object.values(NPMClient),
+      default: NPMClient.Npm,
+    },
     {
       name: "functionName",
       type: "input",
@@ -104,15 +112,17 @@ export async function initializeLemna(path: string): Promise<void> {
   loggedWriteFile(packageJsonPath, formatJson(composePackageJson(functionName)));
 
   logger.verbose("Installing dependencies");
-  const cmd = "npm i lemna -D";
-  logger.debug(`EXEC ${cmd} @ ${projectDir}`);
-  execSync(cmd, { cwd: projectDir });
+  const cmd = `${installCommand(npmClient)} -D lemna`;
+  logger.debug(`EXEC ${projectDir}:${cmd}`);
+  execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 
-  const { entryPoint, buildSteps } = await runTemplate(template, projectDir);
+  const { entryPoint, buildSteps } = await runTemplate(template, projectDir, npmClient);
 
   const lemnaConfigPath = resolve(projectDir, "lemna.config.json");
   const config = composeLemnaConfig(functionName, entryPoint);
   config.buildSteps = buildSteps;
   config.function.memorySize = memorySize;
   loggedWriteFile(lemnaConfigPath, formatJson(config));
+
+  return { npmClient };
 }
