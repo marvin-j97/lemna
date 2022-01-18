@@ -59,6 +59,7 @@ export async function updateFunctionCode(
         FunctionName: name,
       })
       .promise();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     const arn = process.env.LEMNA_ARN;
 

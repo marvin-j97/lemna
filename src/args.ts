@@ -69,6 +69,7 @@ export default yargs
             logger.verbose(`Built zip file: ${zipFile}`);
             results.built.push({ zipFile, buildHash });
             successCount++;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             logger.warn(`Error building ${path}: ${error.message}`);
             errorCount++;
@@ -120,6 +121,7 @@ export default yargs
             const config = loadConfig(path);
             await deployProject(config);
             successCount++;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             logger.warn(`Error deploying ${path}: ${error.message}`);
             errorCount++;
