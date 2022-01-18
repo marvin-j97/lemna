@@ -186,9 +186,9 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@dotvirus/yxc@2.0.2":
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/@dotvirus/yxc/-/yxc-2.0.2.tgz#3dcf0faa3e4d387e8100d58f480f6c65f90e960e"
+"@dotvirus/yxc@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@dotvirus/yxc/-/yxc-2.0.3.tgz#4dd7603077f2e25eece36f4c0a1a1ba9e416ccff"
 
 "@es-joy/jsdoccomment@0.10.8":
   version "0.10.8"
