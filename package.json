@@ -67,7 +67,7 @@
     ]
   },
   "dependencies": {
-    "@dotvirus/yxc": "2.0.2",
+    "@dotvirus/yxc": "2.0.3",
     "aws-sdk": "2.1058.0",
     "dotenv": "10.0.0",
     "esbuild": "0.14.11",
