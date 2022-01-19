@@ -7,7 +7,7 @@ import { initializeLemna } from "./init";
 import { logger } from "./logger";
 import { execCommand } from "./npm_client";
 import { registerModules } from "./register";
-import { globPromise } from "./util";
+import { fileVisitor, formatJson } from "./util";
 import version from "./version";
 
 export default yargs
@@ -52,7 +52,7 @@ export default yargs
       registerModules(argv.register);
 
       logger.silly(`Build paths:`);
-      logger.silly(JSON.stringify(argv.paths));
+      logger.silly(formatJson(argv.paths));
 
       let successCount = 0;
       let errorCount = 0;
@@ -60,21 +60,17 @@ export default yargs
         built: [],
       };
 
-      for (const globExp of argv.paths) {
-        const files = await globPromise(globExp, { cwd: process.cwd() });
-
-        for (const path of files) {
-          try {
-            const config = loadConfig(path);
-            const { zipFile, buildHash } = await build(config);
-            logger.verbose(`Built zip file: ${zipFile}`);
-            results.built.push({ zipFile, buildHash });
-            successCount++;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            logger.warn(`Error building ${path}: ${error.message}`);
-            errorCount++;
-          }
+      for await (const path of fileVisitor(argv.paths)) {
+        try {
+          const config = loadConfig(path);
+          const { zipFile, buildHash } = await build(config);
+          logger.verbose(`Built zip file: ${zipFile}`);
+          results.built.push({ zipFile, buildHash });
+          successCount++;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          logger.warn(`Error building ${path}: ${error.message}`);
+          errorCount++;
         }
       }
 
@@ -84,7 +80,7 @@ export default yargs
         process.exit(1);
       }
 
-      console.log(JSON.stringify(results, null, 2));
+      console.log(formatJson(results));
       logger.info(
         `Successfully built ${successCount}/${matchedCount} (${(
           (successCount / matchedCount) *
@@ -106,27 +102,20 @@ export default yargs
       registerModules(argv.register);
 
       logger.silly(`Deploy paths:`);
-      logger.silly(JSON.stringify(argv.paths));
+      logger.silly(formatJson(argv.paths));
 
       let successCount = 0;
       let errorCount = 0;
 
-      for (const globExp of argv.paths) {
-        const files = await globPromise(globExp, { cwd: process.cwd() });
-
-        logger.silly("Glob result");
-        logger.silly(JSON.stringify(files));
-
-        for (const path of files) {
-          try {
-            const config = loadConfig(path);
-            await deployProject(config);
-            successCount++;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            logger.warn(`Error deploying ${path}: ${error.message}`);
-            errorCount++;
-          }
+      for await (const path of fileVisitor(argv.paths)) {
+        try {
+          const config = loadConfig(path);
+          await deployProject(config);
+          successCount++;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          logger.warn(`Error deploying ${path}: ${error.message}`);
+          errorCount++;
         }
       }
 

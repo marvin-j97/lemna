@@ -36,3 +36,19 @@ export async function globFiles(input: string[], cwd: string): Promise<string[]>
   ];
   return files;
 }
+
+/**
+ * Visit files described by multiple glob expressions
+ */
+export async function* fileVisitor(globs: string[], cwd = process.cwd()): AsyncGenerator<string> {
+  for (const globExp of globs) {
+    const files = await globPromise(globExp, { cwd });
+
+    logger.silly("Glob result:");
+    logger.silly(files);
+
+    for (const file of files) {
+      yield file;
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { existsSync, readFileSync, statSync } from "fs";
 
 import { IFunctionSettings } from "./config";
 import { logger } from "./logger";
+import { formatJson } from "./util";
 
 const lambda = new aws.Lambda({
   logger: {
@@ -22,7 +23,7 @@ async function createFunctionWithZip(
 
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Creating Lambda function (${name}) code using ${zipFile} and ARN ${arn}`);
-  logger.debug(JSON.stringify(functionSettings, null, 2));
+  logger.debug(formatJson(functionSettings));
 
   await lambda
     .createFunction({
@@ -86,7 +87,7 @@ export async function updateFunctionCode(
     .promise();
 
   logger.verbose(`Updating Lambda function (${name}) configuration`);
-  logger.debug(JSON.stringify(functionSettings, null, 2));
+  logger.debug(formatJson(functionSettings));
   await lambda
     .updateFunctionConfiguration({
       FunctionName: name,

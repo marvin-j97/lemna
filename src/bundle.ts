@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 
 import { logger } from "./logger";
+import { formatJson } from "./util";
 
 interface IBundleOptions {
   minify: boolean;
@@ -27,10 +28,19 @@ export async function bundleCode(
     minify: opts.minify || false,
   };
 
-  logger.silly(JSON.stringify(options, null, 2));
+  logger.silly(formatJson(options));
   logger.verbose(`Writing bundle to ${output}`);
 
   const bundle = await esbuild.build(options);
 
-  logger.silly(JSON.stringify(bundle, null, 2));
+  logger.silly(formatJson(bundle));
+
+  if (bundle.warnings.length) {
+    logger.warn(formatJson(bundle.warnings));
+  }
+
+  const errorCount = bundle.errors.length;
+  if (errorCount) {
+    throw new Error(`Had ${errorCount} bundle errors`);
+  }
 }

@@ -1,15 +1,13 @@
 import { execSync } from "child_process";
 import crypto from "crypto";
-import { createReadStream, mkdirSync } from "fs";
-import globParent from "glob-parent";
-import jszip from "jszip";
-import { join, relative, resolve } from "path";
+import { mkdirSync } from "fs";
+import { resolve } from "path";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";
 import { logger } from "./logger";
-import { globFiles } from "./util";
-import { saveZip } from "./zip";
+import { formatJson } from "./util";
+import { composeZip, saveZip } from "./zip";
 
 /**
  * Generates a random hash for build artifacts
@@ -43,7 +41,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   const hash = buildHash();
 
   logger.info(`Building project with entrypoint ${entryPoint}`);
-  logger.silly(JSON.stringify(config, null, 2));
+  logger.silly(formatJson(config));
 
   // Build steps
   runBuildSteps(config.buildSteps || [], projectDir);
@@ -60,23 +58,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   // Zip
   const zipFile = resolve(bundleOutputFolder, "bundle.zip");
   logger.debug(`Composing zip file`);
-  const zip = new jszip();
-
-  zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
-  zip.file("index.js", createReadStream(bundleOutput));
-
-  for (const [base, patterns] of Object.entries(config.bundle || {})) {
-    const files = await globFiles(patterns, projectDir);
-    const folder = resolve(globParent(files[0]));
-
-    for (const file of files) {
-      const relativePath = relative(folder, file);
-      console.log(relativePath);
-      const redirectedPath = join(base, relativePath);
-      logger.silly(`Adding ${file} to zip at ${redirectedPath}`);
-      zip.file(redirectedPath, createReadStream(file));
-    }
-  }
+  const zip = await composeZip(projectDir, bundleOutput, config.bundle);
 
   const zipPath = resolve(projectDir, config.output || zipFile);
   await saveZip(zip, zipPath);

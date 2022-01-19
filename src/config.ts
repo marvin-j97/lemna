@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, statSync } from "fs";
 import { parse, resolve } from "path";
 
 import { logger } from "./logger";
+import { formatJson } from "./util";
 
 const functionSettingsSchema = yxc.object({
   name: yxc.string().notEmpty(),
@@ -37,7 +38,7 @@ export type ILemnaConfig = Infer<typeof configSchema>;
 export function isValidConfig(val: unknown): val is ILemnaConfig {
   const { ok, errors } = createExecutableSchema(configSchema)(val);
   if (errors.length) {
-    logger.error(`${errors.length} validation errors: ${JSON.stringify(errors, null, 2)}`);
+    logger.error(`${errors.length} validation errors: ${formatJson(errors)}`);
   }
   return ok;
 }
@@ -49,7 +50,7 @@ let projectDir: string;
  * Returns the loaded config
  */
 export function getConfig(): ILemnaConfig {
-  return JSON.parse(JSON.stringify(config));
+  return JSON.parse(formatJson(config));
 }
 
 /**
@@ -95,7 +96,7 @@ export function loadConfig(file: string): ILemnaConfig {
   }
 
   logger.silly("Loaded config:");
-  logger.silly(JSON.stringify(content, null, 2));
+  logger.silly(formatJson(content));
 
   if (!isValidConfig(content)) {
     console.error(`Invalid config at ${path}`);

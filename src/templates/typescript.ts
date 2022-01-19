@@ -46,7 +46,7 @@ function composeTsConfig(): unknown {
  */
 function composeIndexFile(): string {
   logger.silly(`Composing index.handler`);
-  return `import { Handler } from "aws-lambda";
+  return `import type { Handler } from "aws-lambda";
 
 const handler: Handler = async function (event, context) {
   console.log("Hello from Lemna");
