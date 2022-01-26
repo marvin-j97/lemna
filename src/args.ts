@@ -4,7 +4,7 @@ import { build } from "./build";
 import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
-import { logger } from "./logger";
+import logger from "./logger";
 import { execCommand } from "./npm_client";
 import { registerModules } from "./register";
 import { fileVisitor, formatJson } from "./util";
@@ -22,7 +22,7 @@ export default yargs
     },
   })
   .command(
-    "init <dir>",
+    ["init <dir>", "setup <dir>"],
     "Initialize new project",
     (yargs) => {
       return yargs.positional("dir", {
@@ -33,10 +33,17 @@ export default yargs
     async (argv) => {
       registerModules(argv.register);
 
-      const { npmClient } = await initializeLemna(<string>argv.dir);
-      logger.info("Setup successful, run:");
-      logger.info(`cd ${argv.dir}`);
-      logger.info(execCommand(npmClient, "lemna deploy"));
+      const path = <string>argv.dir;
+
+      try {
+        const { npmClient } = await initializeLemna(path);
+        logger.info("Setup successful, run:");
+        logger.info(`cd ${argv.dir}`);
+        logger.info(execCommand(npmClient, "lemna deploy"));
+      } catch (error: any) {
+        logger.error(`Error setting up ${path}: ${error.message}`);
+        logger.silly(error.stack);
+      }
     },
   )
   .command(
@@ -70,6 +77,7 @@ export default yargs
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           logger.warn(`Error building ${path}: ${error.message}`);
+          logger.silly(error.stack);
           errorCount++;
         }
       }
@@ -115,6 +123,7 @@ export default yargs
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
           logger.warn(`Error deploying ${path}: ${error.message}`);
+          logger.silly(error.stack);
           errorCount++;
         }
       }

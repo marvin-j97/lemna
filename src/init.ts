@@ -4,7 +4,7 @@ import inquirer from "inquirer";
 import { resolve } from "path";
 
 import { ILemnaConfig } from "./config";
-import { logger } from "./logger";
+import logger from "./logger";
 import { installCommand, NPMClient } from "./npm_client";
 import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
@@ -29,7 +29,7 @@ function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaCon
       timeout: undefined,
     },
     buildOptions: {
-      minify: false,
+      minify: true,
     },
   };
 }

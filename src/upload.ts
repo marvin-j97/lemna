@@ -2,13 +2,14 @@ import aws from "aws-sdk";
 import { existsSync, readFileSync, statSync } from "fs";
 
 import { IFunctionSettings } from "./config";
-import { logger } from "./logger";
+import logger from "./logger";
 import { formatJson } from "./util";
 
 const lambda = new aws.Lambda({
   logger: {
     log: (data) => logger.silly(data),
   },
+  maxRetries: 5,
 });
 
 /**

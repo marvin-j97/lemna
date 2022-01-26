@@ -2,7 +2,7 @@ import { writeFileSync } from "fs";
 import glob from "glob";
 import { promisify } from "util";
 
-import { logger } from "./logger";
+import logger from "./logger";
 
 /**
  * Stringifies JSON into readable format

@@ -1,46 +1,49 @@
-import yxc, { createExecutableSchema, Infer } from "@dotvirus/yxc";
+import * as z from "zod";
 import { existsSync, mkdirSync, statSync } from "fs";
 import { parse, resolve } from "path";
 
-import { logger } from "./logger";
+import logger from "./logger";
 import { formatJson } from "./util";
 
-const functionSettingsSchema = yxc.object({
-  name: yxc.string().notEmpty(),
-  description: yxc.string().optional(),
-  memorySize: yxc.number().integer().min(1).optional(),
-  handler: yxc.string().optional(),
-  runtime: yxc.string().notEmpty(),
-  env: yxc.record(yxc.string()).optional(),
-  timeout: yxc.number().optional(),
+const functionSettingsSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  memorySize: z.number().int().min(1).optional(),
+  handler: z.string().optional(),
+  runtime: z.string().min(1),
+  env: z.record(z.string()).optional(),
+  timeout: z.number().optional(),
 });
 
-export type IFunctionSettings = Infer<typeof functionSettingsSchema>;
+export type IFunctionSettings = z.TypeOf<typeof functionSettingsSchema>;
 
-const configSchema = yxc.object({
-  entryPoint: yxc.string().notEmpty(),
-  output: yxc.string().notEmpty().optional(),
-  bundle: yxc.record(yxc.array(yxc.string())).optional(),
-  buildSteps: yxc.array(yxc.string().notEmpty()).optional(),
+const configSchema = z.object({
+  entryPoint: z.string().min(1),
+  output: z.string().min(1).optional(),
+  bundle: z.record(z.array(z.string().min(1))).optional(),
+  buildSteps: z.array(z.string().min(1)).optional(),
   function: functionSettingsSchema,
-  buildOptions: yxc
+  buildOptions: z
     .object({
-      minify: yxc.boolean().optional(),
+      minify: z.boolean().optional(),
     })
     .optional(),
 });
 
-export type ILemnaConfig = Infer<typeof configSchema>;
+export type ILemnaConfig = z.TypeOf<typeof configSchema>;
 
 /**
  * Returns if the given input is a valid Lemna config
  */
 export function isValidConfig(val: unknown): val is ILemnaConfig {
-  const { ok, errors } = createExecutableSchema(configSchema)(val);
-  if (errors.length) {
-    logger.error(`${errors.length} validation errors: ${formatJson(errors)}`);
+  const result = configSchema.safeParse(val);
+  if (result.success) {
+    return true;
   }
-  return ok;
+  logger.error(
+    `${result.error.issues.length} validation errors: ${formatJson(result.error.issues)}`,
+  );
+  return false;
 }
 
 let config: ILemnaConfig;

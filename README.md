@@ -94,7 +94,7 @@ lemna deploy firstconfig.json secondconfig.json [...]
 
 ## Debugging/Tracing
 
-Run with LEMNA_LOG_LEVEL=debug/silly/verbose
+Run with LEMNA_LOG_LEVEL=error/warn/info/verbose/debug/silly
 
 ```
 LEMNA_LOG_LEVEL=silly lemna deploy

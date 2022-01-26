@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { existsSync } from "fs";
 
-import { logger } from "./logger";
+import logger from "./logger";
 
 /**
  * Loads an environment variable file if it exists

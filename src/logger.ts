@@ -1,16 +1,44 @@
-import winston from "winston";
-const { printf, combine, colorize, timestamp } = winston.format;
+import { createLogger } from "skriva";
+import { createConsoleTransport } from "skriva-transport-console";
+import chalk, { Chalk } from "chalk";
+import { formatJson } from "./util";
 
-const formatter = printf(({ level, message, timestamp }) => {
-  return `${timestamp} [lemna] ${level}: ${message}`;
-});
+const logLevels = {
+  error: 0,
+  warn: 10,
+  info: 20,
+  verbose: 30,
+  debug: 40,
+  silly: 50,
+};
 
-export const logger = winston.createLogger({
-  level: process.env.LEMNA_LOG_LEVEL || "info",
-  format: combine(timestamp(), colorize(), formatter),
+const colorize: Record<keyof typeof logLevels, Chalk> = {
+  error: chalk.red,
+  warn: chalk.yellow,
+  info: chalk.green,
+  verbose: chalk.hex("#6969b3"),
+  debug: chalk.magentaBright,
+  silly: chalk.blueBright,
+};
+
+const logger = createLogger<unknown, typeof logLevels, { timestamp: Date }>({
+  context: () => ({ timestamp: new Date() }),
+  logLevels,
+  level: "debug",
   transports: [
-    new winston.transports.Console({
-      stderrLevels: ["silly", "debug", "verbose", "info", "warn", "error"],
-    }),
+    {
+      handler: createConsoleTransport({
+        format: ({ timestamp, level, message }) => {
+          if (typeof message === "string") {
+            return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${message}`;
+          }
+          return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${formatJson(
+            message,
+          )}`;
+        },
+      }),
+    },
   ],
 });
+
+export default logger;

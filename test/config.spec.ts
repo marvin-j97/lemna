@@ -6,35 +6,18 @@ import { getConfig, ILemnaConfig, isValidConfig, loadConfig } from "../src/confi
 const validConfigs: ILemnaConfig[] = [
   {
     entryPoint: "entrypoint",
-    output: undefined,
-    buildSteps: undefined,
-    bundle: undefined,
     function: {
       name: "function name",
       runtime: "nodejs14.x",
-      handler: undefined,
-      description: undefined,
-      memorySize: undefined,
-      env: undefined,
-      timeout: undefined,
     },
     buildOptions: { minify: false },
   },
   {
     entryPoint: "entrypoint",
-    output: undefined,
-    buildSteps: undefined,
-    bundle: undefined,
     function: {
       name: "function name",
       runtime: "nodejs14.x",
-      handler: undefined,
-      description: undefined,
-      memorySize: undefined,
-      env: undefined,
-      timeout: undefined,
     },
-    buildOptions: undefined,
   },
 ];
 

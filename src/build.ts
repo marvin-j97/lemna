@@ -5,7 +5,7 @@ import { resolve } from "path";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";
-import { logger } from "./logger";
+import logger from "./logger";
 import { formatJson } from "./util";
 import { composeZip, saveZip } from "./zip";
 
@@ -57,7 +57,6 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
 
   // Zip
   const zipFile = resolve(bundleOutputFolder, "bundle.zip");
-  logger.debug(`Composing zip file`);
   const zip = await composeZip(projectDir, bundleOutput, config.bundle);
 
   const zipPath = resolve(projectDir, config.output || zipFile);

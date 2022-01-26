@@ -1,7 +1,7 @@
 import { mkdirSync } from "fs";
 import { relative, resolve } from "path";
 
-import { logger } from "../logger";
+import logger from "../logger";
 import { loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
 

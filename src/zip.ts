@@ -3,7 +3,7 @@ import globParent from "glob-parent";
 import JSZip from "jszip";
 import { dirname, join, relative, resolve } from "path";
 
-import { logger } from "./logger";
+import logger from "./logger";
 import { globFiles } from "./util";
 
 /**
@@ -37,14 +37,19 @@ export async function composeZip(
 
   for (const [base, patterns] of Object.entries(extraFiles || {})) {
     const files = await globFiles(patterns, projectDir);
-    const folder = resolve(globParent(files[0]));
 
-    for (const file of files) {
-      const relativePath = relative(folder, file);
-      console.log(relativePath);
-      const redirectedPath = join(base, relativePath);
-      logger.silly(`Adding ${file} to zip at ${redirectedPath}`);
-      zip.file(redirectedPath, createReadStream(file));
+    if (!files.length) {
+      logger.warn(`No files found for "${base}" (glob patterns: ${JSON.stringify(patterns)}`);
+    } else {
+      const folder = resolve(globParent(files[0]));
+
+      for (const file of files) {
+        const relativePath = relative(folder, file);
+        console.log(relativePath);
+        const redirectedPath = join(base, relativePath);
+        logger.silly(`Adding ${file} to zip at ${redirectedPath}`);
+        zip.file(redirectedPath, createReadStream(file));
+      }
     }
   }
 

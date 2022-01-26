@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 
-import { logger } from "./logger";
+import logger from "./logger";
 import { formatJson } from "./util";
 
 interface IBundleOptions {
