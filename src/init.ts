@@ -60,7 +60,7 @@ function composePackageJson(name: string): unknown {
 export async function initializeLemna(path: string): Promise<{ npmClient: NPMClient }> {
   const projectDir = resolve(path);
 
-  const { functionName, template, memorySize, npmClient } = await inquirer.prompt([
+  const { functionName, template, memorySize, timeout, npmClient } = await inquirer.prompt([
     {
       name: "npmClient",
       type: "list",
@@ -122,6 +122,7 @@ export async function initializeLemna(path: string): Promise<{ npmClient: NPMCli
   const config = composeLemnaConfig(functionName, entryPoint);
   config.buildSteps = buildSteps;
   config.function.memorySize = memorySize;
+  config.function.timeout = timeout;
   loggedWriteFile(lemnaConfigPath, formatJson(config));
 
   return { npmClient };
