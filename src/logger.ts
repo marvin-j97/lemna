@@ -1,6 +1,7 @@
+import chalk, { Chalk } from "chalk";
 import { createLogger } from "skriva";
 import { createConsoleTransport } from "skriva-transport-console";
-import chalk, { Chalk } from "chalk";
+
 import { formatJson } from "./util";
 
 const logLevels = {

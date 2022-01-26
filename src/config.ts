@@ -1,6 +1,6 @@
-import * as z from "zod";
 import { existsSync, mkdirSync, statSync } from "fs";
 import { parse, resolve } from "path";
+import * as z from "zod";
 
 import logger from "./logger";
 import { formatJson } from "./util";
