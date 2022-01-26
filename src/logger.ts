@@ -13,6 +13,12 @@ const logLevels = {
   silly: 50,
 };
 
+const logLevel = process.env.LEMNA_LOG_LEVEL;
+if (logLevel && !(logLevel in logLevels)) {
+  console.error(`Invalid log level: ${logLevel}`);
+  process.exit(1);
+}
+
 const colorize: Record<keyof typeof logLevels, Chalk> = {
   error: chalk.red,
   warn: chalk.yellow,
@@ -25,7 +31,7 @@ const colorize: Record<keyof typeof logLevels, Chalk> = {
 const logger = createLogger<unknown, typeof logLevels, { timestamp: Date }>({
   context: () => ({ timestamp: new Date() }),
   logLevels,
-  level: "debug",
+  level: <keyof typeof logLevels>logLevel || "info",
   transports: [
     {
       handler: createConsoleTransport({
