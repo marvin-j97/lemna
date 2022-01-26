@@ -67,15 +67,17 @@
     ]
   },
   "dependencies": {
-    "@dotvirus/yxc": "2.0.3",
     "aws-sdk": "2.1061.0",
+    "chalk": "5",
     "dotenv": "10.0.0",
     "esbuild": "0.14.13",
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
     "inquirer": "8.2.0",
     "jszip": "3.6.0",
-    "winston": "3.3.3",
-    "yargs": "17.0.1"
+    "skriva": "^0.0.1-alpha.1",
+    "skriva-transport-console": "^0.0.1-alpha.1",
+    "yargs": "17.0.1",
+    "zod": "^3.11.6"
   }
 }
