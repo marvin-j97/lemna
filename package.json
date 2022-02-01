@@ -69,7 +69,7 @@
   "dependencies": {
     "aws-sdk": "2.1066.0",
     "chalk": "4",
-    "dotenv": "14.3.2",
+    "dotenv": "15.0.0",
     "esbuild": "0.14.16",
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
