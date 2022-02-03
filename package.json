@@ -70,7 +70,7 @@
     "aws-sdk": "2.1066.0",
     "chalk": "4",
     "dotenv": "14.3.2",
-    "esbuild": "0.14.17",
+    "esbuild": "0.14.18",
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
     "inquirer": "7",
