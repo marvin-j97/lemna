@@ -20,13 +20,13 @@ Dependencies will be bundled into your code using esbuild (https://esbuild.githu
 npm i lemna -g
 ```
 
-## Scaffold new project
+## Scaffold new Lambda function
 
 ```
 lemna init <directory>
 ```
 
-This will setup a project folder with:
+This will setup a function folder with:
 
 - package.json
 - Typescript (+ tsconfig)
