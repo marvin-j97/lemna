@@ -3119,5 +3119,5 @@ yn@3.1.1:
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
 
 zod@^3.11.6:
-  version "3.11.6"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.11.6.tgz#e43a5e0c213ae2e02aefe7cb2b1a6fa3d7f1f483"
+  version "3.14.2"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.14.2.tgz#0b4ed79085c471adce0e7f2c0a4fbb5ddc516ba2"
