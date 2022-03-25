@@ -23,11 +23,7 @@ const configSchema = z.object({
   bundle: z.record(z.array(z.string().min(1))).optional(),
   buildSteps: z.array(z.string().min(1)).optional(),
   function: functionSettingsSchema,
-  buildOptions: z
-    .object({
-      minify: z.boolean().optional(),
-    })
-    .optional(),
+  buildOptions: z.object({}).optional(),
 });
 
 export type ILemnaConfig = z.TypeOf<typeof configSchema>;

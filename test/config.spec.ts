@@ -19,6 +19,14 @@ const validConfigs: ILemnaConfig[] = [
       runtime: "nodejs14.x",
     },
   },
+  {
+    entryPoint: "entrypoint",
+    function: {
+      name: "function name",
+      runtime: "nodejs14.x",
+    },
+    buildOptions: {},
+  },
 ];
 
 let i = 0;

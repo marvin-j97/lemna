@@ -51,9 +51,7 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   mkdirSync(bundleOutputFolder, { recursive: true });
 
   const bundleOutput = resolve(bundleOutputFolder, "index.js");
-  await bundleCode(entryPoint, bundleOutput, {
-    minify: config.buildOptions?.minify || false,
-  });
+  await bundleCode(entryPoint, bundleOutput, config.buildOptions || {});
 
   // Zip
   const zipFile = resolve(bundleOutputFolder, "bundle.zip");
