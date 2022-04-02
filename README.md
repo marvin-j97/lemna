@@ -99,3 +99,18 @@ Run with LEMNA_LOG_LEVEL=error/warn/info/verbose/debug/silly
 ```
 LEMNA_LOG_LEVEL=silly lemna deploy
 ```
+
+## Required AWS policies
+
+#### Required:
+
+- iam:PassRole
+- lambda:CreateFunction
+- lambda:UpdateFunctionCode
+- lambda:UpdateFunctionConfiguration
+
+#### Optional:
+
+- lambda:GetFunction (for `cat` command)
+- lambda:ListFunctions (for `ls` command)
+- lambda:DeleteFunction (for `rm` command)

@@ -49,18 +49,20 @@ function composePackageJson(name: string): unknown {
       test: 'echo "Error: no test specified" && exit 1',
     },
     keywords: ["lambda", "lemna"],
-    author: "",
-    license: "ISC",
   };
 }
 
 /**
  * Initializes a project
  */
-export async function initializeLemna(path: string): Promise<{ npmClient: NPMClient }> {
-  const projectDir = resolve(path);
-
-  const { functionName, template, memorySize, timeout, npmClient } = await inquirer.prompt([
+export async function initializeLemna(): Promise<{ projectDir: string; npmClient: NPMClient }> {
+  const { dir, functionName, template, memorySize, timeout, npmClient } = await inquirer.prompt([
+    {
+      name: "dir",
+      type: "input",
+      default: "my-function",
+      message: "Enter project folder name",
+    },
     {
       name: "npmClient",
       type: "list",
@@ -94,6 +96,8 @@ export async function initializeLemna(path: string): Promise<{ npmClient: NPMCli
     },
   ]);
 
+  const projectDir = resolve(dir);
+
   logger.info(`Initializing Lemna project at ${projectDir}`);
   logger.verbose(`Using template "${template}"`);
 
@@ -125,5 +129,5 @@ export async function initializeLemna(path: string): Promise<{ npmClient: NPMCli
   config.function.timeout = timeout;
   loggedWriteFile(lemnaConfigPath, formatJson(config));
 
-  return { npmClient };
+  return { projectDir, npmClient };
 }

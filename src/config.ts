@@ -12,6 +12,7 @@ const functionSettingsSchema = z.object({
   handler: z.string().optional(),
   runtime: z.string().min(1),
   env: z.record(z.string()).optional(),
+  tags: z.record(z.string()).optional(),
   timeout: z.number().optional(),
 });
 

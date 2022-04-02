@@ -1,3 +1,5 @@
+import { lambdaClient } from "./lambda_client";
+import { relative } from "path";
 import yargs from "yargs";
 
 import { build } from "./build";
@@ -9,6 +11,21 @@ import { execCommand } from "./npm_client";
 import { registerModules } from "./register";
 import { fileVisitor, formatJson } from "./util";
 import version from "./version";
+
+function checkAWSKeys(): void {
+  if (!process.env.AWS_ACCESS_KEY_ID) {
+    logger.error(`Missing AWS_ACCESS_KEY_ID environment variable`);
+    process.exit(1);
+  }
+  if (!process.env.AWS_SECRET_ACCESS_KEY) {
+    logger.error(`Missing AWS_SECRET_ACCESS_KEY environment variable`);
+    process.exit(1);
+  }
+  if (!process.env.AWS_REGION) {
+    logger.error(`Missing AWS_REGION environment variable`);
+    process.exit(1);
+  }
+}
 
 export default yargs
   .scriptName("lemna")
@@ -22,26 +39,96 @@ export default yargs
     },
   })
   .command(
-    ["init <dir>", "setup <dir>"],
-    "Initialize new project",
-    (yargs) => {
-      return yargs.positional("dir", {
-        description: "Directory in which to initialize the project",
+    "rm <name>",
+    "Deletes a Lambda function",
+    (yargs) =>
+      yargs.positional("name", {
         type: "string",
-      });
-    },
+        description: "Name of function to delete",
+        demandOption: true,
+      }),
     async (argv) => {
+      checkAWSKeys();
       registerModules(argv.register);
 
-      const path = <string>argv.dir;
+      try {
+        await lambdaClient
+          .deleteFunction({
+            FunctionName: argv.name,
+          })
+          .promise();
+        logger.info(`Deleted function: ${argv.name}`);
+      } catch (error: any) {
+        logger.error(`Error deleting function: ${error.message}`);
+        logger.silly(error.stack);
+      }
+    },
+  )
+  .command(
+    "ls",
+    "Lists functions in account",
+    (yargs) =>
+      yargs.option({
+        page: {
+          description: "Page to display (zero-indexed)",
+          default: 0,
+          type: "number",
+        },
+        take: {
+          description: "Page size",
+          default: 50,
+          type: "number",
+        },
+      }),
+    async (argv) => {
+      checkAWSKeys();
+      registerModules(argv.register);
 
       try {
-        const { npmClient } = await initializeLemna(path);
-        logger.info("Setup successful, run:");
-        logger.info(`cd ${argv.dir}`);
-        logger.info(execCommand(npmClient, "lemna deploy"));
+        let marker: string | undefined;
+        let page = 0;
+
+        for (;;) {
+          const listResult = await lambdaClient
+            .listFunctions({
+              MaxItems: Math.floor(argv.take),
+              Marker: marker,
+            })
+            .promise();
+
+          if (page === Math.floor(argv.page)) {
+            console.log(listResult.Functions);
+            process.exit(0);
+          }
+          page++;
+          marker = listResult.NextMarker;
+
+          if (!listResult.NextMarker) {
+            console.log([]);
+            process.exit(0);
+          }
+        }
       } catch (error: any) {
-        logger.error(`Error setting up ${path}: ${error.message}`);
+        logger.error(`Error listing functions: ${error.message}`);
+        logger.silly(error.stack);
+      }
+    },
+  )
+  .command(
+    ["init", "setup"],
+    "Initialize new project",
+    (yargs) => yargs,
+    async (argv) => {
+      checkAWSKeys();
+      registerModules(argv.register);
+
+      try {
+        const { projectDir, npmClient } = await initializeLemna();
+        logger.info("Setup successful, run:");
+        logger.info(`cd ${relative(process.cwd(), projectDir)}`);
+        logger.info(execCommand(npmClient, `lemna deploy`));
+      } catch (error: any) {
+        logger.error(`Error setting up: ${error.message}`);
         logger.silly(error.stack);
       }
     },
@@ -107,6 +194,7 @@ export default yargs
       });
     },
     async (argv) => {
+      checkAWSKeys();
       registerModules(argv.register);
 
       logger.silly(`Deploy paths:`);

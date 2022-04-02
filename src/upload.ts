@@ -1,16 +1,9 @@
-import aws from "aws-sdk";
 import { existsSync, readFileSync, statSync } from "fs";
+import { lambdaClient } from "./lambda_client";
 
 import { IFunctionSettings } from "./config";
 import logger from "./logger";
 import { formatJson } from "./util";
-
-const lambda = new aws.Lambda({
-  logger: {
-    log: (data) => logger.silly(data),
-  },
-  maxRetries: 5,
-});
 
 /**
  * Creates a new Lambda function using a zip file
@@ -20,13 +13,13 @@ async function createFunctionWithZip(
   zipFile: string,
   arn: string,
 ): Promise<void> {
-  const { name, description, memorySize, handler, runtime, env, timeout } = functionSettings;
+  const { name, description, memorySize, handler, runtime, env, timeout, tags } = functionSettings;
 
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Creating Lambda function (${name}) code using ${zipFile} and ARN ${arn}`);
   logger.debug(formatJson(functionSettings));
 
-  await lambda
+  await lambdaClient
     .createFunction({
       FunctionName: name,
       Role: arn,
@@ -37,6 +30,7 @@ async function createFunctionWithZip(
       Runtime: runtime,
       Timeout: timeout,
       Environment: { Variables: env },
+      Tags: tags,
     })
     .promise();
 }
@@ -56,7 +50,7 @@ export async function updateFunctionCode(
   const { name, description, memorySize, handler, runtime, env, timeout } = functionSettings;
 
   try {
-    await lambda
+    await lambdaClient
       .getFunction({
         FunctionName: name,
       })
@@ -71,7 +65,7 @@ export async function updateFunctionCode(
       return;
     } else {
       if (error.statusCode === 404) {
-        logger.warn(`Supply a LEMNA_ARN env variable to automatically create function`);
+        logger.error(`Supply a LEMNA_ARN environment variable to automatically create function`);
       }
       logger.error(error.message);
       throw error;
@@ -80,7 +74,7 @@ export async function updateFunctionCode(
 
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Updating Lambda function (${name}) code using ${zipFile}`);
-  await lambda
+  await lambdaClient
     .updateFunctionCode({
       FunctionName: name,
       ZipFile: readFileSync(zipFile),
@@ -89,7 +83,7 @@ export async function updateFunctionCode(
 
   logger.verbose(`Updating Lambda function (${name}) configuration`);
   logger.debug(formatJson(functionSettings));
-  await lambda
+  await lambdaClient
     .updateFunctionConfiguration({
       FunctionName: name,
       Description: description,
