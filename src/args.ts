@@ -1,4 +1,3 @@
-import { lambdaClient } from "./lambda_client";
 import { relative } from "path";
 import yargs from "yargs";
 
@@ -6,12 +5,16 @@ import { build } from "./build";
 import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
+import { lambdaClient } from "./lambda_client";
 import logger from "./logger";
 import { execCommand } from "./npm_client";
 import { registerModules } from "./register";
 import { fileVisitor, formatJson } from "./util";
 import version from "./version";
 
+/**
+ * Checks for required AWS keys, exits if any is not found
+ */
 function checkAWSKeys(): void {
   if (!process.env.AWS_ACCESS_KEY_ID) {
     logger.error(`Missing AWS_ACCESS_KEY_ID environment variable`);

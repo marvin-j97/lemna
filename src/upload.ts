@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, statSync } from "fs";
-import { lambdaClient } from "./lambda_client";
 
 import { IFunctionSettings } from "./config";
+import { lambdaClient } from "./lambda_client";
 import logger from "./logger";
 import { formatJson } from "./util";
 
