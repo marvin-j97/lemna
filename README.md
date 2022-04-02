@@ -92,6 +92,24 @@ lemna deploy firstconfig.json secondconfig.json [...]
 }
 ```
 
+## List functions
+
+```
+lemna ls --page=0
+```
+
+## Print function details
+
+```
+lemna show my-function
+```
+
+## Delete function
+
+```
+lemna rm my-function
+```
+
 ## Debugging/Tracing
 
 Run with LEMNA_LOG_LEVEL=error/warn/info/verbose/debug/silly

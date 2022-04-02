@@ -42,6 +42,28 @@ export default yargs
     },
   })
   .command(
+    ["cat <name>", "show <name>"],
+    "Shows Lambda function details",
+    (yargs) =>
+      yargs.positional("name", {
+        type: "string",
+        description: "Name of function to delete",
+        demandOption: true,
+      }),
+    async (argv) => {
+      checkAWSKeys();
+      registerModules(argv.register);
+
+      try {
+        const func = await lambdaClient.getFunction({ FunctionName: argv.name }).promise();
+        console.log(func);
+      } catch (error: any) {
+        logger.error(`Error deleting function: ${error.message}`);
+        logger.silly(error.stack);
+      }
+    },
+  )
+  .command(
     "rm <name>",
     "Deletes a Lambda function",
     (yargs) =>
@@ -55,11 +77,7 @@ export default yargs
       registerModules(argv.register);
 
       try {
-        await lambdaClient
-          .deleteFunction({
-            FunctionName: argv.name,
-          })
-          .promise();
+        await lambdaClient.deleteFunction({ FunctionName: argv.name }).promise();
         logger.info(`Deleted function: ${argv.name}`);
       } catch (error: any) {
         logger.error(`Error deleting function: ${error.message}`);
