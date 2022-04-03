@@ -78,7 +78,7 @@
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
     "inquirer": "7.3.3",
-    "jszip": "3.6.0",
+    "jszip": "3.8.0",
     "skriva": "0.0.1-alpha.1",
     "skriva-transport-console": "0.0.1-alpha.1",
     "yargs": "17.0.1",
