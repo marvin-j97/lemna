@@ -56,7 +56,7 @@ export default yargs
 
       try {
         const func = await lambdaClient.getFunction({ FunctionName: argv.name }).promise();
-        console.log(func);
+        console.log(formatJson(func));
       } catch (error: any) {
         logger.error(`Error deleting function: ${error.message}`);
         logger.silly(error.stack);
@@ -118,7 +118,7 @@ export default yargs
             .promise();
 
           if (page === Math.floor(argv.page)) {
-            console.log(listResult.Functions);
+            console.log(formatJson(listResult.Functions));
             process.exit(0);
           }
           page++;

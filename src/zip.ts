@@ -45,7 +45,6 @@ export async function composeZip(
 
       for (const file of files) {
         const relativePath = relative(folder, file);
-        console.log(relativePath);
         const redirectedPath = join(base, relativePath);
         logger.silly(`Adding ${file} to zip at ${redirectedPath}`);
         zip.file(redirectedPath, createReadStream(file));
