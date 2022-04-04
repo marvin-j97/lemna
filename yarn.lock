@@ -2688,17 +2688,17 @@ signal-exit@^3.0.2:
   version "3.0.3"
   resolved "https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.3.tgz"
 
-skriva-transport-console@0.0.1-alpha.1:
-  version "0.0.1-alpha.1"
-  resolved "https://registry.npmjs.org/skriva-transport-console/-/skriva-transport-console-0.0.1-alpha.1.tgz"
-  integrity sha512-SbJSk8TLv25bn0/0TgQun47AXVyJSUZraNXaXO9BO+nTw7FEW3DBbhQRNb3NFuxccs6nVqSyO569glsprcMEWw==
+skriva-transport-console@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/skriva-transport-console/-/skriva-transport-console-0.0.2.tgz#82660a97fffd3c28081ab1a451a6773a7d7b7941"
+  integrity sha512-eeZo26Ur5RhTL55cW0jSp3YZWts0fi18mnPM2dOPvJY2wXIXuXvlzpYkPcPrH89Vnk/0nPBjpdq8KivrbLcU0w==
   dependencies:
-    skriva "^0.0.1-alpha.1"
+    skriva "^0.0.2"
 
-skriva@0.0.1-alpha.1, skriva@^0.0.1-alpha.1:
-  version "0.0.1-alpha.1"
-  resolved "https://registry.npmjs.org/skriva/-/skriva-0.0.1-alpha.1.tgz"
-  integrity sha512-AEPLpjEYMkt6R4/SaaBvSpsQi25jM6nb/uSxEQu35QcyczcjJGS3cBbtauoG4HqUUYQdMbajxY29Hgj7fUTZYw==
+skriva@0.0.2, skriva@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/skriva/-/skriva-0.0.2.tgz#460acf5545b2f7912ae6ced00e2e9ef208febc3c"
+  integrity sha512-apTyDrG9eCxNgSYwza3b2lhjwj8KoEIxzBl4fZ+NZBlU2U5AVqxQOAKeEFgpZbMZoicqkRdh39qhythscaBXPA==
 
 slash@^3.0.0:
   version "3.0.0"

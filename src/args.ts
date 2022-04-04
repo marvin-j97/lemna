@@ -58,7 +58,7 @@ export default yargs
         const func = await lambdaClient.getFunction({ FunctionName: argv.name }).promise();
         console.log(formatJson(func));
       } catch (error: any) {
-        logger.error(`Error deleting function: ${error.message}`);
+        logger.error(`Error reading function: ${error.message}`);
         logger.silly(error.stack);
       }
     },

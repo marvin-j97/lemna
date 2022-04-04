@@ -47,17 +47,22 @@ export async function updateFunctionCode(
     process.exit(1);
   }
 
-  const { name, description, memorySize, handler, runtime, env, timeout } = functionSettings;
+  const {
+    arn: configARN,
+    name,
+    description,
+    memorySize,
+    handler,
+    runtime,
+    env,
+    timeout,
+  } = functionSettings;
 
   try {
-    await lambdaClient
-      .getFunction({
-        FunctionName: name,
-      })
-      .promise();
+    await lambdaClient.getFunction({ FunctionName: name }).promise();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    const arn = process.env.LEMNA_ARN;
+    const arn = configARN || process.env.LEMNA_ARN;
 
     if (error.statusCode === 404 && arn) {
       logger.info("Function not found, creating");
@@ -65,7 +70,9 @@ export async function updateFunctionCode(
       return;
     } else {
       if (error.statusCode === 404) {
-        logger.error(`Supply a LEMNA_ARN environment variable to automatically create function`);
+        logger.error(
+          `Supply config.function.arn or LEMNA_ARN environment variable to automatically create function`,
+        );
       }
       logger.error(error.message);
       throw error;
@@ -75,10 +82,7 @@ export async function updateFunctionCode(
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Updating Lambda function (${name}) code using ${zipFile}`);
   await lambdaClient
-    .updateFunctionCode({
-      FunctionName: name,
-      ZipFile: readFileSync(zipFile),
-    })
+    .updateFunctionCode({ FunctionName: name, ZipFile: readFileSync(zipFile) })
     .promise();
 
   logger.verbose(`Updating Lambda function (${name}) configuration`);

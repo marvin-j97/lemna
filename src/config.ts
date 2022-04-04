@@ -6,6 +6,7 @@ import logger from "./logger";
 import { formatJson } from "./util";
 
 const functionSettingsSchema = z.object({
+  arn: z.string().optional(),
   name: z.string().min(1),
   description: z.string().optional(),
   memorySize: z.number().int().min(1).optional(),
