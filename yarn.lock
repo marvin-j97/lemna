@@ -2696,7 +2696,12 @@ skriva-transport-console@0.0.1-alpha.1:
   dependencies:
     skriva "^0.0.1-alpha.1"
 
-skriva@0.0.1-alpha.1, skriva@^0.0.1-alpha.1:
+skriva@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/skriva/-/skriva-0.0.2.tgz#460acf5545b2f7912ae6ced00e2e9ef208febc3c"
+  integrity sha512-apTyDrG9eCxNgSYwza3b2lhjwj8KoEIxzBl4fZ+NZBlU2U5AVqxQOAKeEFgpZbMZoicqkRdh39qhythscaBXPA==
+
+skriva@^0.0.1-alpha.1:
   version "0.0.1-alpha.1"
   resolved "https://registry.npmjs.org/skriva/-/skriva-0.0.1-alpha.1.tgz"
   integrity sha512-AEPLpjEYMkt6R4/SaaBvSpsQi25jM6nb/uSxEQu35QcyczcjJGS3cBbtauoG4HqUUYQdMbajxY29Hgj7fUTZYw==
