@@ -82,6 +82,6 @@
     "skriva-transport-console": "0.0.2",
     "jszip": "3.8.0",
     "yargs": "17.0.1",
-    "zod": "3.14.3"
+    "zod": "3.14.4"
   }
 }
