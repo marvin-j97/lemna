@@ -5,6 +5,20 @@ import { lambdaClient } from "./lambda_client";
 import logger from "./logger";
 import { formatJson } from "./util";
 
+async function waitUntilReady(name: string): Promise<void> {
+  for (;;) {
+    const config = await lambdaClient.getFunctionConfiguration({ FunctionName: name }).promise();
+    if (config.State !== "Pending" && config.LastUpdateStatus !== "InProgress") {
+      logger.silly(`Function state: ${config.State}, ${config.LastUpdateStatus}`);
+      logger.verbose("Function is ready for new operation");
+      return;
+    }
+    logger.info("Waiting for Lambda function to become ready");
+    // Sleep for 5 seconds
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+}
+
 /**
  * Creates a new Lambda function using a zip file
  */
@@ -59,6 +73,7 @@ export async function updateFunctionCode(
   } = functionSettings;
 
   try {
+    logger.verbose("Checking if function actually exists");
     await lambdaClient.getFunction({ FunctionName: name }).promise();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
@@ -79,11 +94,15 @@ export async function updateFunctionCode(
     }
   }
 
+  await waitUntilReady(name);
+
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Updating Lambda function (${name}) code using ${zipFile}`);
   await lambdaClient
     .updateFunctionCode({ FunctionName: name, ZipFile: readFileSync(zipFile) })
     .promise();
+
+  await waitUntilReady(name);
 
   logger.verbose(`Updating Lambda function (${name}) configuration`);
   logger.debug(formatJson(functionSettings));

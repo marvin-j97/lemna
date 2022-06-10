@@ -23,7 +23,7 @@ npm i lemna -g
 ## Scaffold new Lambda function
 
 ```
-lemna init <directory>
+lemna init
 ```
 
 This will setup a function folder with:
@@ -126,9 +126,10 @@ LEMNA_LOG_LEVEL=silly lemna deploy
 - lambda:CreateFunction
 - lambda:UpdateFunctionCode
 - lambda:UpdateFunctionConfiguration
+- lambda:GetFunction
+- lambda:GetFunctionConfiguration
 
 #### Optional:
 
-- lambda:GetFunction (for `cat` command)
 - lambda:ListFunctions (for `ls` command)
 - lambda:DeleteFunction (for `rm` command)
