@@ -5,6 +5,9 @@ import { lambdaClient } from "./lambda_client";
 import logger from "./logger";
 import { formatJson } from "./util";
 
+/**
+ * Waits for the function to become ready for another update
+ */
 async function waitUntilReady(name: string): Promise<void> {
   for (;;) {
     const config = await lambdaClient.getFunctionConfiguration({ FunctionName: name }).promise();
