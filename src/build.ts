@@ -19,6 +19,7 @@ function buildHash(): string {
 interface IBuildResult {
   buildHash: string;
   zipFile: string;
+  bundleOutput: string;
 }
 
 /**
@@ -63,5 +64,6 @@ export async function build(config: ILemnaConfig): Promise<IBuildResult> {
   return {
     buildHash: hash,
     zipFile: zipPath,
+    bundleOutput,
   };
 }

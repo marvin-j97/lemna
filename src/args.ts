@@ -1,3 +1,5 @@
+import type { Context, SQSEvent } from "aws-lambda";
+import { randomUUID } from "crypto";
 import { relative } from "path";
 import yargs from "yargs";
 
@@ -41,6 +43,70 @@ export default yargs
       description: "Register node modules",
     },
   })
+  .command(
+    "run [path]",
+    "Run Lambda function with a specific payload",
+    (yargs) =>
+      yargs.positional("path", {
+        description: "Path of Lemna config to run",
+        default: "lemna.config.json",
+        demandOption: false,
+      }),
+    async (argv) => {
+      try {
+        const config = loadConfig(argv.path);
+        const { bundleOutput } = await build(config);
+        const { handler } = require(bundleOutput);
+        if (!handler) {
+          logger.error("Invalid Lambda function: no handler function");
+          process.exit(1);
+        }
+
+        const event: SQSEvent = {
+          Records: [
+            {
+              messageId: "19dd0b57-b21e-4ac1-bd88-01bbb068cb78",
+              receiptHandle: "MessageReceiptHandle",
+              body: "Hello from SQS!",
+              attributes: {
+                ApproximateReceiveCount: "1",
+                SentTimestamp: "1523232000000",
+                SenderId: "123456789012",
+                ApproximateFirstReceiveTimestamp: "1523232000001",
+              },
+              messageAttributes: {},
+              md5OfBody: "{{{md5_of_body}}}",
+              eventSource: "aws:sqs",
+              eventSourceARN: "arn:aws:sqs:us-east-1:123456789012:MyQueue",
+              awsRegion: "us-east-1",
+            },
+          ],
+        };
+
+        const context: Context = {
+          functionName: config.function.name,
+          functionVersion: "1",
+          awsRequestId: randomUUID(),
+          logGroupName: randomUUID(),
+          callbackWaitsForEmptyEventLoop: true,
+          getRemainingTimeInMillis: () => 500,
+          invokedFunctionArn:
+            config.function.arn ||
+            `arn:aws:lambda:eu-central-1:123456789012:function:${config.function.name}`,
+          logStreamName: randomUUID(),
+          memoryLimitInMB: String(config.function.memorySize || 128),
+          done: () => {},
+          fail: () => {},
+          succeed: () => {},
+        };
+
+        console.log(await handler(event, context));
+      } catch (error: any) {
+        logger.error(`Error running Lambda: ${error.message}`);
+        process.exit(1);
+      }
+    },
+  )
   .command(
     ["cat <name>", "show <name>"],
     "Shows Lambda function details",
