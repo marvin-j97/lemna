@@ -24,7 +24,7 @@ function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaCon
       description: "Created by Lemna",
       handler: "index.handler",
       memorySize: 128,
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
       env: undefined,
       timeout: undefined,
     },
