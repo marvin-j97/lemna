@@ -140,7 +140,6 @@ export default yargs
     "Initialize new project",
     (yargs) => yargs,
     async (argv) => {
-      checkAWSKeys();
       registerModules(argv.register);
 
       try {
