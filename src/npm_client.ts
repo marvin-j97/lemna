@@ -16,6 +16,12 @@ const execCommands: Record<string, (client: string) => string> = {
   [NPMClient.Pnpm]: (cmd) => `pnpm exec ${cmd}`,
 };
 
+const runCommands: Record<string, (client: string) => string> = {
+  [NPMClient.Npm]: (cmd) => `npm run ${cmd}`,
+  [NPMClient.Yarn]: (cmd) => `yarn ${cmd}`,
+  [NPMClient.Pnpm]: (cmd) => `pnpm run ${cmd}`,
+};
+
 /**
  * Gets the install command of the chosen NPM client
  */
@@ -28,4 +34,11 @@ export function installCommand(client: NPMClient): string {
  */
 export function execCommand(client: NPMClient, cmd: string): string {
   return execCommands[client](cmd);
+}
+
+/**
+ * Gets the run command of the chosen NPM client
+ */
+export function runCommand(client: NPMClient, cmd: string): string {
+  return runCommands[client](cmd);
 }

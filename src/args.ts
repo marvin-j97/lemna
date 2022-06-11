@@ -7,7 +7,7 @@ import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import { lambdaClient } from "./lambda_client";
 import logger from "./logger";
-import { execCommand } from "./npm_client";
+import { runCommand } from "./npm_client";
 import { registerModules } from "./register";
 import { fileVisitor, formatJson } from "./util";
 import version from "./version";
@@ -146,7 +146,7 @@ export default yargs
         const { projectDir, npmClient } = await initializeLemna();
         logger.info("Setup successful, run:");
         logger.info(`cd ${relative(process.cwd(), projectDir)}`);
-        logger.info(execCommand(npmClient, `lemna deploy`));
+        logger.info(runCommand(npmClient, "deploy"));
       } catch (error: any) {
         logger.error(`Error setting up: ${error.message}`);
         logger.silly(error.stack);
