@@ -82,19 +82,22 @@ export async function updateFunctionCode(
   } catch (error: any) {
     const arn = configARN || process.env.LEMNA_ARN;
 
-    if (error.statusCode === 404 && arn) {
-      logger.info("Function not found, creating");
-      await createFunctionWithZip(functionSettings, zipFile, arn);
-      return;
-    } else {
-      if (error.statusCode === 404) {
+    if (error.statusCode === 404) {
+      logger.error("Function not found");
+
+      if (arn) {
+        logger.info("ARN supplied, creating function");
+        await createFunctionWithZip(functionSettings, zipFile, arn);
+        return;
+      } else {
         logger.error(
           `Supply config.function.arn or LEMNA_ARN environment variable to automatically create function`,
         );
       }
-      logger.error(error.message);
-      throw error;
     }
+
+    logger.error(error.message);
+    throw error;
   }
 
   await waitUntilReady(name);
