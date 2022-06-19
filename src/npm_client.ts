@@ -25,20 +25,20 @@ const runCommands: Record<string, (client: string) => string> = {
 /**
  * Gets the install command of the chosen NPM client
  */
-export function installCommand(client: NPMClient): string {
+export function getInstallCommand(client: NPMClient): string {
   return installCommands[client];
 }
 
 /**
  * Gets the exec command of the chosen NPM client
  */
-export function execCommand(client: NPMClient, cmd: string): string {
+export function getExecCommand(client: NPMClient, cmd: string): string {
   return execCommands[client](cmd);
 }
 
 /**
  * Gets the run command of the chosen NPM client
  */
-export function runCommand(client: NPMClient, cmd: string): string {
+export function getRunCommand(client: NPMClient, cmd: string): string {
   return runCommands[client](cmd);
 }

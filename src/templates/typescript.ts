@@ -3,7 +3,7 @@ import { mkdirSync } from "fs";
 import { relative, resolve } from "path";
 
 import logger from "../logger";
-import { execCommand, installCommand, NPMClient } from "../npm_client";
+import { getExecCommand, getInstallCommand, NPMClient } from "../npm_client";
 import { formatJson, loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
 
@@ -78,7 +78,7 @@ export const runTypescriptTemplate: TemplateFunction = async (
   loggedWriteFile(indexFile, composeIndexFile());
 
   logger.verbose("Installing Typescript dependencies");
-  const cmd = `${installCommand(npmClient)} -D @types/aws-lambda typescript`;
+  const cmd = `${getInstallCommand(npmClient)} -D @types/aws-lambda typescript`;
   logger.debug(`EXEC ${projectDir}:${cmd}`);
   execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 
@@ -86,6 +86,6 @@ export const runTypescriptTemplate: TemplateFunction = async (
 
   return {
     entryPoint: relative(projectDir, buildIndex),
-    buildSteps: [execCommand(npmClient, "tsc")],
+    buildSteps: [getExecCommand(npmClient, "tsc")],
   };
 };
