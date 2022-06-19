@@ -6,6 +6,23 @@ import logger from "./logger";
 import { formatJson } from "./util";
 
 /**
+ * Waits for the function to become ready for another update
+ */
+async function waitUntilReady(name: string): Promise<void> {
+  for (;;) {
+    const config = await lambdaClient.getFunctionConfiguration({ FunctionName: name }).promise();
+    if (config.State !== "Pending" && config.LastUpdateStatus !== "InProgress") {
+      logger.silly(`Function state: ${config.State}, ${config.LastUpdateStatus}`);
+      logger.verbose("Function is ready for new operation");
+      return;
+    }
+    logger.info("Waiting for Lambda function to become ready");
+    // Sleep for 5 seconds
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+}
+
+/**
  * Creates a new Lambda function using a zip file
  */
 async function createFunctionWithZip(
@@ -59,31 +76,39 @@ export async function updateFunctionCode(
   } = functionSettings;
 
   try {
+    logger.verbose("Checking if function actually exists");
     await lambdaClient.getFunction({ FunctionName: name }).promise();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     const arn = configARN || process.env.LEMNA_ARN;
 
-    if (error.statusCode === 404 && arn) {
-      logger.info("Function not found, creating");
-      await createFunctionWithZip(functionSettings, zipFile, arn);
-      return;
-    } else {
-      if (error.statusCode === 404) {
+    if (error.statusCode === 404) {
+      logger.error("Function not found");
+
+      if (arn) {
+        logger.info("ARN supplied, creating function");
+        await createFunctionWithZip(functionSettings, zipFile, arn);
+        return;
+      } else {
         logger.error(
           `Supply config.function.arn or LEMNA_ARN environment variable to automatically create function`,
         );
       }
-      logger.error(error.message);
-      throw error;
     }
+
+    logger.error(error.message);
+    throw error;
   }
+
+  await waitUntilReady(name);
 
   logger.info(`Uploading project ${zipFile} -> ${name}`);
   logger.verbose(`Updating Lambda function (${name}) code using ${zipFile}`);
   await lambdaClient
     .updateFunctionCode({ FunctionName: name, ZipFile: readFileSync(zipFile) })
     .promise();
+
+  await waitUntilReady(name);
 
   logger.verbose(`Updating Lambda function (${name}) configuration`);
   logger.debug(formatJson(functionSettings));

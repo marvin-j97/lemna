@@ -5,7 +5,7 @@ import { resolve } from "path";
 
 import { ILemnaConfig } from "./config";
 import logger from "./logger";
-import { installCommand, NPMClient } from "./npm_client";
+import { getInstallCommand, NPMClient } from "./npm_client";
 import { runTemplate, TemplateType } from "./templates/index";
 import { formatJson, loggedWriteFile } from "./util";
 
@@ -24,7 +24,7 @@ function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaCon
       description: "Created by Lemna",
       handler: "index.handler",
       memorySize: 128,
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
       env: undefined,
       timeout: undefined,
     },
@@ -116,7 +116,7 @@ export async function initializeLemna(): Promise<{ projectDir: string; npmClient
   loggedWriteFile(packageJsonPath, formatJson(composePackageJson(functionName)));
 
   logger.verbose("Installing dependencies");
-  const cmd = `${installCommand(npmClient)} -D lemna`;
+  const cmd = `${getInstallCommand(npmClient)} -D lemna`;
   logger.debug(`EXEC ${projectDir}:${cmd}`);
   execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 

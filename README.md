@@ -23,7 +23,7 @@ npm i lemna -g
 ## Scaffold new Lambda function
 
 ```
-lemna init <directory>
+lemna init
 ```
 
 This will setup a function folder with:
@@ -34,7 +34,25 @@ This will setup a function folder with:
 - Basic Lambda handler (src/index.ts)
 - Lemna config (lemna.config.json)
 
-## Deploying
+## Building
+
+```
+lemna build
+```
+
+### Use a custom path
+
+```
+lemna build my-app/lemna.config.json
+```
+
+### Use glob patterns
+
+```
+lemna build lambdas/**/lemna.config.json
+```
+
+## Deployment
 
 Create a `.env` file and place your AWS credentials in it.
 Then run:
@@ -42,6 +60,8 @@ Then run:
 ```
 lemna deploy
 ```
+
+Note: `deploy` will run `build` automatically
 
 ### Use a custom path
 
@@ -92,25 +112,35 @@ lemna deploy firstconfig.json secondconfig.json [...]
 }
 ```
 
-## List functions
+## Other features
+
+### List functions
 
 ```
-lemna ls --page=0
+lemna ls
 ```
 
-## Print function details
+### Print function details
 
 ```
 lemna show my-function
 ```
 
-## Delete function
+### Delete function
 
 ```
 lemna rm my-function
 ```
 
-## Debugging/Tracing
+### Usage with jq
+
+Example: Print the runtime of my functions
+
+```
+lemna ls | jq -C "[.[].Runtime]"
+```
+
+### Debugging/Tracing
 
 Run with LEMNA_LOG_LEVEL=error/warn/info/verbose/debug/silly
 
@@ -126,9 +156,10 @@ LEMNA_LOG_LEVEL=silly lemna deploy
 - lambda:CreateFunction
 - lambda:UpdateFunctionCode
 - lambda:UpdateFunctionConfiguration
+- lambda:GetFunction
+- lambda:GetFunctionConfiguration
 
 #### Optional:
 
-- lambda:GetFunction (for `cat` command)
 - lambda:ListFunctions (for `ls` command)
 - lambda:DeleteFunction (for `rm` command)

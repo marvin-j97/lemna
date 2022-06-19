@@ -4,33 +4,17 @@ import { relative } from "path";
 import yargs from "yargs";
 
 import { build } from "./build";
+import { runCommand } from "./commands";
+import { catCommand } from "./commands/cat";
+import { lsCommand } from "./commands/ls";
+import { rmCommand } from "./commands/rm";
 import { loadConfig } from "./config";
 import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
-import { lambdaClient } from "./lambda_client";
 import logger from "./logger";
-import { execCommand } from "./npm_client";
-import { registerModules } from "./register";
+import { getRunCommand } from "./npm_client";
 import { fileVisitor, formatJson } from "./util";
 import version from "./version";
-
-/**
- * Checks for required AWS keys, exits if any is not found
- */
-function checkAWSKeys(): void {
-  if (!process.env.AWS_ACCESS_KEY_ID) {
-    logger.error(`Missing AWS_ACCESS_KEY_ID environment variable`);
-    process.exit(1);
-  }
-  if (!process.env.AWS_SECRET_ACCESS_KEY) {
-    logger.error(`Missing AWS_SECRET_ACCESS_KEY environment variable`);
-    process.exit(1);
-  }
-  if (!process.env.AWS_REGION) {
-    logger.error(`Missing AWS_REGION environment variable`);
-    process.exit(1);
-  }
-}
 
 export default yargs
   .scriptName("lemna")
@@ -117,20 +101,14 @@ export default yargs
         demandOption: true,
       }),
     async (argv) => {
-      checkAWSKeys();
-      registerModules(argv.register);
-
-      try {
-        const func = await lambdaClient.getFunction({ FunctionName: argv.name }).promise();
-        console.log(formatJson(func));
-      } catch (error: any) {
-        logger.error(`Error reading function: ${error.message}`);
-        logger.silly(error.stack);
-      }
+      await runCommand(async () => catCommand(argv.name), {
+        modulesToRegister: argv.register,
+        requiresCredentials: true,
+      });
     },
   )
   .command(
-    "rm <name>",
+    ["rm <name>", "remove <name>", "delete <name>"],
     "Deletes a Lambda function",
     (yargs) =>
       yargs.positional("name", {
@@ -139,20 +117,14 @@ export default yargs
         demandOption: true,
       }),
     async (argv) => {
-      checkAWSKeys();
-      registerModules(argv.register);
-
-      try {
-        await lambdaClient.deleteFunction({ FunctionName: argv.name }).promise();
-        logger.info(`Deleted function: ${argv.name}`);
-      } catch (error: any) {
-        logger.error(`Error deleting function: ${error.message}`);
-        logger.silly(error.stack);
-      }
+      await runCommand(async () => rmCommand(argv.name), {
+        modulesToRegister: argv.register,
+        requiresCredentials: true,
+      });
     },
   )
   .command(
-    "ls",
+    ["ls", "list"],
     "Lists functions in account",
     (yargs) =>
       yargs.option({
@@ -168,37 +140,10 @@ export default yargs
         },
       }),
     async (argv) => {
-      checkAWSKeys();
-      registerModules(argv.register);
-
-      try {
-        let marker: string | undefined;
-        let page = 0;
-
-        for (;;) {
-          const listResult = await lambdaClient
-            .listFunctions({
-              MaxItems: Math.floor(argv.take),
-              Marker: marker,
-            })
-            .promise();
-
-          if (page === Math.floor(argv.page)) {
-            console.log(formatJson(listResult.Functions));
-            process.exit(0);
-          }
-          page++;
-          marker = listResult.NextMarker;
-
-          if (!listResult.NextMarker) {
-            console.log([]);
-            process.exit(0);
-          }
-        }
-      } catch (error: any) {
-        logger.error(`Error listing functions: ${error.message}`);
-        logger.silly(error.stack);
-      }
+      await runCommand(async () => await lsCommand(argv.take, argv.page), {
+        modulesToRegister: argv.register,
+        requiresCredentials: true,
+      });
     },
   )
   .command(
@@ -206,18 +151,15 @@ export default yargs
     "Initialize new project",
     (yargs) => yargs,
     async (argv) => {
-      checkAWSKeys();
-      registerModules(argv.register);
-
-      try {
-        const { projectDir, npmClient } = await initializeLemna();
-        logger.info("Setup successful, run:");
-        logger.info(`cd ${relative(process.cwd(), projectDir)}`);
-        logger.info(execCommand(npmClient, `lemna deploy`));
-      } catch (error: any) {
-        logger.error(`Error setting up: ${error.message}`);
-        logger.silly(error.stack);
-      }
+      await runCommand(
+        async () => {
+          const { projectDir, npmClient } = await initializeLemna();
+          logger.info("Setup successful, run:");
+          logger.info(`cd ${relative(process.cwd(), projectDir)}`);
+          logger.info(getRunCommand(npmClient, "deploy"));
+        },
+        { modulesToRegister: argv.register, requiresCredentials: false },
+      );
     },
   )
   .command(
@@ -230,49 +172,52 @@ export default yargs
       });
     },
     async (argv) => {
-      registerModules(argv.register);
+      await runCommand(
+        async () => {
+          logger.silly(`Build paths:`);
+          logger.silly(formatJson(argv.paths));
 
-      logger.silly(`Build paths:`);
-      logger.silly(formatJson(argv.paths));
+          let successCount = 0;
+          let errorCount = 0;
+          const results: { built: { zipFile: string; buildHash: string }[] } = {
+            built: [],
+          };
 
-      let successCount = 0;
-      let errorCount = 0;
-      const results: { built: { zipFile: string; buildHash: string }[] } = {
-        built: [],
-      };
+          for await (const path of fileVisitor(argv.paths)) {
+            try {
+              const config = loadConfig(path);
+              const { zipFile, buildHash } = await build(config);
+              logger.verbose(`Built zip file: ${zipFile}`);
+              results.built.push({ zipFile, buildHash });
+              successCount++;
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+              logger.warn(`Error building ${path}: ${error.message}`);
+              logger.silly(error.stack);
+              errorCount++;
+            }
+          }
 
-      for await (const path of fileVisitor(argv.paths)) {
-        try {
-          const config = loadConfig(path);
-          const { zipFile, buildHash } = await build(config);
-          logger.verbose(`Built zip file: ${zipFile}`);
-          results.built.push({ zipFile, buildHash });
-          successCount++;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          logger.warn(`Error building ${path}: ${error.message}`);
-          logger.silly(error.stack);
-          errorCount++;
-        }
-      }
+          const matchedCount = successCount + errorCount;
+          if (!matchedCount) {
+            logger.error("No files matched the inputs");
+            process.exit(1);
+          }
 
-      const matchedCount = successCount + errorCount;
-      if (!matchedCount) {
-        logger.error("No files matched the inputs");
-        process.exit(1);
-      }
-
-      console.log(formatJson(results));
-      logger.info(
-        `Successfully built ${successCount}/${matchedCount} (${(
-          (successCount / matchedCount) *
-          100
-        ).toFixed(0)}%) functions`,
+          console.log(formatJson(results));
+          logger.info(
+            `Successfully built ${successCount}/${matchedCount} (${(
+              (successCount / matchedCount) *
+              100
+            ).toFixed(0)}%) functions`,
+          );
+        },
+        { modulesToRegister: argv.register, requiresCredentials: false },
       );
     },
   )
   .command(
-    "deploy [paths..]",
+    ["deploy [paths..]", "up [paths..]"],
     "Builds and deploys one or multiple projects",
     (yargs) => {
       return yargs.positional("paths", {
@@ -281,39 +226,41 @@ export default yargs
       });
     },
     async (argv) => {
-      checkAWSKeys();
-      registerModules(argv.register);
+      await runCommand(
+        async () => {
+          logger.silly(`Deploy paths:`);
+          logger.silly(formatJson(argv.paths));
 
-      logger.silly(`Deploy paths:`);
-      logger.silly(formatJson(argv.paths));
+          let successCount = 0;
+          let errorCount = 0;
 
-      let successCount = 0;
-      let errorCount = 0;
+          for await (const path of fileVisitor(argv.paths)) {
+            try {
+              const config = loadConfig(path);
+              await deployProject(config);
+              successCount++;
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (error: any) {
+              logger.warn(`Error deploying ${path}: ${error.message}`);
+              logger.silly(error.stack);
+              errorCount++;
+            }
+          }
 
-      for await (const path of fileVisitor(argv.paths)) {
-        try {
-          const config = loadConfig(path);
-          await deployProject(config);
-          successCount++;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          logger.warn(`Error deploying ${path}: ${error.message}`);
-          logger.silly(error.stack);
-          errorCount++;
-        }
-      }
+          const matchedCount = successCount + errorCount;
+          if (!matchedCount) {
+            logger.error("No files matched the inputs");
+            process.exit(1);
+          }
 
-      const matchedCount = successCount + errorCount;
-      if (!matchedCount) {
-        logger.error("No files matched the inputs");
-        process.exit(1);
-      }
-
-      logger.info(
-        `Successfully deployed ${successCount}/${matchedCount} (${(
-          (successCount / matchedCount) *
-          100
-        ).toFixed(0)}%) functions`,
+          logger.info(
+            `Successfully deployed ${successCount}/${matchedCount} (${(
+              (successCount / matchedCount) *
+              100
+            ).toFixed(0)}%) functions`,
+          );
+        },
+        { modulesToRegister: argv.register, requiresCredentials: true },
       );
     },
   )
