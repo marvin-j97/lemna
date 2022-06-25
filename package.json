@@ -46,16 +46,16 @@
     "@typescript-eslint/parser": "5.29.0",
     "ava": "4.3.0",
     "cross-env": "7.0.3",
-    "eslint": "8.17.0",
+    "eslint": "8.18.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-jsdoc": "39.3.2",
+    "eslint-plugin-jsdoc": "39.3.3",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-simple-import-sort": "7.0.0",
     "nyc": "15.1.0",
     "prettier": "2.7.1",
     "ts-node": "10.8.1",
     "tsconfig-paths": "4.0.0",
-    "typescript": "4.7.3"
+    "typescript": "4.7.4"
   },
   "files": [
     "dist",
@@ -71,10 +71,10 @@
     ]
   },
   "dependencies": {
-    "aws-sdk": "2.1156.0",
+    "aws-sdk": "2.1161.0",
     "chalk": "4.1.2",
     "dotenv": "14.3.2",
-    "esbuild": "0.14.45",
+    "esbuild": "0.14.47",
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
     "inquirer": "7.3.3",
