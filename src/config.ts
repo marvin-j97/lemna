@@ -5,28 +5,32 @@ import * as z from "zod";
 import logger from "./logger";
 import { formatJson } from "./util";
 
-const functionSettingsSchema = z.object({
-  arn: z.string().optional(),
-  name: z.string().min(1),
-  description: z.string().optional(),
-  memorySize: z.number().int().min(1).optional(),
-  handler: z.string().optional(),
-  runtime: z.enum(["nodejs12.x", "nodejs14.x", "nodejs16.x"]),
-  env: z.record(z.string()).optional(),
-  tags: z.record(z.string()).optional(),
-  timeout: z.number().optional(),
-});
+const functionSettingsSchema = z
+  .object({
+    arn: z.string().optional(),
+    name: z.string().min(1),
+    description: z.string().optional(),
+    memorySize: z.number().int().min(1).optional(),
+    handler: z.string().optional(),
+    runtime: z.enum(["nodejs12.x", "nodejs14.x", "nodejs16.x"]),
+    env: z.record(z.string()).optional(),
+    tags: z.record(z.string()).optional(),
+    timeout: z.number().optional(),
+  })
+  .strict();
 
 export type IFunctionSettings = z.TypeOf<typeof functionSettingsSchema>;
 
-const configSchema = z.object({
-  entryPoint: z.string().min(1),
-  output: z.string().min(1).optional(),
-  bundle: z.record(z.array(z.string().min(1))).optional(),
-  buildSteps: z.array(z.string().min(1)).optional(),
-  function: functionSettingsSchema,
-  buildOptions: z.object({}).optional(),
-});
+const configSchema = z
+  .object({
+    entryPoint: z.string().min(1),
+    output: z.string().min(1).optional(),
+    bundle: z.record(z.array(z.string().min(1))).optional(),
+    buildSteps: z.array(z.string().min(1)).optional(),
+    function: functionSettingsSchema,
+    buildOptions: z.object({}).optional(),
+  })
+  .strict();
 
 export type LemnaConfig = z.TypeOf<typeof configSchema>;
 

@@ -1,4 +1,4 @@
-import { LemnaConfig } from "config";
+import { LemnaConfig } from "./config";
 
 export { buildCommand as build } from "./commands/build";
 export { deployCommand as deploy } from "./commands/deploy";

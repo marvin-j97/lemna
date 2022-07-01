@@ -75,17 +75,23 @@ lemna deploy my-app/lemna.config.json
 lemna deploy lambdas/**/lemna.config.json
 ```
 
-### Use CommonJS module as config
+### Use CommonJS module (with intellisense) as config
 
 ```js
-// lemna.config.js
-module.exports = {
+// @ts-check
+
+/**
+ * @type {import('lemna').LemnaConfig}
+ **/
+const config = {
   entryPoint: "path to .js file",
   function: {
     name: "lambda-function-name",
     runtime: "nodejs16.x",
   },
 };
+
+module.exports = config;
 ```
 
 ```
