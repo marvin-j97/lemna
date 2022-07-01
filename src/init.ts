@@ -3,7 +3,7 @@ import { existsSync, mkdirSync } from "fs";
 import inquirer from "inquirer";
 import { resolve } from "path";
 
-import { ILemnaConfig } from "./config";
+import { LemnaConfig } from "./config";
 import logger from "./logger";
 import { getInstallCommand, NPMClient } from "./npm_client";
 import { runTemplate, TemplateType } from "./templates/index";
@@ -12,7 +12,7 @@ import { formatJson, loggedWriteFile } from "./util";
 /**
  * Creates a Lemna config file
  */
-function composeLemnaConfig(functionName: string, entryPoint: string): ILemnaConfig {
+function composeLemnaConfig(functionName: string, entryPoint: string): LemnaConfig {
   logger.silly(`Composing lemna.config.json for ${functionName}`);
   return {
     entryPoint,

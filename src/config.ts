@@ -28,12 +28,12 @@ const configSchema = z.object({
   buildOptions: z.object({}).optional(),
 });
 
-export type ILemnaConfig = z.TypeOf<typeof configSchema>;
+export type LemnaConfig = z.TypeOf<typeof configSchema>;
 
 /**
  * Returns if the given input is a valid Lemna config
  */
-export function isValidConfig(val: unknown): val is ILemnaConfig {
+export function isValidConfig(val: unknown): val is LemnaConfig {
   const result = configSchema.safeParse(val);
   if (result.success) {
     return true;
@@ -44,13 +44,13 @@ export function isValidConfig(val: unknown): val is ILemnaConfig {
   return false;
 }
 
-let config: ILemnaConfig;
+let config: LemnaConfig;
 let projectDir: string;
 
 /**
  * Returns the loaded config
  */
-export function getConfig(): ILemnaConfig {
+export function getConfig(): LemnaConfig {
   return JSON.parse(formatJson(config));
 }
 
@@ -72,7 +72,7 @@ export function getTempFolder(folder: string): string {
  * Loads a config from file (.json or .js)
  * Automatically creates temp folder next to the config
  */
-export function loadConfig(file: string): ILemnaConfig {
+export function loadConfig(file: string): LemnaConfig {
   const path = resolve(file);
   logger.debug(`Loading config at ${path}`);
 
