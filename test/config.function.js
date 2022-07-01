@@ -4,7 +4,7 @@ module.exports = () => ({
   bundle: undefined,
   function: {
     name: "function name",
-    runtime: "nodejs14.x",
+    runtime: "nodejs16.x",
     handler: undefined,
     description: undefined,
     memorySize: undefined,

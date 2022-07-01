@@ -83,7 +83,7 @@ module.exports = {
   entryPoint: "path to .js file",
   function: {
     name: "lambda-function-name",
-    runtime: "nodejs14.x",
+    runtime: "nodejs16.x",
   },
 };
 ```
@@ -107,7 +107,7 @@ lemna deploy firstconfig.json secondconfig.json [...]
   "entryPoint": "path to .js file",
   "function": {
     "name": "lambda-function-name",
-    "runtime": "nodejs14.x"
+    "runtime": "nodejs16.x"
   }
 }
 ```

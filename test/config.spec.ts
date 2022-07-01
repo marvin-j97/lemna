@@ -8,7 +8,7 @@ const validConfigs: ILemnaConfig[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
     },
     buildOptions: { minify: false },
   },
@@ -16,14 +16,14 @@ const validConfigs: ILemnaConfig[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
     },
   },
   {
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
     },
     buildOptions: {},
   },

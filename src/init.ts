@@ -56,45 +56,53 @@ function composePackageJson(name: string): unknown {
  * Initializes a project
  */
 export async function initializeLemna(): Promise<{ projectDir: string; npmClient: NPMClient }> {
-  const { dir, functionName, template, memorySize, timeout, npmClient } = await inquirer.prompt([
-    {
-      name: "dir",
-      type: "input",
-      default: "my-function",
-      message: "Enter project folder name",
-    },
-    {
-      name: "npmClient",
-      type: "list",
-      message: "Select NPM client",
-      choices: Object.values(NPMClient),
-      default: NPMClient.Npm,
-    },
-    {
-      name: "functionName",
-      type: "input",
-      message: "Enter function name",
-    },
-    {
-      name: "memorySize",
-      type: "number",
-      message: "Enter function memory size (in MB)",
-      default: 128,
-    },
-    {
-      name: "timeout",
-      type: "number",
-      message: "Enter function timeout seconds",
-      default: 15,
-    },
-    {
-      name: "template",
-      choices: Object.values(TemplateType),
-      type: "list",
-      message: "Select template",
-      default: TemplateType.Typescript,
-    },
-  ]);
+  const { dir, functionName, template, memorySize, timeout, npmClient, runtime } =
+    await inquirer.prompt([
+      {
+        name: "dir",
+        type: "input",
+        default: "my-function",
+        message: "Enter project folder name",
+      },
+      {
+        name: "npmClient",
+        type: "list",
+        message: "Select NPM client",
+        choices: Object.values(NPMClient),
+        default: NPMClient.Npm,
+      },
+      {
+        name: "functionName",
+        type: "input",
+        message: "Enter function name",
+      },
+      {
+        name: "memorySize",
+        type: "number",
+        message: "Enter function memory size (in MB)",
+        default: 128,
+      },
+      {
+        name: "timeout",
+        type: "number",
+        message: "Enter function timeout seconds",
+        default: 15,
+      },
+      {
+        name: "runtime",
+        choices: ["nodejs12.x", "nodejs14.x", "nodejs16.x"],
+        type: "list",
+        message: "Select runtime",
+        default: "nodejs16.x",
+      },
+      {
+        name: "template",
+        choices: Object.values(TemplateType),
+        type: "list",
+        message: "Select template",
+        default: TemplateType.Typescript,
+      },
+    ]);
 
   const projectDir = resolve(dir);
 
@@ -127,6 +135,7 @@ export async function initializeLemna(): Promise<{ projectDir: string; npmClient
   config.buildSteps = buildSteps;
   config.function.memorySize = memorySize;
   config.function.timeout = timeout;
+  config.function.runtime = runtime;
   loggedWriteFile(lemnaConfigPath, formatJson(config));
 
   return { projectDir, npmClient };
