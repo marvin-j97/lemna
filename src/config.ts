@@ -5,35 +5,39 @@ import * as z from "zod";
 import logger from "./logger";
 import { formatJson } from "./util";
 
-const functionSettingsSchema = z.object({
-  arn: z.string().optional(),
-  name: z.string().min(1),
-  description: z.string().optional(),
-  memorySize: z.number().int().min(1).optional(),
-  handler: z.string().optional(),
-  runtime: z.string().min(1),
-  env: z.record(z.string()).optional(),
-  tags: z.record(z.string()).optional(),
-  timeout: z.number().optional(),
-});
+const functionSettingsSchema = z
+  .object({
+    arn: z.string().optional(),
+    name: z.string().min(1),
+    description: z.string().optional(),
+    memorySize: z.number().int().min(1).optional(),
+    handler: z.string().optional(),
+    runtime: z.enum(["nodejs12.x", "nodejs14.x", "nodejs16.x"]),
+    env: z.record(z.string()).optional(),
+    tags: z.record(z.string()).optional(),
+    timeout: z.number().optional(),
+  })
+  .strict();
 
 export type IFunctionSettings = z.TypeOf<typeof functionSettingsSchema>;
 
-const configSchema = z.object({
-  entryPoint: z.string().min(1),
-  output: z.string().min(1).optional(),
-  bundle: z.record(z.array(z.string().min(1))).optional(),
-  buildSteps: z.array(z.string().min(1)).optional(),
-  function: functionSettingsSchema,
-  buildOptions: z.object({}).optional(),
-});
+const configSchema = z
+  .object({
+    entryPoint: z.string().min(1),
+    output: z.string().min(1).optional(),
+    bundle: z.record(z.array(z.string().min(1))).optional(),
+    buildSteps: z.array(z.string().min(1)).optional(),
+    function: functionSettingsSchema,
+    buildOptions: z.object({}).optional(),
+  })
+  .strict();
 
-export type ILemnaConfig = z.TypeOf<typeof configSchema>;
+export type LemnaConfig = z.TypeOf<typeof configSchema>;
 
 /**
  * Returns if the given input is a valid Lemna config
  */
-export function isValidConfig(val: unknown): val is ILemnaConfig {
+export function isValidConfig(val: unknown): val is LemnaConfig {
   const result = configSchema.safeParse(val);
   if (result.success) {
     return true;
@@ -44,13 +48,13 @@ export function isValidConfig(val: unknown): val is ILemnaConfig {
   return false;
 }
 
-let config: ILemnaConfig;
+let config: LemnaConfig;
 let projectDir: string;
 
 /**
  * Returns the loaded config
  */
-export function getConfig(): ILemnaConfig {
+export function getConfig(): LemnaConfig {
   return JSON.parse(formatJson(config));
 }
 
@@ -72,7 +76,7 @@ export function getTempFolder(folder: string): string {
  * Loads a config from file (.json or .js)
  * Automatically creates temp folder next to the config
  */
-export function loadConfig(file: string): ILemnaConfig {
+export function loadConfig(file: string): LemnaConfig {
   const path = resolve(file);
   logger.debug(`Loading config at ${path}`);
 

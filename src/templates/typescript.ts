@@ -15,7 +15,7 @@ function composeTsConfig(): unknown {
   return {
     exclude: ["node_modules", "test", "build"],
     compilerOptions: {
-      target: "es5",
+      target: "es6",
       module: "commonjs",
 
       rootDir: "src",
@@ -50,7 +50,8 @@ function composeIndexFile(): string {
 
 const handler: Handler = async function (event, context) {
   console.log("Hello from Lemna");
-  console.log("EVENT: \\n" + JSON.stringify(event, null, 2));
+  console.log("EVENT:");
+  console.log(JSON.stringify(event, null, 2));
   return context.logStreamName;
 };
 

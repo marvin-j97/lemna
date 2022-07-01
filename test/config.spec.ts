@@ -1,14 +1,14 @@
 import test from "ava";
 import { resolve } from "path";
 
-import { getConfig, ILemnaConfig, isValidConfig, loadConfig } from "../src/config";
+import { getConfig, LemnaConfig, isValidConfig, loadConfig } from "../src/config";
 
-const validConfigs: ILemnaConfig[] = [
+const validConfigs: LemnaConfig[] = [
   {
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
     },
     buildOptions: { minify: false },
   },
@@ -16,14 +16,14 @@ const validConfigs: ILemnaConfig[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
     },
   },
   {
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs14.x",
+      runtime: "nodejs16.x",
     },
     buildOptions: {},
   },

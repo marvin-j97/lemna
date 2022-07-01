@@ -4,7 +4,7 @@ import { mkdirSync } from "fs";
 import { resolve } from "path";
 
 import { bundleCode } from "./bundle";
-import { getProjectDirectory, getTempFolder, ILemnaConfig } from "./config";
+import { getProjectDirectory, getTempFolder, LemnaConfig } from "./config";
 import logger from "./logger";
 import { formatJson } from "./util";
 import { composeZip, saveZip } from "./zip";
@@ -36,7 +36,7 @@ function runBuildSteps(steps: string[], cwd: string): void {
  * Builds a project according to the given config
  * Returns a build result
  */
-export async function build(config: ILemnaConfig): Promise<IBuildResult> {
+export async function build(config: LemnaConfig): Promise<IBuildResult> {
   const projectDir = getProjectDirectory();
   const entryPoint = resolve(projectDir, config.entryPoint);
   const hash = buildHash();

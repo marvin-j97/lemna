@@ -3,17 +3,16 @@ import { randomUUID } from "crypto";
 import { relative } from "path";
 import yargs from "yargs";
 
-import { build } from "./build";
 import { runCommand } from "./commands";
-import { catCommand } from "./commands/cat";
-import { lsCommand } from "./commands/ls";
+import { buildCommand } from "./commands/build";
+import { deployCommand } from "./commands/deploy";
+import { listCommand } from "./commands/ls";
+import { readFunctionDetails } from "./commands/read";
 import { rmCommand } from "./commands/rm";
-import { loadConfig } from "./config";
-import { deployProject } from "./deploy";
 import { initializeLemna } from "./init";
 import logger from "./logger";
 import { getRunCommand } from "./npm_client";
-import { fileVisitor, formatJson } from "./util";
+import { formatJson } from "./util";
 import version from "./version";
 
 export default yargs
@@ -101,10 +100,15 @@ export default yargs
         demandOption: true,
       }),
     async (argv) => {
-      await runCommand(async () => catCommand(argv.name), {
-        modulesToRegister: argv.register,
-        requiresCredentials: true,
-      });
+      await runCommand(
+        async () => {
+          console.log(formatJson(await readFunctionDetails(argv.name)));
+        },
+        {
+          modulesToRegister: argv.register,
+          requiresCredentials: true,
+        },
+      );
     },
   )
   .command(
@@ -140,15 +144,20 @@ export default yargs
         },
       }),
     async (argv) => {
-      await runCommand(async () => await lsCommand(argv.take, argv.page), {
-        modulesToRegister: argv.register,
-        requiresCredentials: true,
-      });
+      await runCommand(
+        async () => {
+          console.log(formatJson(await listCommand(argv.take, argv.page)));
+        },
+        {
+          modulesToRegister: argv.register,
+          requiresCredentials: true,
+        },
+      );
     },
   )
   .command(
     ["init", "setup"],
-    "Initialize new project",
+    "Initializes new project",
     (yargs) => yargs,
     async (argv) => {
       await runCommand(
@@ -174,37 +183,8 @@ export default yargs
     async (argv) => {
       await runCommand(
         async () => {
-          logger.silly(`Build paths:`);
-          logger.silly(formatJson(argv.paths));
-
-          let successCount = 0;
-          let errorCount = 0;
-          const results: { built: { zipFile: string; buildHash: string }[] } = {
-            built: [],
-          };
-
-          for await (const path of fileVisitor(argv.paths)) {
-            try {
-              const config = loadConfig(path);
-              const { zipFile, buildHash } = await build(config);
-              logger.verbose(`Built zip file: ${zipFile}`);
-              results.built.push({ zipFile, buildHash });
-              successCount++;
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (error: any) {
-              logger.warn(`Error building ${path}: ${error.message}`);
-              logger.silly(error.stack);
-              errorCount++;
-            }
-          }
-
-          const matchedCount = successCount + errorCount;
-          if (!matchedCount) {
-            logger.error("No files matched the inputs");
-            process.exit(1);
-          }
-
-          console.log(formatJson(results));
+          const { results, matchedCount, successCount } = await buildCommand(argv.paths);
+          console.log(formatJson({ built: results }));
           logger.info(
             `Successfully built ${successCount}/${matchedCount} (${(
               (successCount / matchedCount) *
@@ -228,31 +208,7 @@ export default yargs
     async (argv) => {
       await runCommand(
         async () => {
-          logger.silly(`Deploy paths:`);
-          logger.silly(formatJson(argv.paths));
-
-          let successCount = 0;
-          let errorCount = 0;
-
-          for await (const path of fileVisitor(argv.paths)) {
-            try {
-              const config = loadConfig(path);
-              await deployProject(config);
-              successCount++;
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (error: any) {
-              logger.warn(`Error deploying ${path}: ${error.message}`);
-              logger.silly(error.stack);
-              errorCount++;
-            }
-          }
-
-          const matchedCount = successCount + errorCount;
-          if (!matchedCount) {
-            logger.error("No files matched the inputs");
-            process.exit(1);
-          }
-
+          const { matchedCount, successCount } = await deployCommand(argv.paths);
           logger.info(
             `Successfully deployed ${successCount}/${matchedCount} (${(
               (successCount / matchedCount) *

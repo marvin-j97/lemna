@@ -12,7 +12,8 @@ function composeIndexFile(): string {
   logger.silly(`Composing index.handler`);
   return `const handler = async function (event, context) {
   console.log("Hello from Lemna");
-  console.log("EVENT: \\n" + JSON.stringify(event, null, 2));
+  console.log("EVENT:");
+  console.log(JSON.stringify(event, null, 2));
   return context.logStreamName;
 };
 
