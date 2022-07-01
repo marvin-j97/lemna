@@ -78,6 +78,8 @@ lemna deploy lambdas/**/lemna.config.json
 ### Use CommonJS module (with intellisense) as config
 
 ```js
+// lemna.config.js
+
 // @ts-check
 
 /**
@@ -102,20 +104,6 @@ lemna deploy lemna.config.js
 
 ```
 lemna deploy firstconfig.json secondconfig.json [...]
-```
-
-## Use in existing project
-
-- Create a `lemna.config.json`, including at least:
-
-```json
-{
-  "entryPoint": "path to .js file",
-  "function": {
-    "name": "lambda-function-name",
-    "runtime": "nodejs16.x"
-  }
-}
 ```
 
 ## Other features
@@ -152,6 +140,20 @@ Run with LEMNA_LOG_LEVEL=error/warn/info/verbose/debug/silly
 
 ```
 LEMNA_LOG_LEVEL=silly lemna deploy
+```
+
+## Use in existing project
+
+- Create a `lemna.config.json`, including at least:
+
+```json
+{
+  "entryPoint": "path to .js file",
+  "function": {
+    "name": "lambda-function-name",
+    "runtime": "nodejs16.x"
+  }
+}
 ```
 
 ## Required AWS policies
