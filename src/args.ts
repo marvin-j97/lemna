@@ -3,9 +3,9 @@ import yargs from "yargs";
 
 import { runCommand } from "./commands";
 import { buildCommand } from "./commands/build";
-import { catCommand } from "./commands/cat";
 import { deployCommand } from "./commands/deploy";
-import { lsCommand } from "./commands/ls";
+import { listCommand } from "./commands/ls";
+import { readFunctionDetails } from "./commands/read";
 import { rmCommand } from "./commands/rm";
 import { initializeLemna } from "./init";
 import logger from "./logger";
@@ -34,10 +34,15 @@ export default yargs
         demandOption: true,
       }),
     async (argv) => {
-      await runCommand(async () => catCommand(argv.name), {
-        modulesToRegister: argv.register,
-        requiresCredentials: true,
-      });
+      await runCommand(
+        async () => {
+          console.log(formatJson(await readFunctionDetails(argv.name)));
+        },
+        {
+          modulesToRegister: argv.register,
+          requiresCredentials: true,
+        },
+      );
     },
   )
   .command(
@@ -73,10 +78,15 @@ export default yargs
         },
       }),
     async (argv) => {
-      await runCommand(async () => await lsCommand(argv.take, argv.page), {
-        modulesToRegister: argv.register,
-        requiresCredentials: true,
-      });
+      await runCommand(
+        async () => {
+          console.log(formatJson(await listCommand(argv.take, argv.page)));
+        },
+        {
+          modulesToRegister: argv.register,
+          requiresCredentials: true,
+        },
+      );
     },
   )
   .command(

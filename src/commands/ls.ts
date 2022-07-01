@@ -1,10 +1,11 @@
+import { FunctionList } from "aws-sdk/clients/lambda";
+
 import { lambdaClient } from "../lambda_client";
-import { formatJson } from "../util";
 
 /**
  * Lists a page of functions, page size cannot be greater than 50
  */
-export async function lsCommand(take: number, page: number): Promise<void> {
+export async function listCommand(take: number, page: number): Promise<FunctionList> {
   let marker: string | undefined;
   let currentPage = 0;
 
@@ -17,15 +18,13 @@ export async function lsCommand(take: number, page: number): Promise<void> {
       .promise();
 
     if (currentPage === Math.floor(page)) {
-      console.log(formatJson(listResult.Functions));
-      process.exit(0);
+      return listResult.Functions || [];
     }
     currentPage++;
     marker = listResult.NextMarker;
 
     if (!listResult.NextMarker) {
-      console.log([]);
-      process.exit(0);
+      return [];
     }
   }
 }
