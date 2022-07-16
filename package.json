@@ -78,7 +78,7 @@
     "esbuild": "0.14.49",
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
-    "inquirer": "7.3.3",
+    "inquirer": "9.0.1",
     "jszip": "3.8.0",
     "skriva": "0.0.2",
     "skriva-transport-console": "0.0.2",
