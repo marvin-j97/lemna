@@ -3,7 +3,7 @@ import { mkdirSync } from "fs";
 import { relative, resolve } from "path";
 
 import logger from "../logger";
-import { getExecCommand, getInstallCommand, NPMClient } from "../npm_client";
+import { getInstallCommand, NPMClient } from "../npm_client";
 import { formatJson, loggedWriteFile } from "../util";
 import { ITemplateResult, TemplateFunction } from "./index";
 
@@ -18,6 +18,7 @@ function composeTsConfig(): unknown {
       target: "es6",
       module: "commonjs",
 
+      noEmit: true,
       rootDir: "src",
       baseUrl: "src",
       outDir: "build",
@@ -83,10 +84,8 @@ export const runTypescriptTemplate: TemplateFunction = async (
   logger.debug(`EXEC ${projectDir}:${cmd}`);
   execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 
-  const buildIndex = resolve(projectDir, "./build/index.js");
-
   return {
-    entryPoint: relative(projectDir, buildIndex),
-    buildSteps: [getExecCommand(npmClient, "tsc")],
+    entryPoint: relative(projectDir, indexFile),
+    buildSteps: [],
   };
 };

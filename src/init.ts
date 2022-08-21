@@ -90,7 +90,7 @@ export async function initializeLemna(): Promise<{ projectDir: string; npmClient
       },
       {
         name: "runtime",
-        choices: ["nodejs12.x", "nodejs14.x", "nodejs16.x"],
+        choices: ["nodejs14.x", "nodejs16.x"],
         type: "list",
         message: "Select runtime",
         default: "nodejs16.x",
