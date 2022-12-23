@@ -72,7 +72,7 @@
     ]
   },
   "dependencies": {
-    "aws-sdk": "2.1198.0",
+    "aws-sdk": "2.1281.0",
     "chalk": "4.1.2",
     "dotenv": "14.3.2",
     "esbuild": "0.14.49",
