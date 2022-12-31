@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://badge.fury.io/js/lemna.svg" alt="Version">
   <a href="https://codecov.io/gh/marvin-j97/lemna">
-    <img src="https://codecov.io/gh/marvin-j97/lemna/branch/master/graph/badge.svg?token=T6L95TZZXA"/>
+    <img src="https://codecov.io/gh/marvin-j97/lemna/branch/main/graph/badge.svg?token=T6L95TZZXA"/>
   </a>
   <img src="https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml/badge.svg" alt="Build Status">
 </p>
