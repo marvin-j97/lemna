@@ -19,12 +19,7 @@ module.exports = {
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
 
-    "prettier/prettier": [
-      "error",
-      {
-        endOfLine: "off",
-      },
-    ],
+    "prettier/prettier": "error",
 
     "require-jsdoc": [
       "error",
