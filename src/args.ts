@@ -1,22 +1,22 @@
-import { relative } from "node:path";
 import { randomUUID } from "node:crypto";
-
-import yargs from "yargs";
+import { relative } from "node:path";
 
 import type { Context, SQSEvent } from "aws-lambda";
+import yargs from "yargs";
+
+import { build } from "./build";
 import { runCommand } from "./commands";
 import { buildCommand } from "./commands/build";
 import { deployCommand } from "./commands/deploy";
 import { listCommand } from "./commands/ls";
 import { readFunctionDetails } from "./commands/read";
 import { rmCommand } from "./commands/rm";
+import { loadConfig } from "./config";
 import { initializeLemna } from "./init";
 import logger from "./logger";
 import { getRunCommand } from "./npm_client";
 import { formatJson } from "./util";
 import version from "./version";
-import { loadConfig } from "./config";
-import { build } from "./build";
 
 export default yargs
   .scriptName("lemna")
