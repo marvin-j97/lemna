@@ -34,6 +34,8 @@ export default yargs
       try {
         const config = await loadConfig(argv.path);
         const { bundleOutput } = await build(config);
+
+        // TODO: don't use require, use esbuild
         const { handler } = require(bundleOutput);
         if (!handler) {
           logger.error("Invalid Lambda function: no handler function");
@@ -73,8 +75,11 @@ export default yargs
             `arn:aws:lambda:eu-central-1:123456789012:function:${config.function.name}`,
           logStreamName: randomUUID(),
           memoryLimitInMB: String(config.function.memorySize || 128),
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           done: () => {},
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           fail: () => {},
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           succeed: () => {},
         };
 
