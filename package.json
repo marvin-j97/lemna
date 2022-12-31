@@ -1,24 +1,23 @@
 {
   "name": "lemna",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
   "bin": {
     "lemna": "cli.js"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14.18"
   },
   "license": "GPL-3.0",
   "scripts": {
     "start": "node cli",
-    "build": "tsc",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --fix --ext .ts",
-    "test": "ava -c 2 test/**/*.spec.ts",
-    "coverage": "cross-env LEMNA_LOG_LEVEL=debug nyc yarn test",
-    "postcoverage": "nyc report --reporter=json"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -43,38 +42,35 @@
     "@types/inquirer": "7.3.3",
     "@types/node": "16.3.2",
     "@types/yargs": "17.0.0",
-    "@typescript-eslint/eslint-plugin": "5.33.1",
-    "@typescript-eslint/parser": "5.33.1",
-    "ava": "4.3.0",
+    "@typescript-eslint/eslint-plugin": "5.47.1",
+    "@typescript-eslint/parser": "5.47.1",
+    "@vitest/coverage-istanbul": "0.26.2",
     "cross-env": "7.0.3",
-    "eslint": "8.22.0",
+    "eslint": "8.31.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-jsdoc": "39.3.3",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-simple-import-sort": "7.0.0",
-    "nyc": "15.1.0",
-    "prettier": "2.7.1",
-    "ts-node": "10.8.2",
-    "tsconfig-paths": "4.0.0",
-    "typescript": "4.7.4"
+    "prettier": "2.8.1",
+    "tsup": "6.5.0",
+    "typescript": "4.9.4",
+    "vitest": "0.26.2"
   },
   "files": [
     "dist",
     "cli.js"
   ],
-  "ava": {
-    "extensions": [
-      "ts"
-    ],
-    "require": [
-      "ts-node/register",
-      "tsconfig-paths/register"
-    ]
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
   },
   "dependencies": {
-    "aws-sdk": "2.1198.0",
+    "aws-sdk": "2.1285.0",
     "chalk": "4.1.2",
-    "dotenv": "14.3.2",
+    "dotenv": "16.0.3",
     "esbuild": "0.14.49",
     "glob": "7.1.6",
     "glob-parent": "6.0.2",
@@ -83,6 +79,6 @@
     "skriva": "0.0.2",
     "skriva-transport-console": "0.0.2",
     "yargs": "17.0.1",
-    "zod": "3.17.3"
+    "zod": "3.20.2"
   }
 }

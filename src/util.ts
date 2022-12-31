@@ -1,6 +1,6 @@
-import { writeFileSync } from "fs";
 import glob from "glob";
-import { promisify } from "util";
+import { writeFileSync } from "node:fs";
+import { promisify } from "node:util";
 
 import logger from "./logger";
 

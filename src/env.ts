@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { existsSync } from "fs";
+import { existsSync } from "node:fs";
 
 import logger from "./logger";
 

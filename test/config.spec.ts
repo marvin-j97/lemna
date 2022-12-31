@@ -1,5 +1,5 @@
-import test from "ava";
-import { resolve } from "path";
+import { describe, it, expect } from "vitest";
+import { resolve } from "node:path";
 
 import { getConfig, LemnaConfig, isValidConfig, loadConfig } from "../src/config";
 
@@ -27,24 +27,33 @@ const validConfigs: LemnaConfig[] = [
     },
     buildOptions: {},
   },
+  {
+    entryPoint: "entrypoint",
+    function: {
+      name: "function name",
+      runtime: "nodejs18.x",
+    },
+    buildOptions: {},
+  },
 ];
 
-let i = 0;
-for (const config of validConfigs) {
-  test(`Is valid config ${i}`, (t) => {
-    t.assert(isValidConfig(config));
+describe("config", () => {
+  validConfigs.forEach((config, i) => {
+    it(`should be valid config ${i + 1}`, () => {
+      expect(isValidConfig(config)).to.be.true;
+    });
   });
-  i++;
-}
 
-test("Is invalid config", (t) => {
-  t.false(isValidConfig({}));
-});
+  it("should be invalid config", () => {
+    expect(isValidConfig({})).to.be.false;
+  });
 
-test("Load config from path", (t) => {
-  const config = loadConfig(resolve(__dirname, "config.function.js"));
-  t.deepEqual(config.function.name, validConfigs[0].function.name);
+  it("should load config from path", async () => {
+    const config = await loadConfig(resolve(__dirname, "config.mjs"));
+    expect(config.function.name).to.equal(validConfigs[0].function.name);
 
-  const cachedConfig = getConfig();
-  t.deepEqual(config, cachedConfig);
+    // TODO: change, to not have global state
+    const cachedConfig = getConfig();
+    expect(config).to.deep.equal(cachedConfig);
+  });
 });

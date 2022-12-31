@@ -1,9 +1,7 @@
 import { checkAWSKeys } from "../creds";
 import logger from "../logger";
-import { registerModules } from "../register";
 
 export interface ICommandOptions {
-  modulesToRegister: string[];
   requiresCredentials: boolean;
 }
 
@@ -19,7 +17,6 @@ export async function runCommand(
   if (runOptions.requiresCredentials) {
     checkAWSKeys();
   }
-  registerModules(runOptions.modulesToRegister);
 
   try {
     await fn();

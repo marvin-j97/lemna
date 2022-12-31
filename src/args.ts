@@ -1,4 +1,4 @@
-import { relative } from "path";
+import { relative } from "node:path";
 import yargs from "yargs";
 
 import { runCommand } from "./commands";
@@ -16,14 +16,6 @@ import version from "./version";
 export default yargs
   .scriptName("lemna")
   .version(version)
-  .option({
-    register: {
-      alias: ["r"],
-      type: "array",
-      default: [],
-      description: "Register node modules",
-    },
-  })
   .command(
     ["cat <name>", "show <name>"],
     "Shows Lambda function details",
@@ -38,10 +30,7 @@ export default yargs
         async () => {
           console.log(formatJson(await readFunctionDetails(argv.name)));
         },
-        {
-          modulesToRegister: argv.register,
-          requiresCredentials: true,
-        },
+        { requiresCredentials: true },
       );
     },
   )
@@ -56,7 +45,6 @@ export default yargs
       }),
     async (argv) => {
       await runCommand(async () => rmCommand(argv.name), {
-        modulesToRegister: argv.register,
         requiresCredentials: true,
       });
     },
@@ -82,10 +70,7 @@ export default yargs
         async () => {
           console.log(formatJson(await listCommand(argv.take, argv.page)));
         },
-        {
-          modulesToRegister: argv.register,
-          requiresCredentials: true,
-        },
+        { requiresCredentials: true },
       );
     },
   )
@@ -93,7 +78,7 @@ export default yargs
     ["init", "setup"],
     "Initializes new project",
     (yargs) => yargs,
-    async (argv) => {
+    async () => {
       await runCommand(
         async () => {
           const { projectDir, npmClient } = await initializeLemna();
@@ -101,7 +86,7 @@ export default yargs
           logger.info(`cd ${relative(process.cwd(), projectDir)}`);
           logger.info(getRunCommand(npmClient, "deploy"));
         },
-        { modulesToRegister: argv.register, requiresCredentials: false },
+        { requiresCredentials: false },
       );
     },
   )
@@ -111,7 +96,7 @@ export default yargs
     (yargs) => {
       return yargs.positional("paths", {
         description: "Paths of Lemna configs to deploy",
-        default: ["lemna.config.json"],
+        default: ["lemna.config.mjs"],
       });
     },
     async (argv) => {
@@ -126,7 +111,7 @@ export default yargs
             ).toFixed(0)}%) functions`,
           );
         },
-        { modulesToRegister: argv.register, requiresCredentials: false },
+        { requiresCredentials: false },
       );
     },
   )
@@ -136,7 +121,7 @@ export default yargs
     (yargs) => {
       return yargs.positional("paths", {
         description: "Paths of Lemna configs to deploy",
-        default: ["lemna.config.json"],
+        default: ["lemna.config.mjs"],
       });
     },
     async (argv) => {
@@ -150,7 +135,7 @@ export default yargs
             ).toFixed(0)}%) functions`,
           );
         },
-        { modulesToRegister: argv.register, requiresCredentials: true },
+        { requiresCredentials: true },
       );
     },
   )

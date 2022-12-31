@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
-import { mkdirSync } from "fs";
-import { relative, resolve } from "path";
+import { execSync } from "node:child_process";
+import { mkdirSync } from "node:fs";
+import { relative, resolve } from "node:path";
 
 import logger from "../logger";
 import { getInstallCommand, NPMClient } from "../npm_client";

@@ -1,7 +1,7 @@
-import { execSync } from "child_process";
-import { existsSync, mkdirSync } from "fs";
 import inquirer from "inquirer";
-import { resolve } from "path";
+import { execSync } from "node:child_process";
+import { existsSync, mkdirSync } from "node:fs";
+import { resolve } from "node:path";
 
 import { LemnaConfig } from "./config";
 import logger from "./logger";
@@ -13,7 +13,7 @@ import { formatJson, loggedWriteFile } from "./util";
  * Creates a Lemna config file
  */
 function composeLemnaConfig(functionName: string, entryPoint: string): LemnaConfig {
-  logger.silly(`Composing lemna.config.json for ${functionName}`);
+  logger.silly(`Composing lemna.config.mjs for ${functionName}`);
   return {
     entryPoint,
     output: undefined,
@@ -130,7 +130,7 @@ export async function initializeLemna(): Promise<{ projectDir: string; npmClient
 
   const { entryPoint, buildSteps } = await runTemplate(template, projectDir, npmClient);
 
-  const lemnaConfigPath = resolve(projectDir, "lemna.config.json");
+  const lemnaConfigPath = resolve(projectDir, "lemna.config.mjs");
   const config = composeLemnaConfig(functionName, entryPoint);
   config.buildSteps = buildSteps;
   config.function.memorySize = memorySize;

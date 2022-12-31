@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync } from "fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 
 import { IFunctionSettings } from "./config";
 import { lambdaClient } from "./lambda_client";
