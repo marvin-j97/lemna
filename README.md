@@ -14,16 +14,12 @@ Lemna will transpile, bundle and upload your code - no more tedious code deployi
 
 Dependencies will be bundled into your code using esbuild (https://esbuild.github.io/), so only required code is uploaded (dev dependencies will be ignored).
 
-## Installation
-
-```
-npm i lemna -g
-```
-
 ## Scaffold new Lambda function
 
 ```
-lemna init
+npx lemna init
+yarn lemna init
+pnpm lemna init
 ```
 
 This will setup a function folder with:
