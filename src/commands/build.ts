@@ -23,7 +23,7 @@ export async function buildCommand(paths: string[]): Promise<{
 
   for await (const path of fileVisitor(paths)) {
     try {
-      const config = loadConfig(path);
+      const config = await loadConfig(path);
       const { zipFile, buildHash } = await build(config);
       logger.verbose(`Built zip file: ${zipFile}`);
       results.push({ zipFile, buildHash });

@@ -1,7 +1,8 @@
-import { createReadStream, createWriteStream, mkdirSync } from "fs";
+import { createReadStream, createWriteStream, mkdirSync } from "node:fs";
+import { dirname, join, relative, resolve } from "node:path";
+
 import globParent from "glob-parent";
 import JSZip from "jszip";
-import { dirname, join, relative, resolve } from "path";
 
 import logger from "./logger";
 import { globFiles } from "./util";

@@ -19,7 +19,7 @@ export async function deployCommand(paths: string[]): Promise<{
 
   for await (const path of fileVisitor(paths)) {
     try {
-      const config = loadConfig(path);
+      const config = await loadConfig(path);
       await deployProject(config);
       successCount++;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

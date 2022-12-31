@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync } from "fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 
 import { IFunctionSettings } from "./config";
 import { lambdaClient } from "./lambda_client";
@@ -83,7 +83,7 @@ export async function updateFunctionCode(
     const arn = configARN || process.env.LEMNA_ARN;
 
     if (error.statusCode === 404) {
-      logger.error("Function not found");
+      logger.info("Function not found");
 
       if (arn) {
         logger.info("ARN supplied, creating function");

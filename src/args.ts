@@ -1,8 +1,9 @@
-import type { Context, SQSEvent } from "aws-lambda";
-import { randomUUID } from "crypto";
-import { relative } from "path";
+import { relative } from "node:path";
+import { randomUUID } from "node:crypto";
+
 import yargs from "yargs";
 
+import type { Context, SQSEvent } from "aws-lambda";
 import { runCommand } from "./commands";
 import { buildCommand } from "./commands/build";
 import { deployCommand } from "./commands/deploy";
@@ -14,18 +15,12 @@ import logger from "./logger";
 import { getRunCommand } from "./npm_client";
 import { formatJson } from "./util";
 import version from "./version";
+import { loadConfig } from "./config";
+import { build } from "./build";
 
 export default yargs
   .scriptName("lemna")
   .version(version)
-  .option({
-    register: {
-      alias: ["r"],
-      type: "array",
-      default: [],
-      description: "Register node modules",
-    },
-  })
   .command(
     "run [path]",
     "Run Lambda function with a specific payload",
@@ -37,7 +32,7 @@ export default yargs
       }),
     async (argv) => {
       try {
-        const config = loadConfig(argv.path);
+        const config = await loadConfig(argv.path);
         const { bundleOutput } = await build(config);
         const { handler } = require(bundleOutput);
         if (!handler) {
@@ -104,10 +99,7 @@ export default yargs
         async () => {
           console.log(formatJson(await readFunctionDetails(argv.name)));
         },
-        {
-          modulesToRegister: argv.register,
-          requiresCredentials: true,
-        },
+        { requiresCredentials: true },
       );
     },
   )
@@ -122,7 +114,6 @@ export default yargs
       }),
     async (argv) => {
       await runCommand(async () => rmCommand(argv.name), {
-        modulesToRegister: argv.register,
         requiresCredentials: true,
       });
     },
@@ -148,10 +139,7 @@ export default yargs
         async () => {
           console.log(formatJson(await listCommand(argv.take, argv.page)));
         },
-        {
-          modulesToRegister: argv.register,
-          requiresCredentials: true,
-        },
+        { requiresCredentials: true },
       );
     },
   )
@@ -159,7 +147,7 @@ export default yargs
     ["init", "setup"],
     "Initializes new project",
     (yargs) => yargs,
-    async (argv) => {
+    async () => {
       await runCommand(
         async () => {
           const { projectDir, npmClient } = await initializeLemna();
@@ -167,7 +155,7 @@ export default yargs
           logger.info(`cd ${relative(process.cwd(), projectDir)}`);
           logger.info(getRunCommand(npmClient, "deploy"));
         },
-        { modulesToRegister: argv.register, requiresCredentials: false },
+        { requiresCredentials: false },
       );
     },
   )
@@ -177,7 +165,7 @@ export default yargs
     (yargs) => {
       return yargs.positional("paths", {
         description: "Paths of Lemna configs to deploy",
-        default: ["lemna.config.json"],
+        default: ["lemna.config.mjs"],
       });
     },
     async (argv) => {
@@ -192,7 +180,7 @@ export default yargs
             ).toFixed(0)}%) functions`,
           );
         },
-        { modulesToRegister: argv.register, requiresCredentials: false },
+        { requiresCredentials: false },
       );
     },
   )
@@ -202,7 +190,7 @@ export default yargs
     (yargs) => {
       return yargs.positional("paths", {
         description: "Paths of Lemna configs to deploy",
-        default: ["lemna.config.json"],
+        default: ["lemna.config.mjs"],
       });
     },
     async (argv) => {
@@ -216,7 +204,7 @@ export default yargs
             ).toFixed(0)}%) functions`,
           );
         },
-        { modulesToRegister: argv.register, requiresCredentials: true },
+        { requiresCredentials: true },
       );
     },
   )

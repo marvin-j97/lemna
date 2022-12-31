@@ -1,5 +1,6 @@
-import { existsSync, mkdirSync, statSync } from "fs";
-import { parse, resolve } from "path";
+import { existsSync, mkdirSync, statSync } from "node:fs";
+import { parse, resolve } from "node:path";
+
 import * as z from "zod";
 
 import logger from "./logger";
@@ -12,7 +13,7 @@ const functionSettingsSchema = z
     description: z.string().optional(),
     memorySize: z.number().int().min(1).optional(),
     handler: z.string().optional(),
-    runtime: z.enum(["nodejs12.x", "nodejs14.x", "nodejs16.x"]),
+    runtime: z.enum(["nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x"]),
     env: z.record(z.string()).optional(),
     tags: z.record(z.string()).optional(),
     timeout: z.number().optional(),
@@ -73,10 +74,10 @@ export function getTempFolder(folder: string): string {
 }
 
 /**
- * Loads a config from file (.json or .js)
+ * Loads a config from file (.mjs)
  * Automatically creates temp folder next to the config
  */
-export function loadConfig(file: string): LemnaConfig {
+export async function loadConfig(file: string): Promise<LemnaConfig> {
   const path = resolve(file);
   logger.debug(`Loading config at ${path}`);
 
@@ -88,16 +89,10 @@ export function loadConfig(file: string): LemnaConfig {
     throw new Error(`${path} is a directory`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  let content = require(path);
+  let content = await import(path);
 
   if (content.default) {
     content = content.default;
-  }
-
-  if (typeof content === "function") {
-    logger.verbose(`Config is a function, executing`);
-    content = content();
   }
 
   logger.silly("Loaded config:");

@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://badge.fury.io/js/lemna.svg" alt="Version">
   <a href="https://codecov.io/gh/marvin-j97/lemna">
-    <img src="https://codecov.io/gh/marvin-j97/lemna/branch/master/graph/badge.svg?token=T6L95TZZXA"/>
+    <img src="https://codecov.io/gh/marvin-j97/lemna/branch/main/graph/badge.svg?token=T6L95TZZXA"/>
   </a>
   <img src="https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml/badge.svg" alt="Build Status">
 </p>
@@ -14,16 +14,12 @@ Lemna will transpile, bundle and upload your code - no more tedious code deployi
 
 Dependencies will be bundled into your code using esbuild (https://esbuild.github.io/), so only required code is uploaded (dev dependencies will be ignored).
 
-## Installation
-
-```
-npm i lemna -g
-```
-
 ## Scaffold new Lambda function
 
 ```
-lemna init
+npx lemna init
+yarn lemna init
+pnpm lemna init
 ```
 
 This will setup a function folder with:
@@ -32,7 +28,7 @@ This will setup a function folder with:
 - Typescript (+ tsconfig)
 - Lambda typings (@types/aws-lambda)
 - Basic Lambda handler (src/index.ts)
-- Lemna config (lemna.config.json)
+- Lemna config (lemna.config.mjs)
 
 ## Building
 
@@ -43,13 +39,13 @@ lemna build
 ### Use a custom path
 
 ```
-lemna build my-app/lemna.config.json
+lemna build my-app/lemna.config.mjs
 ```
 
 ### Use glob patterns
 
 ```
-lemna build lambdas/**/lemna.config.json
+lemna build lambdas/**/lemna.config.mjs
 ```
 
 ## Deployment
@@ -66,19 +62,19 @@ Note: `deploy` will run `build` automatically
 ### Use a custom path
 
 ```
-lemna deploy my-app/lemna.config.json
+lemna deploy my-app/lemna.config.mjs
 ```
 
 ### Use glob patterns
 
 ```
-lemna deploy lambdas/**/lemna.config.json
+lemna deploy lambdas/**/lemna.config.mjs
 ```
 
-### Use CommonJS module (with intellisense) as config
+### Use ESM module (with intellisense) as config
 
 ```js
-// lemna.config.js
+// lemna.config.mjs
 
 // @ts-check
 
@@ -97,13 +93,13 @@ module.exports = config;
 ```
 
 ```
-lemna deploy lemna.config.js
+lemna deploy lemna.config.mjs
 ```
 
 ### Deploy multiple functions
 
 ```
-lemna deploy firstconfig.json secondconfig.json [...]
+lemna deploy firstconfig.mjs secondconfig.mjs [...]
 ```
 
 ## Other features
@@ -144,16 +140,16 @@ LEMNA_LOG_LEVEL=silly lemna deploy
 
 ## Use in existing project
 
-- Create a `lemna.config.json`, including at least:
+- Create a `lemna.config.mjs`, including at least:
 
-```json
-{
-  "entryPoint": "path to .js file",
-  "function": {
-    "name": "lambda-function-name",
-    "runtime": "nodejs16.x"
-  }
-}
+```js
+export default {
+  entryPoint: "path to .js file",
+  function: {
+    name: "lambda-function-name",
+    runtime: "nodejs16.x",
+  },
+};
 ```
 
 ## Required AWS policies

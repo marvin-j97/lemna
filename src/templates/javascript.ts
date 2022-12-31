@@ -1,5 +1,5 @@
-import { mkdirSync } from "fs";
-import { relative, resolve } from "path";
+import { mkdirSync } from "node:fs";
+import { relative, resolve } from "node:path";
 
 import logger from "../logger";
 import { loggedWriteFile } from "../util";

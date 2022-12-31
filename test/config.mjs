@@ -1,4 +1,4 @@
-module.exports = () => ({
+export default {
   entryPoint: "entrypoint",
   buildSteps: undefined,
   bundle: undefined,
@@ -10,4 +10,4 @@ module.exports = () => ({
     memorySize: undefined,
     env: undefined,
   },
-});
+};

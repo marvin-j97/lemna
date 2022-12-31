@@ -1,7 +1,8 @@
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
+import { mkdirSync } from "node:fs";
+import { resolve } from "node:path";
+
 import crypto from "crypto";
-import { mkdirSync } from "fs";
-import { resolve } from "path";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, LemnaConfig } from "./config";
