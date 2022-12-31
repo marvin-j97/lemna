@@ -1,4 +1,5 @@
 import { relative } from "node:path";
+
 import yargs from "yargs";
 
 import { runCommand } from "./commands";

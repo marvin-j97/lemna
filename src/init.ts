@@ -1,7 +1,8 @@
-import inquirer from "inquirer";
 import { execSync } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
+
+import inquirer from "inquirer";
 
 import { LemnaConfig } from "./config";
 import logger from "./logger";
