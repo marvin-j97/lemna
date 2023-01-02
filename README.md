@@ -1,6 +1,8 @@
 <h1 align="center">Lemna</h1>
 
 <p align="center">
+  <img src="https://img.shields.io/static/v1?label=&message=TS+ready&color=000000&logo=typescript" alt="TS ready">
+  <img src="https://img.shields.io/static/v1?label=&message=ESM+ready&color=%23000000&logo=javascript" alt="ESM ready">
   <img src="https://badge.fury.io/js/lemna.svg" alt="Version">
   <a href="https://codecov.io/gh/marvin-j97/lemna">
     <img src="https://codecov.io/gh/marvin-j97/lemna/branch/main/graph/badge.svg?token=T6L95TZZXA"/>
