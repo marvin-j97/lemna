@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
-    "@types/glob": "7.1.4",
+    "@types/glob": "7.2.0",
     "@types/glob-parent": "5.1.1",
     "@types/inquirer": "7.3.3",
     "@types/node": "16.3.2",
@@ -72,7 +72,7 @@
     "chalk": "5.2.0",
     "dotenv": "16.0.3",
     "esbuild": "0.17.18",
-    "glob": "7.1.6",
+    "glob": "7.2.3",
     "glob-parent": "6.0.2",
     "inquirer": "7.3.3",
     "jszip": "3.8.0",
