@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
 import { resolve } from "node:path";
 
-import { getConfig, LemnaConfig, isValidConfig, loadConfig } from "../src/config";
+import { describe, expect, it } from "vitest";
+
+import { getConfig, isValidConfig, LemnaConfig, loadConfig } from "../src/config";
 
 const validConfigs: LemnaConfig[] = [
   {

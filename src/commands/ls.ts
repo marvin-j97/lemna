@@ -18,7 +18,7 @@ export async function listCommand(take: number, page: number): Promise<FunctionL
       .promise();
 
     if (currentPage === Math.floor(page)) {
-      return listResult.Functions || [];
+      return listResult.Functions ?? [];
     }
     currentPage++;
     marker = listResult.NextMarker;

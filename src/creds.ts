@@ -2,6 +2,8 @@ import logger from "./logger";
 
 /**
  * Checks for required AWS keys, exits if any is not found
+ *
+ * https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
  */
 export function checkAWSKeys(): void {
   if (!process.env.AWS_ACCESS_KEY_ID) {

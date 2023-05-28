@@ -37,10 +37,6 @@ export async function buildCommand(paths: string[]): Promise<{
   }
 
   const matchedCount = successCount + errorCount;
-  if (!matchedCount) {
-    logger.error("No files matched the inputs");
-    process.exit(1);
-  }
 
   return { results, successCount, matchedCount, errorCount };
 }

@@ -7,8 +7,6 @@ export interface ICommandOptions {
 
 /**
  * Command wrapper
- *
- * Registers node modules if needed and checks AWS credentials
  */
 export async function runCommand(
   fn: () => Promise<void>,
@@ -24,5 +22,6 @@ export async function runCommand(
   } catch (error: any) {
     logger.error(`Error during operation: ${error.message}`);
     logger.silly(error.stack);
+    process.exit(1);
   }
 }

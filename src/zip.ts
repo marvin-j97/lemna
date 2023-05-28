@@ -36,7 +36,7 @@ export async function composeZip(
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
   zip.file("index.js", createReadStream(bundlePath));
 
-  for (const [base, patterns] of Object.entries(extraFiles || {})) {
+  for (const [base, patterns] of Object.entries(extraFiles ?? {})) {
     const files = await globFiles(patterns, projectDir);
 
     if (!files.length) {

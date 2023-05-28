@@ -13,7 +13,7 @@ const functionSettingsSchema = z
     description: z.string().optional(),
     memorySize: z.number().int().min(1).optional(),
     handler: z.string().optional(),
-    runtime: z.enum(["nodejs12.x", "nodejs14.x", "nodejs16.x", "nodejs18.x"]),
+    runtime: z.enum(["nodejs16.x", "nodejs18.x"]),
     env: z.record(z.string()).optional(),
     tags: z.record(z.string()).optional(),
     timeout: z.number().optional(),

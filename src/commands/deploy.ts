@@ -31,10 +31,6 @@ export async function deployCommand(paths: string[]): Promise<{
   }
 
   const matchedCount = successCount + errorCount;
-  if (!matchedCount) {
-    logger.error("No files matched the inputs");
-    process.exit(1);
-  }
 
   return { matchedCount, successCount, errorCount };
 }

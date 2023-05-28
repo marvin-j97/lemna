@@ -1,4 +1,4 @@
-import chalk, { Chalk } from "chalk";
+import chalk, { type ChalkInstance } from "chalk";
 import { createLogger } from "skriva";
 import { createConsoleTransport } from "skriva-transport-console";
 
@@ -19,7 +19,7 @@ if (logLevel && !(logLevel in logLevels)) {
   process.exit(1);
 }
 
-const colorize: Record<keyof typeof logLevels, Chalk> = {
+const colorize: Record<keyof typeof logLevels, ChalkInstance> = {
   error: chalk.red,
   warn: chalk.yellow,
   info: chalk.green,

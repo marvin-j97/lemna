@@ -1,8 +1,7 @@
 import { execSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
-
-import crypto from "crypto";
 
 import { bundleCode } from "./bundle";
 import { getProjectDirectory, getTempFolder, LemnaConfig } from "./config";
@@ -14,7 +13,7 @@ import { composeZip, saveZip } from "./zip";
  * Generates a random hash for build artifacts
  */
 function buildHash(): string {
-  return crypto.randomBytes(12).toString("hex");
+  return randomBytes(12).toString("hex");
 }
 
 interface IBuildResult {
@@ -45,20 +44,20 @@ export async function build(config: LemnaConfig): Promise<IBuildResult> {
   logger.silly(formatJson(config));
 
   // Build steps
-  runBuildSteps(config.buildSteps || [], projectDir);
+  runBuildSteps(config.buildSteps ?? [], projectDir);
 
   // Bundle
   const bundleOutputFolder = resolve(getTempFolder(projectDir), hash);
   mkdirSync(bundleOutputFolder, { recursive: true });
 
   const bundleOutput = resolve(bundleOutputFolder, "index.js");
-  await bundleCode(entryPoint, bundleOutput, config.buildOptions || {});
+  await bundleCode(entryPoint, bundleOutput, config.buildOptions ?? {});
 
   // Zip
   const zipFile = resolve(bundleOutputFolder, "bundle.zip");
   const zip = await composeZip(projectDir, bundleOutput, config.bundle);
 
-  const zipPath = resolve(projectDir, config.output || zipFile);
+  const zipPath = resolve(projectDir, config.output ?? zipFile);
   await saveZip(zip, zipPath);
 
   return {

@@ -111,6 +111,10 @@ export default yargs
               100
             ).toFixed(0)}%) functions`,
           );
+
+          if (!matchedCount) {
+            throw new Error("No files matched the inputs");
+          }
         },
         { requiresCredentials: false },
       );
@@ -135,6 +139,10 @@ export default yargs
               100
             ).toFixed(0)}%) functions`,
           );
+
+          if (!matchedCount) {
+            throw new Error("No files matched the inputs");
+          }
         },
         { requiresCredentials: true },
       );
