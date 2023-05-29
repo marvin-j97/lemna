@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
   aws-sdk:
@@ -40,8 +44,8 @@ dependencies:
 
 devDependencies:
   '@types/glob':
-    specifier: 7.1.4
-    version: 7.1.4
+    specifier: 8.1.0
+    version: 8.1.0
   '@types/glob-parent':
     specifier: 5.1.1
     version: 5.1.1
@@ -856,8 +860,8 @@ packages:
     resolution: {integrity: sha512-r2rwLjU4mYJmX3S81d8KxCboZOGPVEN5hvtYKzQ0aFNRhYir3DIVf8Hlznr65Wk748swi6hhccsDo3MyydHb2A==}
     dev: true
 
-  /@types/glob@7.1.4:
-    resolution: {integrity: sha512-w+LsMxKyYQm347Otw+IfBXOv9UWVjpHpCDdbBMt8Kz/xbvCYNjP+0qPh91Km3iKfSRLBB0P7fAMf0KHrPu+MyA==}
+  /@types/glob@8.1.0:
+    resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
       '@types/node': 16.3.2
