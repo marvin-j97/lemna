@@ -1,6 +1,4 @@
-import { build } from "../build";
-import { loadConfig } from "../config";
-import logger from "../logger";
+import { Lemna } from "../lemna";
 import { fileVisitor, formatJson } from "../util";
 
 type BuildItem = { zipFile: string; buildHash: string };
@@ -8,14 +6,17 @@ type BuildItem = { zipFile: string; buildHash: string };
 /**
  * Build command
  */
-export async function buildCommand(paths: string[]): Promise<{
+export async function buildCommand(
+  client: Lemna,
+  paths: string[],
+): Promise<{
   results: BuildItem[];
   successCount: number;
   matchedCount: number;
   errorCount: number;
 }> {
-  logger.silly(`Build paths:`);
-  logger.silly(formatJson(paths));
+  client.logger.silly(`Build paths:`);
+  client.logger.silly(formatJson(paths));
 
   let successCount = 0;
   let errorCount = 0;
@@ -23,15 +24,13 @@ export async function buildCommand(paths: string[]): Promise<{
 
   for await (const path of fileVisitor(paths)) {
     try {
-      const config = await loadConfig(path);
-      const { zipFile, buildHash } = await build(config);
-      logger.verbose(`Built zip file: ${zipFile}`);
-      results.push({ zipFile, buildHash });
+      const { buildHash, zipFile } = await client.buildAtPath(path);
+      results.push({ buildHash, zipFile });
       successCount++;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      logger.warn(`Error building ${path}: ${error.message}`);
-      logger.silly(error.stack);
+      client.logger.warn(`Error building ${path}: ${error.message}`);
+      client.logger.silly(error.stack);
       errorCount++;
     }
   }

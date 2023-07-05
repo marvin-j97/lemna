@@ -1,10 +1,10 @@
 import chalk, { type ChalkInstance } from "chalk";
-import { createLogger } from "skriva";
+import { createLogger, LogFunction } from "skriva";
 import { createConsoleTransport } from "skriva-transport-console";
 
 import { formatJson } from "./util";
 
-const logLevels = {
+export const logLevels = {
   error: 0,
   warn: 10,
   info: 20,
@@ -13,11 +13,7 @@ const logLevels = {
   silly: 50,
 };
 
-const logLevel = process.env.LEMNA_LOG_LEVEL;
-if (logLevel && !(logLevel in logLevels)) {
-  console.error(`Invalid log level: ${logLevel}`);
-  process.exit(1);
-}
+export type LogLevel = keyof typeof logLevels;
 
 const colorize: Record<keyof typeof logLevels, ChalkInstance> = {
   error: chalk.red,
@@ -28,24 +24,34 @@ const colorize: Record<keyof typeof logLevels, ChalkInstance> = {
   silly: chalk.blueBright,
 };
 
-const logger = createLogger<unknown, typeof logLevels, { timestamp: Date }>({
-  context: () => ({ timestamp: new Date() }),
-  logLevels,
-  level: <keyof typeof logLevels>logLevel || "info",
-  transports: [
-    {
-      handler: createConsoleTransport({
-        format: ({ timestamp, level, message }) => {
-          if (typeof message === "string") {
-            return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${message}`;
-          }
-          return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${formatJson(
-            message,
-          )}`;
-        },
-      }),
-    },
-  ],
-});
+/**
+ * Creates a logger instance
+ */
+export function createLemnaLogger(level: LogLevel): Record<LogLevel, LogFunction<unknown>> {
+  return createLogger<unknown, typeof logLevels, { timestamp: Date }>({
+    context: () => ({ timestamp: new Date() }),
+    logLevels,
+    level,
+    transports: [
+      {
+        handler: createConsoleTransport({
+          format: ({ timestamp, level, message }) => {
+            if (message instanceof Error) {
+              return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${
+                message.message
+              }`;
+            }
+            if (typeof message === "string") {
+              return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${message}`;
+            }
+            return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${formatJson(
+              message,
+            )}`;
+          },
+        }),
+      },
+    ],
+  });
+}
 
-export default logger;
+export type Logger = Record<LogLevel, LogFunction<unknown>>;

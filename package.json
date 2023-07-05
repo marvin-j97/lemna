@@ -1,20 +1,21 @@
 {
   "name": "lemna",
   "version": "2.0.0",
-  "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript",
+  "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
   "bin": {
-    "lemna": "cli.js"
+    "lemna": "cli.mjs"
   },
   "engines": {
-    "node": ">=14.18"
+    "node": "18 || 20"
   },
-  "license": "GPL-3.0",
+  "license": "MIT",
   "scripts": {
-    "start": "node cli",
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "start": "node cli.mjs",
+    "build": "tsup --entry src/bin.ts --entry src/index.ts --format cjs,esm --dts --clean",
+    "lint": "eslint src --ext .ts",
     "fmt": "eslint src --ext .ts --fix",
     "test": "vitest run",
     "coverage": "vitest run --coverage"
@@ -37,24 +38,25 @@
   },
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
-    "@types/glob": "7.1.4",
+    "@types/glob": "8.1.0",
     "@types/glob-parent": "5.1.1",
-    "@types/inquirer": "7.3.3",
-    "@types/node": "16.18.34",
-    "@types/yargs": "17.0.0",
-    "@typescript-eslint/eslint-plugin": "5.59.7",
-    "@typescript-eslint/parser": "5.59.7",
-    "@vitest/coverage-istanbul": "0.31.1",
+    "@types/inquirer": "9.0.3",
+    "@types/node": "16.18.38",
+    "@types/yargs": "17.0.24",
+    "@typescript-eslint/eslint-plugin": "5.61.0",
+    "@typescript-eslint/parser": "5.61.0",
+    "@vitest/coverage-istanbul": "0.32.4",
     "cross-env": "7.0.3",
-    "eslint": "8.39.0",
+    "eslint": "8.44.0",
     "eslint-config-prettier": "8.8.0",
-    "eslint-plugin-jsdoc": "39.9.1",
+    "eslint-plugin-jsdoc": "46.4.3",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-simple-import-sort": "10.0.0",
-    "prettier": "2.8.8",
-    "tsup": "6.7.0",
-    "typescript": "5.0.4",
-    "vitest": "0.31.1"
+    "prettier": "3.0.0",
+    "tsup": "7.1.0",
+    "tsx": "3.12.7",
+    "typescript": "5.1.6",
+    "vitest": "0.32.4"
   },
   "files": [
     "dist",
@@ -69,16 +71,16 @@
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "3.341.0",
-    "chalk": "5.2.0",
-    "dotenv": "16.0.3",
-    "esbuild": "0.17.18",
-    "glob": "7.1.6",
+    "chalk": "5.3.0",
+    "dotenv": "16.3.1",
+    "esbuild": "0.18.11",
+    "glob": "10.3.1",
     "glob-parent": "6.0.2",
-    "inquirer": "7.3.3",
-    "jszip": "3.8.0",
+    "inquirer": "9.2.7",
+    "jszip": "3.10.1",
     "skriva": "0.0.2",
     "skriva-transport-console": "0.0.2",
-    "yargs": "17.0.1",
+    "yargs": "17.7.2",
     "zod": "3.21.4"
   }
 }

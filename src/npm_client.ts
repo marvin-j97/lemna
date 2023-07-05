@@ -1,25 +1,21 @@
-export enum NPMClient {
-  Npm = "npm",
-  Yarn = "yarn",
-  Pnpm = "pnpm",
-}
+export type NPMClient = "npm" | "yarn" | "pnpm";
 
-const installCommands: Record<string, string> = {
-  [NPMClient.Npm]: `npm i`,
-  [NPMClient.Pnpm]: `pnpm add`,
-  [NPMClient.Yarn]: `yarn add`,
+const installCommands: Record<NPMClient, string> = {
+  npm: `npm i`,
+  pnpm: `pnpm add`,
+  yarn: `yarn add`,
 };
 
 const execCommands: Record<string, (client: string) => string> = {
-  [NPMClient.Npm]: (cmd) => `npx ${cmd}`,
-  [NPMClient.Yarn]: (cmd) => `yarn ${cmd}`,
-  [NPMClient.Pnpm]: (cmd) => `pnpm exec ${cmd}`,
+  npm: (cmd) => `npx ${cmd}`,
+  yarn: (cmd) => `yarn ${cmd}`,
+  pnpm: (cmd) => `pnpm exec ${cmd}`,
 };
 
 const runCommands: Record<string, (client: string) => string> = {
-  [NPMClient.Npm]: (cmd) => `npm run ${cmd}`,
-  [NPMClient.Yarn]: (cmd) => `yarn ${cmd}`,
-  [NPMClient.Pnpm]: (cmd) => `pnpm run ${cmd}`,
+  npm: (cmd) => `npm run ${cmd}`,
+  yarn: (cmd) => `yarn ${cmd}`,
+  pnpm: (cmd) => `pnpm run ${cmd}`,
 };
 
 /**

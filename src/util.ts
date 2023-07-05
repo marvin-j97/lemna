@@ -1,9 +1,9 @@
 import { writeFileSync } from "node:fs";
-import { promisify } from "node:util";
+import { resolve } from "node:path";
 
-import glob from "glob";
+import { glob } from "glob";
 
-import logger from "./logger";
+import { RuntimeVersion } from "./config";
 
 /**
  * Stringifies JSON into readable format
@@ -15,12 +15,9 @@ export function formatJson<T>(json: T): string {
 /**
  * Writes content to a file
  */
-export function loggedWriteFile(path: string, content: string): void {
-  logger.silly(`Writing to file ${path} with ${content.length} characters`);
-  writeFileSync(path, content);
+export function writeToFile(path: string, content: string): void {
+  writeFileSync(path, content, "utf-8");
 }
-
-export const globPromise = promisify(glob);
 
 /**
  * Finds all files described by multiple glob patterns
@@ -29,9 +26,7 @@ export async function globFiles(input: string[], cwd: string): Promise<string[]>
   const files = [
     ...new Set(
       (
-        await Promise.all(
-          input.map((item) => globPromise(item, { cwd, nodir: true, absolute: true })),
-        )
+        await Promise.all(input.map((item) => glob(item, { cwd, nodir: true, absolute: true })))
       ).flat(),
     ),
   ];
@@ -43,13 +38,26 @@ export async function globFiles(input: string[], cwd: string): Promise<string[]>
  */
 export async function* fileVisitor(globs: string[], cwd = process.cwd()): AsyncGenerator<string> {
   for (const globExp of globs) {
-    const files = await globPromise(globExp, { cwd });
-
-    logger.silly("Glob result:");
-    logger.silly(files);
+    const files = await glob(globExp, { cwd });
 
     for (const file of files) {
       yield file;
     }
   }
+}
+
+const HAS_V3_REGEX = /^nodejs(18|20).x$/;
+
+/**
+ * Returns true if the runtime version has aws-sdk v3 built in
+ */
+export function hasV3(version: RuntimeVersion): boolean {
+  return HAS_V3_REGEX.test(version);
+}
+
+/**
+ * Returns the path of the temp folder (.lemna)
+ */
+export function getTempFolderPath(folder: string): string {
+  return resolve(folder, ".lemna");
 }

@@ -1,5 +1,6 @@
 import { checkAWSKeys } from "../creds";
-import logger from "../logger";
+import { Lemna } from "../lemna";
+import { createLemnaLogger, LogLevel, logLevels } from "../logger";
 
 export interface ICommandOptions {
   requiresCredentials: boolean;
@@ -9,19 +10,29 @@ export interface ICommandOptions {
  * Command wrapper
  */
 export async function runCommand(
-  fn: () => Promise<void>,
+  fn: (client: Lemna) => Promise<void>,
   runOptions: ICommandOptions,
 ): Promise<void> {
-  if (runOptions.requiresCredentials) {
-    checkAWSKeys();
+  const logLevel = process.env.LEMNA_LOG_LEVEL;
+  if (logLevel && !(logLevel in logLevels)) {
+    console.error(`Invalid log level: ${logLevel}`);
+    process.exit(1);
   }
 
+  const logger = createLemnaLogger((process.env.LEMNA_LOG_LEVEL as LogLevel) ?? "info");
+
+  if (runOptions.requiresCredentials) {
+    checkAWSKeys(logger);
+  }
+
+  const client = new Lemna(logger);
+
   try {
-    await fn();
+    await fn(client);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    logger.error(`Error during operation: ${error.message}`);
-    logger.silly(error.stack);
+    client.logger.error(`Error during operation: ${error.message}`);
+    client.logger.silly(error.stack);
     process.exit(1);
   }
 }

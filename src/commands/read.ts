@@ -1,11 +1,13 @@
-import type { GetFunctionResponse } from "aws-sdk/clients/lambda";
+import { GetFunctionCommand, GetFunctionResponse } from "@aws-sdk/client-lambda";
 
-import { lambdaClient } from "../lambda_client";
+import { Lemna } from "../lemna";
 
 /**
  * Get a function's information
  */
-export async function readFunctionDetails(name: string): Promise<GetFunctionResponse> {
-  const func = await lambdaClient.getFunction({ FunctionName: name }).promise();
-  return func;
+export async function getFunctionCommand(
+  client: Lemna,
+  name: string,
+): Promise<GetFunctionResponse> {
+  return client.lambdaClient.send(new GetFunctionCommand({ FunctionName: name }));
 }

@@ -1,11 +1,9 @@
-import { build } from "./build";
-import { LemnaConfig } from "./config";
-import { updateFunctionCode } from "./upload";
+import { Lemna } from "./lemna";
 
 /**
  * Deploys a project
  */
-export async function deployProject(config: LemnaConfig): Promise<void> {
-  const { zipFile } = await build(config);
-  await updateFunctionCode(config.function, zipFile);
+export async function deployWithConfigPath(client: Lemna, projectDir: string): Promise<void> {
+  const { zipFile, config } = await client.buildAtPath(projectDir);
+  await client.updateOrCreateFunction(config.function, zipFile);
 }

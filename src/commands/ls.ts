@@ -1,21 +1,25 @@
-import { FunctionList } from "aws-sdk/clients/lambda";
+import { FunctionConfiguration, ListFunctionsCommand } from "@aws-sdk/client-lambda";
 
-import { lambdaClient } from "../lambda_client";
+import { Lemna } from "../lemna";
 
 /**
  * Lists a page of functions, page size cannot be greater than 50
  */
-export async function listCommand(take: number, page: number): Promise<FunctionList> {
+export async function listCommand(
+  client: Lemna,
+  take: number,
+  page: number,
+): Promise<FunctionConfiguration[]> {
   let marker: string | undefined;
   let currentPage = 0;
 
   for (;;) {
-    const listResult = await lambdaClient
-      .listFunctions({
+    const listResult = await client.lambdaClient.send(
+      new ListFunctionsCommand({
         MaxItems: Math.floor(take),
         Marker: marker,
-      })
-      .promise();
+      }),
+    );
 
     if (currentPage === Math.floor(page)) {
       return listResult.Functions ?? [];

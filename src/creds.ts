@@ -1,11 +1,11 @@
-import logger from "./logger";
+import { Logger } from "./logger";
 
 /**
  * Checks for required AWS keys, exits if any is not found
  *
  * https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html
  */
-export function checkAWSKeys(): void {
+export function checkAWSKeys(logger: Logger): void {
   if (!process.env.AWS_ACCESS_KEY_ID) {
     logger.error(`Missing AWS_ACCESS_KEY_ID environment variable`);
     process.exit(1);

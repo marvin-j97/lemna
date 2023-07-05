@@ -1,152 +1,169 @@
 import { relative } from "node:path";
 
-import yargs from "yargs";
+import yargs from "yargs/yargs";
 
 import { runCommand } from "./commands";
 import { buildCommand } from "./commands/build";
 import { deployCommand } from "./commands/deploy";
 import { listCommand } from "./commands/ls";
-import { readFunctionDetails } from "./commands/read";
-import { rmCommand } from "./commands/rm";
+import { getFunctionCommand } from "./commands/read";
+import { removeCommand } from "./commands/rm";
 import { initializeLemna } from "./init";
-import logger from "./logger";
 import { getRunCommand } from "./npm_client";
-import { formatJson } from "./util";
+import { formatJson, hasV3 } from "./util";
 import version from "./version";
 
-export default yargs
-  .scriptName("lemna")
-  .version(version)
-  .command(
-    ["cat <name>", "show <name>"],
-    "Shows Lambda function details",
-    (yargs) =>
-      yargs.positional("name", {
-        type: "string",
-        description: "Name of function to delete",
-        demandOption: true,
-      }),
-    async (argv) => {
-      await runCommand(
-        async () => {
-          console.log(formatJson(await readFunctionDetails(argv.name)));
-        },
-        { requiresCredentials: true },
-      );
-    },
-  )
-  .command(
-    ["rm <name>", "remove <name>", "delete <name>"],
-    "Deletes a Lambda function",
-    (yargs) =>
-      yargs.positional("name", {
-        type: "string",
-        description: "Name of function to delete",
-        demandOption: true,
-      }),
-    async (argv) => {
-      await runCommand(async () => rmCommand(argv.name), {
-        requiresCredentials: true,
-      });
-    },
-  )
-  .command(
-    ["ls", "list"],
-    "Lists functions in account",
-    (yargs) =>
-      yargs.option({
-        page: {
-          description: "Page to display (zero-indexed)",
-          default: 0,
-          type: "number",
-        },
-        take: {
-          description: "Page size",
-          default: 50,
-          type: "number",
-        },
-      }),
-    async (argv) => {
-      await runCommand(
-        async () => {
-          console.log(formatJson(await listCommand(argv.take, argv.page)));
-        },
-        { requiresCredentials: true },
-      );
-    },
-  )
-  .command(
-    ["init", "setup"],
-    "Initializes new project",
-    (yargs) => yargs,
-    async () => {
-      await runCommand(
-        async () => {
-          const { projectDir, npmClient } = await initializeLemna();
-          logger.info("Setup successful, run:");
-          logger.info(`cd ${relative(process.cwd(), projectDir)}`);
-          logger.info(getRunCommand(npmClient, "deploy"));
-        },
-        { requiresCredentials: false },
-      );
-    },
-  )
-  .command(
-    "build [paths..]",
-    "Builds one or multiple projects",
-    (yargs) => {
-      return yargs.positional("paths", {
-        description: "Paths of Lemna configs to deploy",
-        default: ["lemna.config.mjs"],
-      });
-    },
-    async (argv) => {
-      await runCommand(
-        async () => {
-          const { results, matchedCount, successCount } = await buildCommand(argv.paths);
-          console.log(formatJson({ built: results }));
-          logger.info(
-            `Successfully built ${successCount}/${matchedCount} (${(
-              (successCount / matchedCount) *
-              100
-            ).toFixed(0)}%) functions`,
-          );
+// eslint-disable-next-line max-lines-per-function, require-jsdoc
+export async function parseArgs(): Promise<void> {
+  await yargs(process.argv.slice(2))
+    .scriptName("lemna")
+    .version(version)
+    .command(
+      ["cat <name>", "show <name>"],
+      "Shows Lambda function details",
+      (yargs) =>
+        yargs.positional("name", {
+          type: "string",
+          description: "Name of function to delete",
+          demandOption: true,
+        }),
+      async (argv) => {
+        await runCommand(
+          async (client) => {
+            console.log(formatJson(await getFunctionCommand(client, argv.name)));
+          },
+          { requiresCredentials: true },
+        );
+      },
+    )
+    .command(
+      ["rm [names..]", "remove [names..]", "delete <name>"],
+      "Deletes Lambda functions",
+      (yargs) =>
+        yargs.positional("names", {
+          type: "string",
+          description: "Names of functions to delete",
+          demandOption: true,
+          array: true,
+        }),
+      async (argv) => {
+        await runCommand(async (client) => removeCommand(client, argv.names), {
+          requiresCredentials: true,
+        });
+      },
+    )
+    .command(
+      ["ls", "list"],
+      "Lists functions in account",
+      (yargs) =>
+        yargs.option({
+          page: {
+            description: "Page to display (zero-indexed)",
+            default: 0,
+            type: "number",
+          },
+          take: {
+            description: "Page size",
+            default: 50,
+            type: "number",
+          },
+        }),
+      async (argv) => {
+        await runCommand(
+          async (client) => {
+            console.log(formatJson(await listCommand(client, argv.take, argv.page)));
+          },
+          { requiresCredentials: true },
+        );
+      },
+    )
+    .command(
+      ["init", "setup", "new"],
+      "Initializes new project",
+      (yargs) => yargs,
+      async () => {
+        await runCommand(
+          async (client) => {
+            const { projectDir, npmClient, nodeVersion } = await initializeLemna(client);
 
-          if (!matchedCount) {
-            throw new Error("No files matched the inputs");
-          }
-        },
-        { requiresCredentials: false },
-      );
-    },
-  )
-  .command(
-    ["deploy [paths..]", "up [paths..]"],
-    "Builds and deploys one or multiple projects",
-    (yargs) => {
-      return yargs.positional("paths", {
-        description: "Paths of Lemna configs to deploy",
-        default: ["lemna.config.mjs"],
-      });
-    },
-    async (argv) => {
-      await runCommand(
-        async () => {
-          const { matchedCount, successCount } = await deployCommand(argv.paths);
-          logger.info(
-            `Successfully deployed ${successCount}/${matchedCount} (${(
-              (successCount / matchedCount) *
-              100
-            ).toFixed(0)}%) functions`,
-          );
+            if (hasV3(nodeVersion)) {
+              client.logger.warn(
+                `You have chosen Node.js version "${nodeVersion}" which has aws-sdk V3, NOT aws-sdk V2 built in.`,
+              );
+              client.logger.warn(
+                `Read more here: https://aws.amazon.com/de/blogs/developer/why-and-how-you-should-use-aws-sdk-for-javascript-v3-on-node-js-18/`,
+              );
+            }
 
-          if (!matchedCount) {
-            throw new Error("No files matched the inputs");
-          }
-        },
-        { requiresCredentials: true },
-      );
-    },
-  )
-  .strictCommands()
-  .demandCommand(1).argv;
+            client.logger.info("Setup successful, run:");
+            client.logger.info(`cd ${relative(process.cwd(), projectDir)}`);
+            client.logger.info(getRunCommand(npmClient, "deploy"));
+          },
+          { requiresCredentials: false },
+        );
+      },
+    )
+    .command(
+      "build [paths..]",
+      "Builds one or multiple projects",
+      (yargs) => {
+        return yargs.positional("paths", {
+          description: "Paths of Lemna configs to deploy",
+          default: ["lemna.config.mjs"],
+        });
+      },
+      async (argv) => {
+        await runCommand(
+          async (client) => {
+            const { results, matchedCount, successCount } = await buildCommand(client, argv.paths);
+
+            console.log(formatJson({ built: results }));
+
+            client.logger.info(
+              `Successfully built ${successCount}/${matchedCount} (${(
+                (successCount / matchedCount) *
+                100
+              ).toFixed(0)}%) functions`,
+            );
+
+            if (!matchedCount) {
+              throw new Error("No files matched the inputs");
+            }
+          },
+          { requiresCredentials: false },
+        );
+      },
+    )
+    .command(
+      ["deploy [paths..]", "up [paths..]"],
+      "Builds and deploys one or multiple projects",
+      (yargs) => {
+        return yargs.positional("paths", {
+          description: "Paths of Lemna configs to deploy",
+          default: ["lemna.config.mjs"],
+        });
+      },
+      async (argv) => {
+        await runCommand(
+          async (client) => {
+            const { matchedCount, successCount } = await deployCommand(client, argv.paths);
+
+            client.logger.info(
+              `Successfully deployed ${successCount}/${matchedCount} (${(
+                (successCount / matchedCount) *
+                100
+              ).toFixed(0)}%) functions`,
+            );
+
+            if (!matchedCount) {
+              throw new Error("No files matched the inputs");
+            }
+          },
+          { requiresCredentials: true },
+        );
+      },
+    )
+    .strictCommands()
+    .demandCommand(1)
+    .parseAsync();
+}

@@ -1,31 +1,32 @@
-import { loadConfig } from "../config";
-import { deployProject } from "../deploy";
-import logger from "../logger";
+import { deployWithConfigPath } from "../deploy";
+import { Lemna } from "../lemna";
 import { fileVisitor, formatJson } from "../util";
 
 /**
  * Deploy command
  */
-export async function deployCommand(paths: string[]): Promise<{
+export async function deployCommand(
+  client: Lemna,
+  paths: string[],
+): Promise<{
   successCount: number;
   matchedCount: number;
   errorCount: number;
 }> {
-  logger.silly(`Deploy paths:`);
-  logger.silly(formatJson(paths));
+  client.logger.silly(`Deploy paths:`);
+  client.logger.silly(formatJson(paths));
 
   let successCount = 0;
   let errorCount = 0;
 
   for await (const path of fileVisitor(paths)) {
     try {
-      const config = await loadConfig(path);
-      await deployProject(config);
+      await deployWithConfigPath(client, path);
       successCount++;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      logger.warn(`Error deploying ${path}: ${error.message}`);
-      logger.silly(error.stack);
+      client.logger.warn(`Error deploying ${path}: ${error.message}`);
+      client.logger.silly(error.stack);
       errorCount++;
     }
   }

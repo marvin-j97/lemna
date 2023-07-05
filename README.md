@@ -8,9 +8,10 @@
     <img src="https://codecov.io/gh/marvin-j97/lemna/branch/main/graph/badge.svg?token=T6L95TZZXA"/>
   </a>
   <img src="https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml/badge.svg" alt="Build Status">
+  <img src="https://img.shields.io/github/license/marvin-j97/lemna" alt="License">
 </p>
 
-Quickly scaffold and deploy AWS Lambda handlers powered by Javascript or Typescript.
+Quickly scaffold and deploy AWS Lambda handlers powered by Typescript.
 
 Lemna will transpile, bundle and upload your code - no more tedious code deploying to Lambda.
 
@@ -73,29 +74,51 @@ lemna deploy my-app/lemna.config.mjs
 lemna deploy lambdas/**/lemna.config.mjs
 ```
 
-### Use ESM module (with intellisense) as config
+### Create function URL
 
-```js
-// lemna.config.mjs
+Use `function.url` to create a function URL. Optionally use `function.url.cors` to configure CORS.
 
-// @ts-check
-
-/**
- * @type {import('lemna').LemnaConfig}
- **/
-const config = {
-  entryPoint: "path to .js file",
-  function: {
-    name: "lambda-function-name",
-    runtime: "nodejs16.x",
-  },
-};
-
-module.exports = config;
+```json
+{
+  "function": {
+    "url": {
+      "authType": "none",
+      "invokeMode": "buffered"
+    }
+  }
+}
 ```
 
+### Add files to bundle with `bundle`
+
+If you want to add a file to the ZIP bundle, you can use `bundle`:
+
+```json
+{
+  "bundle": {
+    ".": ["file.txt"],
+    "subfolder": ["templates/*.html"]
+  }
+}
 ```
-lemna deploy lemna.config.mjs
+
+The bundle keys represent the folders the files will be extracted to (with "." being the function root folder `/var/task`). The array contains glob patterns of files that will be included.
+
+### Prisma
+
+If you use Prisma, you should use a Lambda layer containing the necessary Prisma binaries and setting:
+
+`PRISMA_QUERY_ENGINE_LIBRARY` to `"/opt/nodejs/node_modules/.prisma/client/libquery_engine-rhel-openssl-1.0.x.so.node"` (or whatever openSSL version is needed).
+
+```json
+{
+  "function": {
+    "layers": ["my-lambda-layer-arn"],
+    "env": {
+      "PRISMA_QUERY_ENGINE_LIBRARY": "..."
+    }
+  }
+}
 ```
 
 ### Deploy multiple functions
@@ -140,20 +163,6 @@ Run with LEMNA_LOG_LEVEL=error/warn/info/verbose/debug/silly
 LEMNA_LOG_LEVEL=silly lemna deploy
 ```
 
-## Use in existing project
-
-- Create a `lemna.config.mjs`, including at least:
-
-```js
-export default {
-  entryPoint: "path to .js file",
-  function: {
-    name: "lambda-function-name",
-    runtime: "nodejs16.x",
-  },
-};
-```
-
 ## Required AWS policies
 
 #### Required:
@@ -169,3 +178,4 @@ export default {
 
 - lambda:ListFunctions (for `ls` command)
 - lambda:DeleteFunction (for `rm` command)
+- lambda:AddPermission (for creating Function URL with AuthType: NONE)

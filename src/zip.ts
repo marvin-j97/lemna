@@ -4,7 +4,8 @@ import { dirname, join, relative, resolve } from "node:path";
 import globParent from "glob-parent";
 import JSZip from "jszip";
 
-import logger from "./logger";
+import { ModuleFormat } from "./config";
+import { Logger } from "./logger";
 import { globFiles } from "./util";
 
 /**
@@ -12,7 +13,7 @@ import { globFiles } from "./util";
  */
 export async function saveZip(zip: JSZip, output: string): Promise<void> {
   mkdirSync(dirname(output), { recursive: true });
-  logger.verbose(`Saving zip file to ${output}`);
+
   await new Promise<void>((resolve, reject) => {
     zip
       .generateNodeStream({ type: "nodebuffer", streamFiles: true })
@@ -22,19 +23,29 @@ export async function saveZip(zip: JSZip, output: string): Promise<void> {
   });
 }
 
+type ZipOptions = {
+  projectDir: string;
+  bundlePath: string;
+  moduleFormat: ModuleFormat;
+  extraFiles?: Record<string, string[]>;
+  logger: Logger;
+};
+
 /**
  * Composes a zip file using a JS bundle + extra files described by glob patterns
  */
-export async function composeZip(
-  projectDir: string,
-  bundlePath: string,
-  extraFiles?: Record<string, string[]>,
-): Promise<JSZip> {
+export async function composeZip({
+  projectDir,
+  bundlePath,
+  moduleFormat,
+  extraFiles,
+  logger,
+}: ZipOptions): Promise<JSZip> {
   logger.debug(`Composing zip file`);
   const zip = new JSZip();
 
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
-  zip.file("index.js", createReadStream(bundlePath));
+  zip.file(moduleFormat === "cjs" ? "index.js" : "index.mjs", createReadStream(bundlePath));
 
   for (const [base, patterns] of Object.entries(extraFiles ?? {})) {
     const files = await globFiles(patterns, projectDir);

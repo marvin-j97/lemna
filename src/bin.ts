@@ -1,3 +1,4 @@
+import { parseArgs } from "./args";
 import { tryLoadEnv } from "./env";
 
 if (process.env.NODE_ENV) {
@@ -5,4 +6,4 @@ if (process.env.NODE_ENV) {
 }
 tryLoadEnv();
 
-import "./args";
+parseArgs();

@@ -4,20 +4,22 @@ import { resolve } from "node:path";
 
 import inquirer from "inquirer";
 
-import { LemnaConfig } from "./config";
-import logger from "./logger";
+import { Config, ModuleFormat, RuntimeVersion } from "./config";
+import { Lemna } from "./lemna";
 import { getInstallCommand, NPMClient } from "./npm_client";
-import { runTemplate, TemplateType } from "./templates/index";
-import { formatJson, loggedWriteFile } from "./util";
+import { formatJson, writeToFile } from "./util";
+import { runTypescriptTemplate } from "templates/typescript";
 
 /**
  * Creates a Lemna config file
  */
-function composeLemnaConfig(functionName: string, entryPoint: string): LemnaConfig {
-  logger.silly(`Composing lemna.config.mjs for ${functionName}`);
+function composeLemnaConfig(
+  functionName: string,
+  entryPoint: string,
+  moduleFormat: ModuleFormat,
+): Config {
   return {
     entryPoint,
-    output: undefined,
     buildSteps: [],
     bundle: {},
     function: {
@@ -26,10 +28,9 @@ function composeLemnaConfig(functionName: string, entryPoint: string): LemnaConf
       handler: "index.handler",
       memorySize: 128,
       runtime: "nodejs16.x",
-      env: undefined,
-      timeout: undefined,
+      moduleFormat,
     },
-    buildOptions: {
+    esbuild: {
       minify: true,
     },
   };
@@ -39,25 +40,29 @@ function composeLemnaConfig(functionName: string, entryPoint: string): LemnaConf
  * Creates a package.json
  */
 function composePackageJson(name: string): unknown {
-  logger.silly(`Composing package.json for ${name}`);
   return {
     name,
     version: "1.0.0",
     description: "Created by Lemna",
-    main: "build/index.js",
     scripts: {
-      deploy: `lemna deploy`,
+      deploy: "lemna deploy",
       test: 'echo "Error: no test specified" && exit 1',
     },
     keywords: ["lambda", "lemna"],
   };
 }
 
+/* eslint-disable max-lines-per-function */
+
 /**
  * Initializes a project
  */
-export async function initializeLemna(): Promise<{ projectDir: string; npmClient: NPMClient }> {
-  const { dir, functionName, template, memorySize, timeout, npmClient, runtime } =
+export async function initializeLemna(client: Lemna): Promise<{
+  projectDir: string;
+  npmClient: NPMClient;
+  nodeVersion: RuntimeVersion;
+}> {
+  const { dir, functionName, memorySize, timeout, npmClient, runtime, useEsm } =
     await inquirer.prompt([
       {
         name: "dir",
@@ -69,8 +74,8 @@ export async function initializeLemna(): Promise<{ projectDir: string; npmClient
         name: "npmClient",
         type: "list",
         message: "Select NPM client",
-        choices: Object.values(NPMClient),
-        default: NPMClient.Npm,
+        choices: ["npm", "pnpm", "yarn"] satisfies NPMClient[],
+        default: "pnpm",
       },
       {
         name: "functionName",
@@ -91,53 +96,61 @@ export async function initializeLemna(): Promise<{ projectDir: string; npmClient
       },
       {
         name: "runtime",
-        choices: ["nodejs14.x", "nodejs16.x"],
+        choices: ["nodejs16.x", "nodejs18.x"] satisfies RuntimeVersion[],
         type: "list",
         message: "Select runtime",
-        default: "nodejs16.x",
+        default: "nodejs18.x",
       },
       {
-        name: "template",
-        choices: Object.values(TemplateType),
-        type: "list",
-        message: "Select template",
-        default: TemplateType.Typescript,
+        name: "useEsm",
+        type: "confirm",
+        message: "Use ESM?",
       },
     ]);
 
   const projectDir = resolve(dir);
 
-  logger.info(`Initializing Lemna project at ${projectDir}`);
-  logger.verbose(`Using template "${template}"`);
+  client.logger.info(`Initializing Lemna project at ${projectDir}`);
 
   if (!existsSync(projectDir)) {
-    logger.debug(`Creating project folder at ${projectDir}`);
+    client.logger.debug(`Creating project folder at ${projectDir}`);
     mkdirSync(projectDir, {
       recursive: true,
     });
   } else {
-    // TODO: overwrite?
-    logger.error(`Folder ${projectDir} already in use`);
+    client.logger.error(`Folder ${projectDir} already in use`);
     process.exit(2);
   }
 
   const packageJsonPath = resolve(projectDir, "package.json");
-  loggedWriteFile(packageJsonPath, formatJson(composePackageJson(functionName)));
+  writeToFile(packageJsonPath, formatJson(composePackageJson(functionName)));
 
-  logger.verbose("Installing dependencies");
-  const cmd = `${getInstallCommand(npmClient)} -D lemna`;
-  logger.debug(`EXEC ${projectDir}:${cmd}`);
+  client.logger.verbose("Installing dependencies");
+  const cmd = `${getInstallCommand(npmClient)} -DE lemna`;
+  client.logger.debug(`EXEC ${projectDir}:${cmd}`);
   execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 
-  const { entryPoint, buildSteps } = await runTemplate(template, projectDir, npmClient);
+  const { entryPoint } = await runTypescriptTemplate(projectDir, npmClient, runtime);
 
   const lemnaConfigPath = resolve(projectDir, "lemna.config.mjs");
-  const config = composeLemnaConfig(functionName, entryPoint);
-  config.buildSteps = buildSteps;
+  const config = composeLemnaConfig(functionName, entryPoint, useEsm ? "esm" : "cjs");
+
   config.function.memorySize = memorySize;
   config.function.timeout = timeout;
   config.function.runtime = runtime;
-  loggedWriteFile(lemnaConfigPath, formatJson(config));
 
-  return { projectDir, npmClient };
+  writeToFile(
+    lemnaConfigPath,
+    `// @ts-check
+
+/**
+ * @type {import('lemna').Config}
+ **/
+const config = ${formatJson(config)};
+
+export default config;
+`,
+  );
+
+  return { projectDir, npmClient, nodeVersion: runtime };
 }
