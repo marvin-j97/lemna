@@ -188,3 +188,33 @@ LEMNA_LOG_LEVEL=silly lemna deploy
 - lambda:ListFunctions (for `ls` command)
 - lambda:DeleteFunction (for `rm` command)
 - lambda:AddPermission (for creating Function URL with AuthType: NONE)
+
+Example AWS policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "1",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:CreateFunction",
+        "lambda:UpdateFunctionCode",
+        "lambda:UpdateFunctionConfiguration",
+        "lambda:GetFunction",
+        "lambda:GetFunctionConfiguration",
+        "lambda:DeleteFunction",
+        "lambda:AddPermission"
+      ],
+      "Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:NAME_PATTERN"
+    },
+    {
+      "Sid": "2",
+      "Effect": "Allow",
+      "Action": ["iam:PassRole", "lambda:ListFunctions"],
+      "Resource": "*"
+    }
+  ]
+}
+```
