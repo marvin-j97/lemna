@@ -7,10 +7,7 @@ import dotenv from "dotenv";
  */
 export function tryLoadEnv(path = ".env"): void {
   if (existsSync(path)) {
-    console.error(`Loading env: ${path}`);
     dotenv.config({ path });
     console.error(`Loaded env: ${path}`);
-  } else {
-    console.error(`No ${path} file found`);
   }
 }
