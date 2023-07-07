@@ -1,8 +1,8 @@
-import { LambdaClient } from "@aws-sdk/client-lambda";
+import { LambdaClient, LambdaClientConfig } from "@aws-sdk/client-lambda";
 
 import { Builder, BuildResult } from "./builder";
 import { Config, FunctionSettings } from "./config";
-import { Logger } from "./logger";
+import { createLemnaLogger, Logger, LogLevel } from "./logger";
 import { Uploader } from "./upload";
 
 /**
@@ -15,9 +15,13 @@ export class Lemna {
   /**
    * Constructs a new instance
    */
-  constructor(logger: Logger) {
-    this._lambdaClient = new LambdaClient({});
+  constructor(logger: Logger, lambdaConfig?: LambdaClientConfig) {
+    this._lambdaClient = new LambdaClient(lambdaConfig ?? {});
     this._logger = logger;
+  }
+
+  static withLogLevel(logLevel: LogLevel, lambdaConfig?: LambdaClientConfig): Lemna {
+    return new Lemna(createLemnaLogger(logLevel), lambdaConfig);
   }
 
   /**

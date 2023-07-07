@@ -38,15 +38,13 @@
   },
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
-    "@types/glob": "8.1.0",
     "@types/glob-parent": "5.1.1",
     "@types/inquirer": "9.0.3",
-    "@types/node": "16.18.38",
+    "@types/node": "18",
     "@types/yargs": "17.0.24",
     "@typescript-eslint/eslint-plugin": "5.61.0",
     "@typescript-eslint/parser": "5.61.0",
-    "@vitest/coverage-istanbul": "0.32.4",
-    "cross-env": "7.0.3",
+    "@vitest/coverage-istanbul": "0.33.0",
     "eslint": "8.44.0",
     "eslint-config-prettier": "8.8.0",
     "eslint-plugin-jsdoc": "46.4.3",
@@ -56,7 +54,7 @@
     "tsup": "7.1.0",
     "tsx": "3.12.7",
     "typescript": "5.1.6",
-    "vitest": "0.32.4"
+    "vitest": "0.33.0"
   },
   "files": [
     "dist",

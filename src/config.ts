@@ -27,7 +27,7 @@ const functionUrlSettingsSchema = z
   .object({
     authType: functionUrlAuthTypeSchema,
     invokeMode: functionUrlInvokeModeSchema,
-    cors: functionUrlCorsSettingsSchema.optional(),
+    cors: z.union([functionUrlCorsSettingsSchema, z.literal(true)]).optional(),
     qualifier: z.string().optional(),
   })
   .strict();

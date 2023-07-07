@@ -13,9 +13,13 @@
 
 Quickly scaffold and deploy AWS Lambda handlers powered by Typescript.
 
-Lemna will transpile, bundle and upload your code - no more tedious code deploying to Lambda.
+No more tedious code deploying to Lambda, Lemna handles for you:
 
-Dependencies will be bundled into your code using esbuild (https://esbuild.github.io/), so only required code is uploaded (dev dependencies will be ignored).
+- Scaffolding new functions with TypeScript
+- Transpiling & bundling only necessary dependencies (using [esbuild](https://esbuild.github.io))
+- Zipping & uploading code
+- Updating function configuration
+- Optionally setting up function URL
 
 ## Scaffold new Lambda function
 
@@ -77,13 +81,18 @@ lemna deploy lambdas/**/lemna.config.mjs
 ### Create function URL
 
 Use `function.url` to create a function URL. Optionally use `function.url.cors` to configure CORS.
+You can also use `function.url.cors: true` to set up a all-star "don't care" CORS config.
 
 ```json
 {
   "function": {
     "url": {
       "authType": "none",
-      "invokeMode": "buffered"
+      "invokeMode": "buffered",
+      "cors": {
+        "origins": ["*"],
+        "methods": ["POST"]
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ import {
   CreateFunctionCommand,
   CreateFunctionUrlConfigCommand,
   CreateFunctionUrlConfigCommandInput,
+  DeleteFunctionUrlConfigCommand,
   GetFunctionCommand,
   GetFunctionConfigurationCommand,
   GetFunctionUrlConfigCommand,
@@ -56,6 +57,28 @@ export class Uploader {
   }
 
   /**
+   * Deletes function URL if it exists
+   */
+  private async tryDeleteFunctionUrl(functionName: string): Promise<boolean> {
+    try {
+      await this._client.lambdaClient.send(
+        new DeleteFunctionUrlConfigCommand({
+          FunctionName: functionName,
+        }),
+      );
+      this._client.logger.warn("Deleted function URL because no configuration exists");
+      return true;
+    } catch (error: unknown) {
+      if (error instanceof ResourceNotFoundException) {
+        // OK
+        return false;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  /**
    * Setups up a Lambda function url
    */
   private async createOrUpdateFunctionUrl(
@@ -66,14 +89,29 @@ export class Uploader {
       FunctionName: functionName,
       AuthType: opts.authType === "none" ? "NONE" : "AWS_IAM",
       InvokeMode: opts.invokeMode === "buffered" ? "BUFFERED" : "RESPONSE_STREAM",
-      Cors: opts.cors && {
-        AllowCredentials: opts.cors.credentials,
-        AllowHeaders: opts.cors.headers,
-        AllowMethods: opts.cors.methods,
-        AllowOrigins: opts.cors.origins,
-        ExposeHeaders: opts.cors.exposeHeaders,
-        MaxAge: opts.cors.maxAge,
-      },
+      Cors: (() => {
+        if (!opts.cors) {
+          return undefined;
+        }
+        if (opts.cors === true) {
+          return {
+            AllowCredentials: true,
+            AllowHeaders: ["*"],
+            AllowMethods: ["*"],
+            AllowOrigins: ["*"],
+            ExposeHeaders: ["*"],
+            MaxAge: 3600,
+          };
+        }
+        return {
+          AllowCredentials: opts.cors.credentials,
+          AllowHeaders: opts.cors.headers,
+          AllowMethods: opts.cors.methods,
+          AllowOrigins: opts.cors.origins,
+          ExposeHeaders: opts.cors.exposeHeaders,
+          MaxAge: opts.cors.maxAge,
+        };
+      })(),
       Qualifier: opts.qualifier,
     };
 
@@ -226,6 +264,8 @@ export class Uploader {
     if (functionSettings.url) {
       const functionUrl = await this.createOrUpdateFunctionUrl(functionName, functionSettings.url);
       this._client.logger.info(`Function URL: ${functionUrl}`);
+    } else {
+      this.tryDeleteFunctionUrl(functionName);
     }
   }
 
@@ -243,6 +283,8 @@ export class Uploader {
     if (functionSettings.url) {
       const functionUrl = await this.createOrUpdateFunctionUrl(functionName, functionSettings.url);
       this._client.logger.info(`Function URL: ${functionUrl}`);
+    } else {
+      this.tryDeleteFunctionUrl(functionName);
     }
   }
 

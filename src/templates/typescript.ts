@@ -2,19 +2,19 @@ import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { relative, resolve } from "node:path";
 
-import { RuntimeVersion } from "../config";
+import { ModuleFormat, RuntimeVersion } from "../config";
 import { getInstallCommand, NPMClient } from "../npm_client";
 import { formatJson, writeToFile } from "../util";
 
 /**
  * Creates tsconfig.json
  */
-function composeTsConfig(): unknown {
+function composeTsConfig(moduleFormat: ModuleFormat): unknown {
   return {
     exclude: ["node_modules", "test", "build"],
     compilerOptions: {
       target: "ESNext",
-      module: "ESNext",
+      module: moduleFormat === "esm" ? "ESNext" : "CommonJS",
 
       noEmit: true,
       rootDir: "src",
@@ -47,15 +47,24 @@ function composeTsConfig(): unknown {
 /**
  * Creates handler entry point
  */
-function composeIndexFile(): string {
+function composeIndexFile(moduleFormat: ModuleFormat): string {
   return `import type { Handler } from "aws-lambda";
 
-export const handler: Handler = async function (event, context) {
+const handler: Handler = async (event, context) => {
   console.log("Hello from Lemna");
   console.log("EVENT:");
   console.log(JSON.stringify(event, null, 2));
-  return context.logStreamName;
+  
+  return {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: "Hello from Lemna",
+      event
+    })
+  };
 };
+
+${moduleFormat === "esm" ? "export { handler };" : "exports.handler = handler;"}
 `;
 }
 
@@ -92,6 +101,7 @@ export async function runTypescriptTemplate(
   projectDir: string,
   npmClient: NPMClient,
   runtime: RuntimeVersion,
+  moduleFormat: ModuleFormat,
 ): Promise<{ entryPoint: string }> {
   const srcFolder = resolve(projectDir, "src");
 
@@ -100,11 +110,12 @@ export async function runTypescriptTemplate(
   });
 
   const tsconfigPath = resolve(projectDir, "tsconfig.json");
-  writeToFile(tsconfigPath, formatJson(composeTsConfig()));
+  writeToFile(tsconfigPath, formatJson(composeTsConfig(moduleFormat)));
 
   const indexFile = resolve(srcFolder, "index.ts");
-  writeToFile(indexFile, composeIndexFile());
+  writeToFile(indexFile, composeIndexFile(moduleFormat));
 
+  // NOTE: TODO: ideally AWS provides types at some point
   const responseStreamMonkeyPatchFile = resolve(projectDir, "streamify.d.ts");
   writeToFile(responseStreamMonkeyPatchFile, composeResponseStreamMonkeyPatch());
 

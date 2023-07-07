@@ -4,6 +4,11 @@ import { Lemna } from "../lemna";
 
 /**
  * Get a function's information
+ *
+ * @param {Lemna} client Lemna client
+ * @param {string} name Function name
+ *
+ * @returns {GetFunctionResponse} Function response
  */
 export async function getFunctionCommand(
   client: Lemna,

@@ -69,6 +69,7 @@ export async function initializeLemna(client: Lemna): Promise<{
         type: "input",
         default: "my-function",
         message: "Enter project folder name",
+        validate: (str) => !!str.length || "Must not be empty",
       },
       {
         name: "npmClient",
@@ -81,6 +82,7 @@ export async function initializeLemna(client: Lemna): Promise<{
         name: "functionName",
         type: "input",
         message: "Enter function name",
+        validate: (str) => !!str.length || "Must not be empty",
       },
       {
         name: "memorySize",
@@ -130,10 +132,11 @@ export async function initializeLemna(client: Lemna): Promise<{
   client.logger.debug(`EXEC ${projectDir}:${cmd}`);
   execSync(cmd, { cwd: projectDir, stdio: "inherit" });
 
-  const { entryPoint } = await runTypescriptTemplate(projectDir, npmClient, runtime);
+  const moduleFormat: ModuleFormat = useEsm ? "esm" : "cjs";
 
+  const { entryPoint } = await runTypescriptTemplate(projectDir, npmClient, runtime, moduleFormat);
   const lemnaConfigPath = resolve(projectDir, "lemna.config.mjs");
-  const config = composeLemnaConfig(functionName, entryPoint, useEsm ? "esm" : "cjs");
+  const config = composeLemnaConfig(functionName, entryPoint, moduleFormat);
 
   config.function.memorySize = memorySize;
   config.function.timeout = timeout;

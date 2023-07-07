@@ -4,6 +4,12 @@ import { Lemna } from "../lemna";
 
 /**
  * Lists a page of functions, page size cannot be greater than 50
+ *
+ * @param {Lemna} client Lemna client
+ * @param {number} take Page size
+ * @param {number} page Page number
+ *
+ * @returns {FunctionConfiguration[]} Function configuration array
  */
 export async function listCommand(
   client: Lemna,

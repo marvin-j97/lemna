@@ -5,6 +5,9 @@ type BuildItem = { zipFile: string; buildHash: string };
 
 /**
  * Build command
+ *
+ * @param {Lemna} client Lemna client
+ * @param {string[]} paths Glob patterns of config files
  */
 export async function buildCommand(
   client: Lemna,

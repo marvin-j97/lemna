@@ -4,6 +4,9 @@ import { fileVisitor, formatJson } from "../util";
 
 /**
  * Deploy command
+ *
+ * @param {Lemna} client Lemna client
+ * @param {string[]} paths Glob patterns of config files
  */
 export async function deployCommand(
   client: Lemna,
