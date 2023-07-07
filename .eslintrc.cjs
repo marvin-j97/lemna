@@ -22,7 +22,7 @@ module.exports = {
     "prettier/prettier": "error",
 
     "require-jsdoc": [
-      "error",
+      "warn",
       {
         require: {
           ClassDeclaration: true,

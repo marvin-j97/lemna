@@ -169,6 +169,8 @@ export class Uploader {
       }),
     );
 
+    // NOTE: We just created it so it definitely exists
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return FunctionUrl!;
   }
 
