@@ -20,6 +20,9 @@ import { FunctionSettings, FunctionUrlSettings } from "./config";
 import { Lemna } from "./lemna";
 import { formatJson } from "./util";
 
+/**
+ * Uploader class
+ */
 export class Uploader {
   private _client: Lemna;
 
@@ -141,7 +144,7 @@ export class Uploader {
 
     if (opts.authType === "none") {
       try {
-        this._client.logger.info(
+        this._client.logger.verbose(
           "Auth type is NONE, adding permission for public URL, as per https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html#urls-auth-none",
         );
 
