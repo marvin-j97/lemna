@@ -21,6 +21,6 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm tsx version.ts ${{ github.event.release.tag_name }}
       - run: pnpm build
-      - run: pnpm publish --access public
+      - run: pnpm publish--no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
