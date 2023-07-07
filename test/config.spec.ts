@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { Config, isValidConfig, loadConfig } from "../src/config";
+import { createLemnaLogger } from "../src/logger";
 
 const validConfigs: Config[] = [
   {
@@ -42,15 +43,17 @@ const validConfigs: Config[] = [
   },
 ];
 
+const logger = createLemnaLogger("silly");
+
 describe("config", () => {
   validConfigs.forEach((config, i) => {
     it(`should be valid config ${i + 1}`, () => {
-      expect(isValidConfig(config)).to.be.true;
+      expect(isValidConfig(config, logger)).to.be.true;
     });
   });
 
   it("should be invalid config", () => {
-    expect(isValidConfig({})).to.be.false;
+    expect(isValidConfig({}, logger)).to.be.false;
   });
 
   /* TODO: dynamic import in vite?? 
