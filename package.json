@@ -79,6 +79,6 @@
     "skriva": "0.0.2",
     "skriva-transport-console": "0.0.2",
     "yargs": "17.7.2",
-    "zod": "3.21.4"
+    "zod": "3.22.4"
   }
 }
