@@ -74,9 +74,15 @@ ${moduleFormat === "esm" ? "export { handler };" : "exports.handler = handler;"}
 function composeResponseStreamMonkeyPatch(): string {
   return `import { Context } from "aws-lambda";
 
+  // NOTE: Help improve this type def! https://github.com/marvin-j97/lemna/blob/main/src/templates/typescript.ts#L74C1-L74C1
+
+  // TODO: inherit from Node Stream: https://aws.amazon.com/de/blogs/compute/introducing-aws-lambda-response-streaming/
+  // The responseStream object implements Node's Writable Stream API
+
   type ResponseStream = {
     write: (str: any) => void;
     end: () => void;
+    setContentType: (resType: string) => void;
   };
   
   declare global {
@@ -84,8 +90,8 @@ function composeResponseStreamMonkeyPatch(): string {
       /**
        * Read more at https://docs.aws.amazon.com/lambda/latest/dg/configuration-response-streaming.html
        */
-      streamifyResponse: (
-        fn: (event: unknown, responseStream: ResponseStream, context: Context) => Promise<unknown>,
+      streamifyResponse: <T = unknown>(
+        fn: (event: T, responseStream: ResponseStream, context: Context) => Promise<unknown>,
       ) => void;
     };
   }
