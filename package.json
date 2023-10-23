@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
-    "@types/glob-parent": "5.1.1",
+    "@types/glob-parent": "5.1.2",
     "@types/inquirer": "9.0.3",
     "@types/node": "18.18.6",
     "@types/yargs": "17.0.29",
