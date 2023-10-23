@@ -44,8 +44,8 @@ dependencies:
 
 devDependencies:
   '@types/glob-parent':
-    specifier: 5.1.1
-    version: 5.1.1
+    specifier: 5.1.2
+    version: 5.1.2
   '@types/inquirer':
     specifier: 9.0.3
     version: 9.0.3
@@ -1902,8 +1902,8 @@ packages:
     resolution: {integrity: sha512-mEo1sAde+UCE6b2hxn332f1g1E8WfYRu6p5SvTKr2ZKC1f7gFJXk4h5PyGP9Dt6gCaG8y8XhwnXWC6Iy2cmBng==}
     dev: true
 
-  /@types/glob-parent@5.1.1:
-    resolution: {integrity: sha512-r2rwLjU4mYJmX3S81d8KxCboZOGPVEN5hvtYKzQ0aFNRhYir3DIVf8Hlznr65Wk748swi6hhccsDo3MyydHb2A==}
+  /@types/glob-parent@5.1.2:
+    resolution: {integrity: sha512-hS9aA7+fMXnKSOftFd1CSPJ9n4zrmYoQptBxr7NHYYUV+I9WXcU891jsihXWOv00tkiIcF0DviR378ZCzy1EQw==}
     dev: true
 
   /@types/inquirer@9.0.3:
