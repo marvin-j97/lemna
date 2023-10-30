@@ -37,7 +37,7 @@ export async function parseArgs(): Promise<void> {
       },
     )
     .command(
-      ["rm [names..]", "remove [names..]", "delete <name>"],
+      ["rm [names..]", "remove [names..]", "delete [names..]"],
       "Deletes Lambda functions",
       (yargs) =>
         yargs.positional("names", {

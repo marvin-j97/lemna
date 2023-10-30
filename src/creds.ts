@@ -1,4 +1,4 @@
-import { Logger } from "./logger";
+import type { Logger } from "./logger";
 
 /**
  * Checks for required AWS keys, exits if any is not found

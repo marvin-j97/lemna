@@ -1,5 +1,5 @@
 import chalk, { type ChalkInstance } from "chalk";
-import { createLogger, LogFunction } from "skriva";
+import { createLogger, type LogFunction } from "skriva";
 import { createConsoleTransport } from "skriva-transport-console";
 
 import { formatJson } from "./util";

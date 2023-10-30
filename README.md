@@ -98,20 +98,21 @@ You can also use `function.url.cors: true` to set up a all-star "don't care" COR
 }
 ```
 
-### Add files to bundle with `bundle`
+### Add files to bundle with `includeFiles`
 
-If you want to add a file to the ZIP bundle, you can use `bundle`:
+If you want to add a file to the ZIP bundle, you can use `includeFiles`:
 
 ```json
 {
-  "bundle": {
+  "includeFiles": {
     ".": ["file.txt"],
-    "subfolder": ["templates/*.html"]
+    "assets": ["assets/**/*"],
+    "pages": ["pages/*.html"]
   }
 }
 ```
 
-The bundle keys represent the folders the files will be extracted to (with "." being the function root folder `/var/task`). The array contains glob patterns of files that will be included.
+The `includeFiles` keys represent the folders the files will be extracted to (with "." being the function root folder `/var/task`). The array contains glob patterns of files that will be included.
 
 ### Prisma
 

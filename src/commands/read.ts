@@ -1,4 +1,4 @@
-import { GetFunctionCommand, GetFunctionResponse } from "@aws-sdk/client-lambda";
+import { GetFunctionCommand, type GetFunctionResponse } from "@aws-sdk/client-lambda";
 
 import { Lemna } from "../lemna";
 

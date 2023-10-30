@@ -5,9 +5,9 @@ import { resolve } from "node:path";
 import inquirer from "inquirer";
 import { runTypescriptTemplate } from "templates/typescript";
 
-import { Config, ModuleFormat, RuntimeVersion } from "./config";
+import type { Config, ModuleFormat, RuntimeVersion } from "./config";
 import { Lemna } from "./lemna";
-import { getInstallCommand, NPMClient } from "./npm_client";
+import { getInstallCommand, type NPMClient } from "./npm_client";
 import { formatJson, writeToFile } from "./util";
 
 /**

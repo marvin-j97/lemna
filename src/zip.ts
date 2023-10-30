@@ -4,8 +4,8 @@ import { dirname, join, relative, resolve } from "node:path";
 import globParent from "glob-parent";
 import JSZip from "jszip";
 
-import { ModuleFormat } from "./config";
-import { Logger } from "./logger";
+import type { ModuleFormat } from "./config";
+import type { Logger } from "./logger";
 import { globFiles } from "./util";
 
 /**

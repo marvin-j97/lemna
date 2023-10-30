@@ -3,7 +3,34 @@ import { resolve } from "node:path";
 
 import { glob } from "glob";
 
-import { RuntimeVersion } from "./config";
+import type { FunctionUrlSettings, RuntimeVersion } from "./config";
+import type { Cors } from "@aws-sdk/client-lambda";
+
+export function formatCors(cors: FunctionUrlSettings["cors"]): Cors | undefined {
+  if (!cors) {
+    return undefined;
+  }
+
+  if (cors === true) {
+    return {
+      AllowCredentials: true,
+      AllowHeaders: ["*"],
+      AllowMethods: ["*"],
+      AllowOrigins: ["*"],
+      ExposeHeaders: ["*"],
+      MaxAge: 3600,
+    };
+  }
+
+  return {
+    AllowCredentials: cors.credentials,
+    AllowHeaders: cors.headers,
+    AllowMethods: cors.methods,
+    AllowOrigins: cors.origins,
+    ExposeHeaders: cors.exposeHeaders,
+    MaxAge: cors.maxAge,
+  };
+}
 
 /**
  * Stringifies JSON into readable format

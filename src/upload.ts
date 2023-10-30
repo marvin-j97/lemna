@@ -4,7 +4,7 @@ import {
   AddPermissionCommand,
   CreateFunctionCommand,
   CreateFunctionUrlConfigCommand,
-  CreateFunctionUrlConfigCommandInput,
+  type CreateFunctionUrlConfigCommandInput,
   DeleteFunctionUrlConfigCommand,
   GetFunctionCommand,
   GetFunctionConfigurationCommand,
@@ -16,9 +16,9 @@ import {
   UpdateFunctionUrlConfigCommand,
 } from "@aws-sdk/client-lambda";
 
-import { FunctionSettings, FunctionUrlSettings } from "./config";
+import type { FunctionSettings, FunctionUrlSettings } from "./config";
 import { Lemna } from "./lemna";
-import { formatJson } from "./util";
+import { formatCors, formatJson } from "./util";
 
 /**
  * Uploader class
@@ -64,6 +64,8 @@ export class Uploader {
    */
   private async tryDeleteFunctionUrl(functionName: string): Promise<boolean> {
     try {
+      await this.waitUntilReady(functionName);
+
       await this._client.lambdaClient.send(
         new DeleteFunctionUrlConfigCommand({
           FunctionName: functionName,
@@ -92,33 +94,13 @@ export class Uploader {
       FunctionName: functionName,
       AuthType: opts.authType === "none" ? "NONE" : "AWS_IAM",
       InvokeMode: opts.invokeMode === "buffered" ? "BUFFERED" : "RESPONSE_STREAM",
-      Cors: (() => {
-        if (!opts.cors) {
-          return undefined;
-        }
-        if (opts.cors === true) {
-          return {
-            AllowCredentials: true,
-            AllowHeaders: ["*"],
-            AllowMethods: ["*"],
-            AllowOrigins: ["*"],
-            ExposeHeaders: ["*"],
-            MaxAge: 3600,
-          };
-        }
-        return {
-          AllowCredentials: opts.cors.credentials,
-          AllowHeaders: opts.cors.headers,
-          AllowMethods: opts.cors.methods,
-          AllowOrigins: opts.cors.origins,
-          ExposeHeaders: opts.cors.exposeHeaders,
-          MaxAge: opts.cors.maxAge,
-        };
-      })(),
+      Cors: formatCors(opts.cors),
       Qualifier: opts.qualifier,
     };
 
     try {
+      await this.waitUntilReady(functionName);
+
       this._client.logger.verbose("Checking if function URL config exists");
       await this._client.lambdaClient.send(
         new GetFunctionUrlConfigCommand({
@@ -144,6 +126,8 @@ export class Uploader {
 
     if (opts.authType === "none") {
       try {
+        await this.waitUntilReady(functionName);
+
         this._client.logger.verbose(
           "Auth type is NONE, adding permission for public URL, as per https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html#urls-auth-none",
         );
@@ -201,6 +185,8 @@ export class Uploader {
     this._client.logger.verbose(`Using function ARN "${arn}"`);
     this._client.logger.silly(formatJson({ functionSettings, zipFile, arn }));
 
+    await this.waitUntilReady(functionName);
+
     await this._client.lambdaClient.send(
       new CreateFunctionCommand({
         FunctionName: functionName,
@@ -231,6 +217,8 @@ export class Uploader {
       timeout,
       layers,
     } = functionSettings;
+
+    await this.waitUntilReady(functionName);
 
     // Update function code (with zip)
     this._client.logger.info(`Uploading project ${zipFile} -> ${functionName}`);
@@ -263,8 +251,6 @@ export class Uploader {
       }),
     );
 
-    await this.waitUntilReady(functionName);
-
     // Setup function URL and print it
     if (functionSettings.url) {
       const functionUrl = await this.createOrUpdateFunctionUrl(functionName, functionSettings.url);
@@ -282,7 +268,6 @@ export class Uploader {
     const { name: functionName } = functionSettings;
 
     await this.createFunctionWithZip(functionSettings, zipFile, arn);
-    await this.waitUntilReady(functionName);
 
     // Setup function URL and print it
     if (functionSettings.url) {
@@ -316,7 +301,6 @@ export class Uploader {
       );
 
       // The function does exist, update its code with the zip file
-      await this.waitUntilReady(functionName);
       await this.updateFunction(functionSettings, zipFile);
     } catch (error: unknown) {
       const arn = configARN || process.env.LEMNA_ARN;

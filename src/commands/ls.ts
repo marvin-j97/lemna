@@ -1,4 +1,4 @@
-import { FunctionConfiguration, ListFunctionsCommand } from "@aws-sdk/client-lambda";
+import { type FunctionConfiguration, ListFunctionsCommand } from "@aws-sdk/client-lambda";
 
 import { Lemna } from "../lemna";
 

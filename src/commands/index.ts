@@ -1,6 +1,6 @@
 import { checkAWSKeys } from "../creds";
 import { Lemna } from "../lemna";
-import { createLemnaLogger, LogLevel, logLevels } from "../logger";
+import { createLemnaLogger, type LogLevel, logLevels } from "../logger";
 
 export interface ICommandOptions {
   requiresCredentials: boolean;

@@ -4,8 +4,8 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 import { bundleCode } from "./bundle";
-import { Config, loadConfig } from "./config";
-import { Lemna } from "./lemna";
+import { type Config, loadConfig } from "./config";
+import type { Lemna } from "./lemna";
 import { formatJson, getTempFolderPath } from "./util";
 import { composeZip, saveZip } from "./zip";
 
@@ -84,7 +84,7 @@ export class Builder {
       projectDir,
       bundlePath: bundleOutput,
       moduleFormat: config.function.moduleFormat,
-      extraFiles: config.bundle,
+      extraFiles: config.includeFiles,
       logger: this._client.logger,
     });
 

@@ -3,8 +3,10 @@ import { resolve } from "node:path";
 
 import * as z from "zod";
 
-import { Logger } from "./logger";
+import type { Logger } from "./logger";
 import { formatJson } from "./util";
+import { pathToFileURL } from "node:url";
+import type { BuildOptions } from "esbuild";
 
 const runtimeSchema = z.enum(["nodejs16.x", "nodejs18.x"]);
 const moduleFormatSchema = z.enum(["cjs", "esm"]);
@@ -59,14 +61,16 @@ const configSchema = z
   .object({
     entryPoint: z.string().min(1),
     output: z.string().min(1).optional(),
-    bundle: z.record(z.array(z.string().min(1))).optional(),
+    includeFiles: z.record(z.array(z.string().min(1))).optional(),
     buildSteps: z.array(z.string().min(1)).optional(),
     function: functionSettingsSchema,
     esbuild: z.object({}).optional(),
   })
   .strict();
 
-export type Config = z.TypeOf<typeof configSchema>;
+export type Config = Omit<z.TypeOf<typeof configSchema>, "esbuild"> & {
+  esbuild: Omit<BuildOptions, "entryPoints" | "outfile" | "banner">;
+};
 
 /**
  * Returns if the given input is a valid Lemna config
@@ -76,6 +80,7 @@ export function isValidConfig(val: unknown, logger: Logger): val is Config {
   if (result.success) {
     return true;
   }
+
   logger.error(
     `${result.error.issues.length} validation errors: ${formatJson(result.error.issues)}`,
   );
@@ -100,7 +105,7 @@ export async function loadConfig(file: string, logger: Logger): Promise<Config> 
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let content: any = await import(path);
+  let content: any = await import(pathToFileURL(path).toString());
 
   if (content.default) {
     content = content.default;
