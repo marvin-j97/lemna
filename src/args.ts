@@ -94,6 +94,12 @@ export async function parseArgs(): Promise<void> {
                 `Read more here: https://aws.amazon.com/de/blogs/developer/why-and-how-you-should-use-aws-sdk-for-javascript-v3-on-node-js-18/`,
               );
             }
+            if (nodeVersion === "nodejs16.x") {
+              client.logger.warn(
+                `You have chosen Node.js version "${nodeVersion}" which has reached its end of life (EOL).`,
+              );
+              client.logger.warn("See https://endoflife.date/nodejs");
+            }
 
             client.logger.info("Setup successful, run:");
             client.logger.info(`cd ${relative(process.cwd(), projectDir)}`);

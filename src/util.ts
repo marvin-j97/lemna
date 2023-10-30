@@ -1,10 +1,10 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
+import type { Cors } from "@aws-sdk/client-lambda";
 import { glob } from "glob";
 
 import type { FunctionUrlSettings, RuntimeVersion } from "./config";
-import type { Cors } from "@aws-sdk/client-lambda";
 
 export function formatCors(cors: FunctionUrlSettings["cors"]): Cors | undefined {
   if (!cors) {

@@ -21,7 +21,7 @@ function composeLemnaConfig(
   return {
     entryPoint,
     buildSteps: [],
-    bundle: {},
+    includeFiles: {},
     function: {
       name: functionName,
       description: "Created by Lemna",

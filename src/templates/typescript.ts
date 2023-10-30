@@ -2,8 +2,8 @@ import { execSync } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import { relative, resolve } from "node:path";
 
-import { ModuleFormat, RuntimeVersion } from "../config";
-import { getInstallCommand, NPMClient } from "../npm_client";
+import type { ModuleFormat, RuntimeVersion } from "../config";
+import { getInstallCommand, type NPMClient } from "../npm_client";
 import { formatJson, writeToFile } from "../util";
 
 /**

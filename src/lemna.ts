@@ -3,6 +3,7 @@ import { LambdaClient, type LambdaClientConfig } from "@aws-sdk/client-lambda";
 import { Builder, type BuildResult } from "./builder";
 import type { Config, FunctionSettings } from "./config";
 import { createLemnaLogger, type Logger, type LogLevel } from "./logger";
+import { FunctionManager } from "./manager";
 import { Uploader } from "./upload";
 
 /**
@@ -53,6 +54,7 @@ export class Lemna {
    * @returns Build result and config
    */
   updateOrCreateFunction(functionSettings: FunctionSettings, zipFile: string): Promise<void> {
-    return new Uploader(this).updateOrCreateFunction(functionSettings, zipFile);
+    const fm = new FunctionManager(this, functionSettings.name);
+    return new Uploader(this, fm).updateOrCreateFunction(functionSettings, zipFile);
   }
 }

@@ -1,12 +1,12 @@
 import { existsSync, statSync } from "node:fs";
 import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
+import type { BuildOptions } from "esbuild";
 import * as z from "zod";
 
 import type { Logger } from "./logger";
 import { formatJson } from "./util";
-import { pathToFileURL } from "node:url";
-import type { BuildOptions } from "esbuild";
 
 const runtimeSchema = z.enum(["nodejs16.x", "nodejs18.x"]);
 const moduleFormatSchema = z.enum(["cjs", "esm"]);

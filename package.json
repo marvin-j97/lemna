@@ -2,8 +2,9 @@
   "name": "lemna",
   "version": "3.0.0",
   "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
+  "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "bin": {
     "lemna": "cli.mjs"
@@ -14,6 +15,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node cli.mjs",
+    "dev": "tsx src/bin.ts",
+    "tc": "tsc",
     "build": "tsup --entry src/bin.ts --entry src/index.ts --format esm --dts --clean",
     "lint": "eslint src --ext .ts",
     "fmt": "eslint src --ext .ts --fix",
@@ -62,8 +65,7 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   },

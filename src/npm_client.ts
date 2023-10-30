@@ -9,7 +9,7 @@ const installCommands: Record<NPMClient, string> = {
 const execCommands: Record<string, (client: string) => string> = {
   npm: (cmd) => `npx ${cmd}`,
   yarn: (cmd) => `yarn ${cmd}`,
-  pnpm: (cmd) => `pnpm exec ${cmd}`,
+  pnpm: (cmd) => `pnpx ${cmd}`,
 };
 
 const runCommands: Record<string, (client: string) => string> = {
