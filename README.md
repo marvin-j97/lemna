@@ -178,11 +178,15 @@ LEMNA_LOG_LEVEL=silly lemna deploy
 #### Required:
 
 - iam:PassRole
+- lambda:GetFunction
 - lambda:CreateFunction
 - lambda:UpdateFunctionCode
-- lambda:UpdateFunctionConfiguration
-- lambda:GetFunction
 - lambda:GetFunctionConfiguration
+- lambda:UpdateFunctionConfiguration
+- lambda:GetFunctionUrlConfig
+- lambda:CreateFunctionUrlConfig
+- lambda:UpdateFunctionUrlConfig
+- lambda:DeleteFunctionUrlConfig
 
 #### Optional:
 
@@ -200,20 +204,23 @@ Example AWS policy:
       "Sid": "1",
       "Effect": "Allow",
       "Action": [
+        "lambda:GetFunction",
         "lambda:CreateFunction",
         "lambda:UpdateFunctionCode",
-        "lambda:UpdateFunctionConfiguration",
-        "lambda:GetFunction",
-        "lambda:GetFunctionConfiguration",
         "lambda:DeleteFunction",
-        "lambda:AddPermission"
+        "lambda:UpdateFunctionConfiguration",
+        "lambda:GetFunctionConfiguration",
+        "lambda:GetFunctionUrlConfig",
+        "lambda:CreateFunctionUrlConfig",
+        "lambda:UpdateFunctionUrlConfig",
+        "lambda:DeleteFunctionUrlConfig"
       ],
       "Resource": "arn:aws:lambda:REGION:ACCOUNT_ID:function:NAME_PATTERN"
     },
     {
       "Sid": "2",
       "Effect": "Allow",
-      "Action": ["iam:PassRole", "lambda:ListFunctions"],
+      "Action": ["iam:PassRole", "lambda:ListFunctions", "lambda:AddPermission"],
       "Resource": "*"
     }
   ]
