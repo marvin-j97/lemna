@@ -1,6 +1,6 @@
 {
   "name": "lemna",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
   "type": "module",
   "main": "./dist/index.js",
