@@ -4,7 +4,6 @@ import { Builder, type BuildResult } from "./builder";
 import type { Config, FunctionSettings } from "./config";
 import { createLemnaLogger, type Logger, type LogLevel } from "./logger";
 import { FunctionManager } from "./manager";
-import { Uploader } from "./upload";
 
 /**
  * Base class
@@ -21,6 +20,9 @@ export class Lemna {
     this._logger = logger;
   }
 
+  /**
+   * Creates a new instance with specific log level
+   */
   static withLogLevel(logLevel: LogLevel, lambdaConfig?: LambdaClientConfig): Lemna {
     return new Lemna(createLemnaLogger(logLevel), lambdaConfig);
   }
@@ -54,7 +56,9 @@ export class Lemna {
    * @returns Build result and config
    */
   updateOrCreateFunction(functionSettings: FunctionSettings, zipFile: string): Promise<void> {
-    const fm = new FunctionManager(this, functionSettings.name);
-    return new Uploader(this, fm).updateOrCreateFunction(functionSettings, zipFile);
+    return new FunctionManager(this, functionSettings.name).updateOrCreateFunction(
+      functionSettings,
+      zipFile,
+    );
   }
 }
