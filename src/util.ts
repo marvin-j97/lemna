@@ -6,6 +6,9 @@ import { glob } from "glob";
 
 import type { FunctionUrlSettings, RuntimeVersion } from "./config";
 
+/**
+ * Format cors argument into AWS Cors object
+ */
 export function formatCors(cors: FunctionUrlSettings["cors"]): Cors | undefined {
   if (!cors) {
     return undefined;
