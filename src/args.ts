@@ -13,7 +13,9 @@ import { getRunCommand } from "./npm_client";
 import { formatJson, hasV3 } from "./util";
 import version from "./version";
 
-// eslint-disable-next-line max-lines-per-function, require-jsdoc
+/**
+ * Parses command line arguments and executes the given command or shows help menu
+ */
 export async function parseArgs(): Promise<void> {
   await yargs(process.argv.slice(2))
     .scriptName("lemna")
