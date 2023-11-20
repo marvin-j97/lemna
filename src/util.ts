@@ -76,7 +76,7 @@ export async function* fileVisitor(globs: string[], cwd = process.cwd()): AsyncG
   }
 }
 
-const HAS_V3_REGEX = /^nodejs(18|20).x$/;
+const HAS_V3_REGEX = /^nodejs(18|20|22).x$/;
 
 /**
  * Returns true if the runtime version has aws-sdk v3 built in

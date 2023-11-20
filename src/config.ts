@@ -8,7 +8,7 @@ import * as z from "zod";
 import type { Logger } from "./logger";
 import { formatJson } from "./util";
 
-const runtimeSchema = z.enum(["nodejs16.x", "nodejs18.x"]);
+const runtimeSchema = z.enum(["nodejs16.x", "nodejs18.x", "nodejs20.x"]);
 const moduleFormatSchema = z.enum(["cjs", "esm"]);
 
 const functionUrlAuthTypeSchema = z.enum(["none", "iam"]);
