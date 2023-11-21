@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -6,7 +6,7 @@ import { dirname, resolve } from "node:path";
 import { bundleCode } from "./bundle";
 import { type Config, loadConfig } from "./config";
 import type { Lemna } from "./lemna";
-import { formatJson, getTempFolderPath } from "./util";
+import { formatJson, getTempFolderPath, isEOL } from "./util";
 import { composeZip, saveZip } from "./zip";
 
 /**
@@ -40,7 +40,12 @@ export class Builder {
   private runBuildSteps(cwd: string, steps: string[]): void {
     for (const step of steps) {
       this._client.logger.silly(`Build step, EXEC: ${cwd}:${step}`);
-      execSync(step, { cwd, stdio: "inherit" });
+      const proc = spawnSync(step, { cwd, stdio: "inherit" });
+      if (proc.status) {
+        throw new Error(
+          `Build step "${step}" failed with status code: ${proc.status}`,
+        );
+      }
     }
   }
 
@@ -49,6 +54,13 @@ export class Builder {
    */
   async run(configPath: string): Promise<BuildResult & { config: Config }> {
     const config = await loadConfig(configPath, this._client.logger);
+
+    if (isEOL(config.function.runtime)) {
+      this._client.logger.warn(
+        `You have chosen Node.js version "${config.function.runtime}" which has reached its end of life (EOL).`,
+      );
+      this._client.logger.warn("See https://endoflife.date/nodejs");
+    }
 
     const projectDir = dirname(configPath);
     const entryPoint = resolve(projectDir, config.entryPoint);

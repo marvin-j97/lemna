@@ -5,7 +5,12 @@ import { resolve } from "node:path";
 import inquirer from "inquirer";
 import { runTypescriptTemplate } from "templates/typescript";
 
-import type { Config, ModuleFormat, RuntimeVersion } from "./config";
+import {
+  allSupportedNodeVersions,
+  type Config,
+  type ModuleFormat,
+  type RuntimeVersion,
+} from "./config";
 import { Lemna } from "./lemna";
 import { getInstallCommand, type NPMClient } from "./npm_client";
 import { formatJson, writeToFile } from "./util";
@@ -98,7 +103,7 @@ export async function initializeLemna(client: Lemna): Promise<{
       },
       {
         name: "runtime",
-        choices: ["nodejs16.x", "nodejs18.x"] satisfies RuntimeVersion[],
+        choices: allSupportedNodeVersions,
         type: "list",
         message: "Select runtime",
         default: "nodejs18.x",
@@ -134,7 +139,12 @@ export async function initializeLemna(client: Lemna): Promise<{
 
   const moduleFormat: ModuleFormat = useEsm ? "esm" : "cjs";
 
-  const { entryPoint } = await runTypescriptTemplate(projectDir, npmClient, runtime, moduleFormat);
+  const { entryPoint } = await runTypescriptTemplate(
+    projectDir,
+    npmClient,
+    runtime,
+    moduleFormat,
+  );
   const lemnaConfigPath = resolve(projectDir, "lemna.config.mjs");
   const config = composeLemnaConfig(functionName, entryPoint, moduleFormat);
 

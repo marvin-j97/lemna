@@ -1,8 +1,6 @@
-import { resolve } from "node:path";
-
 import { describe, expect, it } from "vitest";
 
-import { Config, isValidConfig, loadConfig } from "../src/config";
+import { Config, isValidConfig } from "../src/config";
 import { createLemnaLogger } from "../src/logger";
 
 const validConfigs: Config[] = [

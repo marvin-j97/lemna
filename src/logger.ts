@@ -27,7 +27,9 @@ const colorize: Record<keyof typeof logLevels, ChalkInstance> = {
 /**
  * Creates a logger instance
  */
-export function createLemnaLogger(level: LogLevel): Record<LogLevel, LogFunction<unknown>> {
+export function createLemnaLogger(
+  level: LogLevel,
+): Record<LogLevel, LogFunction<unknown>> {
   return createLogger<unknown, typeof logLevels, { timestamp: Date }>({
     context: () => ({ timestamp: new Date() }),
     logLevels,
@@ -37,16 +39,18 @@ export function createLemnaLogger(level: LogLevel): Record<LogLevel, LogFunction
         handler: createConsoleTransport({
           format: ({ timestamp, level, message }) => {
             if (message instanceof Error) {
-              return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${
-                message.message
-              }`;
+              return `${chalk.grey(timestamp.toISOString())} ${colorize[level](
+                level,
+              )} ${message.message}`;
             }
             if (typeof message === "string") {
-              return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${message}`;
+              return `${chalk.grey(timestamp.toISOString())} ${colorize[level](
+                level,
+              )} ${message}`;
             }
-            return `${chalk.grey(timestamp.toISOString())} ${colorize[level](level)} ${formatJson(
-              message,
-            )}`;
+            return `${chalk.grey(timestamp.toISOString())} ${colorize[level](
+              level,
+            )} ${formatJson(message)}`;
           },
         }),
       },

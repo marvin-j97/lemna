@@ -19,7 +19,9 @@ export async function runCommand(
     process.exit(1);
   }
 
-  const logger = createLemnaLogger((process.env.LEMNA_LOG_LEVEL as LogLevel) ?? "info");
+  const logger = createLemnaLogger(
+    (process.env.LEMNA_LOG_LEVEL as LogLevel) ?? "info",
+  );
 
   if (runOptions.requiresCredentials) {
     checkAWSKeys(logger);

@@ -30,7 +30,9 @@ export async function bundleCode({
   const options: esbuild.BuildOptions = {
     // NOTE: AWS SDK is pre-installed on Lambda, so no need to bundle it
     // NOTE: node 18 uses aws sdk v3, but <18 uses v2
-    external: hasV3(version) ? ["@aws-sdk/client-*", "@aws-sdk/lib-*"] : ["aws-sdk"],
+    external: hasV3(version)
+      ? ["@aws-sdk/client-*", "@aws-sdk/lib-*"]
+      : ["aws-sdk"],
     bundle: true,
     format: moduleFormat,
     platform: "node",

@@ -8,7 +8,13 @@ import * as z from "zod";
 import type { Logger } from "./logger";
 import { formatJson } from "./util";
 
-const runtimeSchema = z.enum(["nodejs16.x", "nodejs18.x", "nodejs20.x"]);
+export const allSupportedNodeVersions = [
+  "nodejs16.x",
+  "nodejs18.x",
+  "nodejs20.x",
+] as const;
+
+const runtimeSchema = z.enum(allSupportedNodeVersions);
 const moduleFormatSchema = z.enum(["cjs", "esm"]);
 
 const functionUrlAuthTypeSchema = z.enum(["none", "iam"]);
@@ -69,7 +75,7 @@ const configSchema = z
   .strict();
 
 export type Config = Omit<z.TypeOf<typeof configSchema>, "esbuild"> & {
-  esbuild: Omit<BuildOptions, "entryPoints" | "outfile" | "banner">;
+  esbuild?: Omit<BuildOptions, "entryPoints" | "outfile" | "banner">;
 };
 
 /**
@@ -82,7 +88,9 @@ export function isValidConfig(val: unknown, logger: Logger): val is Config {
   }
 
   logger.error(
-    `${result.error.issues.length} validation errors: ${formatJson(result.error.issues)}`,
+    `${result.error.issues.length} validation errors: ${formatJson(
+      result.error.issues,
+    )}`,
   );
   return false;
 }
@@ -90,7 +98,10 @@ export function isValidConfig(val: unknown, logger: Logger): val is Config {
 /**
  * Loads a config from file (.mjs)
  */
-export async function loadConfig(file: string, logger: Logger): Promise<Config> {
+export async function loadConfig(
+  file: string,
+  logger: Logger,
+): Promise<Config> {
   const path = resolve(file);
   logger.debug(`Loading config at ${path}`);
 

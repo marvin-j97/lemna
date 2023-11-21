@@ -46,8 +46,16 @@ export class FunctionManager {
     zipFile: string,
     arn: string,
   ): Promise<void> {
-    const { description, memorySize, handler, runtime, env, timeout, tags, layers } =
-      functionSettings;
+    const {
+      description,
+      memorySize,
+      handler,
+      runtime,
+      env,
+      timeout,
+      tags,
+      layers,
+    } = functionSettings;
 
     this._client.logger.info(
       `Creating function "${this._functionName}" with zip file "${zipFile}"`,
@@ -91,12 +99,15 @@ export class FunctionManager {
     functionSettings: Omit<FunctionSettings, "name">,
     zipFile: string,
   ): Promise<void> {
-    const { description, memorySize, handler, runtime, env, timeout, layers } = functionSettings;
+    const { description, memorySize, handler, runtime, env, timeout, layers } =
+      functionSettings;
 
     await this.waitUntilReady();
 
     // Update function code (with zip)
-    this._client.logger.info(`Uploading project ${zipFile} -> ${this._functionName}`);
+    this._client.logger.info(
+      `Uploading project ${zipFile} -> ${this._functionName}`,
+    );
     this._client.logger.verbose(
       `Updating Lambda function (${this._functionName}) code using ${zipFile}`,
     );
@@ -110,7 +121,9 @@ export class FunctionManager {
     await this.waitUntilReady();
 
     // Update function configuration as well
-    this._client.logger.verbose(`Updating Lambda function (${this._functionName}) configuration`);
+    this._client.logger.verbose(
+      `Updating Lambda function (${this._functionName}) configuration`,
+    );
     this._client.logger.silly(formatJson(functionSettings));
 
     this._client.lambdaClient.send(
@@ -146,7 +159,8 @@ export class FunctionManager {
     const params: CreateFunctionUrlConfigCommandInput = {
       FunctionName: this._functionName,
       AuthType: opts.authType === "none" ? "NONE" : "AWS_IAM",
-      InvokeMode: opts.invokeMode === "buffered" ? "BUFFERED" : "RESPONSE_STREAM",
+      InvokeMode:
+        opts.invokeMode === "buffered" ? "BUFFERED" : "RESPONSE_STREAM",
       Cors: formatCors(opts.cors),
       Qualifier: opts.qualifier,
     };
@@ -162,16 +176,24 @@ export class FunctionManager {
         }),
       );
 
-      this._client.logger.verbose(`Updating Lambda function (${this._functionName}) URL`);
+      this._client.logger.verbose(
+        `Updating Lambda function (${this._functionName}) URL`,
+      );
       this._client.logger.silly(params);
 
-      await this._client.lambdaClient.send(new UpdateFunctionUrlConfigCommand(params));
+      await this._client.lambdaClient.send(
+        new UpdateFunctionUrlConfigCommand(params),
+      );
     } catch (error: unknown) {
       if (error instanceof ResourceNotFoundException) {
-        this._client.logger.verbose("Function URL config does not exist, creating");
+        this._client.logger.verbose(
+          "Function URL config does not exist, creating",
+        );
         this._client.logger.silly(params);
 
-        await this._client.lambdaClient.send(new CreateFunctionUrlConfigCommand(params));
+        await this._client.lambdaClient.send(
+          new CreateFunctionUrlConfigCommand(params),
+        );
       } else {
         throw error;
       }
@@ -226,7 +248,9 @@ export class FunctionManager {
           FunctionName: this._functionName,
         }),
       );
-      this._client.logger.warn("Deleted function URL because no configuration exists");
+      this._client.logger.warn(
+        "Deleted function URL because no configuration exists",
+      );
       return true;
     } catch (error: unknown) {
       if (error instanceof ResourceNotFoundException) {
@@ -251,21 +275,32 @@ export class FunctionManager {
         }),
       );
 
-      if (config.State !== "Pending" && config.LastUpdateStatus !== "InProgress") {
-        this._client.logger.silly(`Function state: ${config.State}, ${config.LastUpdateStatus}`);
-        this._client.logger.verbose(`Function "${this._functionName}" is ready for new operation`);
+      if (
+        config.State !== "Pending" &&
+        config.LastUpdateStatus !== "InProgress"
+      ) {
+        this._client.logger.silly(
+          `Function state: ${config.State}, ${config.LastUpdateStatus}`,
+        );
+        this._client.logger.verbose(
+          `Function "${this._functionName}" is ready for new operation`,
+        );
         return;
       }
 
       // Sleep for some seconds
-      this._client.logger.verbose(`Waiting for function "${this._functionName}" to become ready`);
+      this._client.logger.verbose(
+        `Waiting for function "${this._functionName}" to become ready`,
+      );
       await new Promise((resolve) => setTimeout(resolve, delayMs));
 
       // Increase delay time, but cap it at max time
       delayMs = Math.min(FunctionManager.WAIT_MAX_TIME, delayMs * 2);
 
       if (delayMs >= 3_000) {
-        this._client.logger.info(`Still waiting for "${this._functionName}" to become ready`);
+        this._client.logger.info(
+          `Still waiting for "${this._functionName}" to become ready`,
+        );
       }
     }
   }
@@ -273,7 +308,10 @@ export class FunctionManager {
   /**
    * Uploads a zip file to a Lambda function
    */
-  async updateOrCreateFunction(functionSettings: FunctionSettings, zipFile: string): Promise<void> {
+  async updateOrCreateFunction(
+    functionSettings: FunctionSettings,
+    zipFile: string,
+  ): Promise<void> {
     if (!existsSync(zipFile) || statSync(zipFile).isDirectory()) {
       this._client.logger.error(`${zipFile} not found`);
       throw new Error("Zip file not found");

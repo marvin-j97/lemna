@@ -10,7 +10,7 @@ import { getFunctionCommand } from "./commands/read";
 import { removeCommand } from "./commands/rm";
 import { initializeLemna } from "./init";
 import { getRunCommand } from "./npm_client";
-import { formatJson, hasV3 } from "./util";
+import { formatJson, hasV3, isEOL } from "./util";
 import version from "./version";
 
 /**
@@ -32,7 +32,9 @@ export async function parseArgs(): Promise<void> {
       async (argv) => {
         await runCommand(
           async (client) => {
-            console.log(formatJson(await getFunctionCommand(client, argv.name)));
+            console.log(
+              formatJson(await getFunctionCommand(client, argv.name)),
+            );
           },
           { requiresCredentials: true },
         );
@@ -73,7 +75,9 @@ export async function parseArgs(): Promise<void> {
       async (argv) => {
         await runCommand(
           async (client) => {
-            console.log(formatJson(await listCommand(client, argv.take, argv.page)));
+            console.log(
+              formatJson(await listCommand(client, argv.take, argv.page)),
+            );
           },
           { requiresCredentials: true },
         );
@@ -86,7 +90,8 @@ export async function parseArgs(): Promise<void> {
       async () => {
         await runCommand(
           async (client) => {
-            const { projectDir, npmClient, nodeVersion } = await initializeLemna(client);
+            const { projectDir, npmClient, nodeVersion } =
+              await initializeLemna(client);
 
             if (hasV3(nodeVersion)) {
               client.logger.warn(
@@ -96,7 +101,7 @@ export async function parseArgs(): Promise<void> {
                 `Read more here: https://aws.amazon.com/de/blogs/developer/why-and-how-you-should-use-aws-sdk-for-javascript-v3-on-node-js-18/`,
               );
             }
-            if (nodeVersion === "nodejs16.x") {
+            if (isEOL(nodeVersion)) {
               client.logger.warn(
                 `You have chosen Node.js version "${nodeVersion}" which has reached its end of life (EOL).`,
               );
@@ -123,7 +128,10 @@ export async function parseArgs(): Promise<void> {
       async (argv) => {
         await runCommand(
           async (client) => {
-            const { results, matchedCount, successCount } = await buildCommand(client, argv.paths);
+            const { results, matchedCount, successCount } = await buildCommand(
+              client,
+              argv.paths,
+            );
 
             console.log(formatJson({ built: results }));
 
@@ -154,7 +162,10 @@ export async function parseArgs(): Promise<void> {
       async (argv) => {
         await runCommand(
           async (client) => {
-            const { matchedCount, successCount } = await deployCommand(client, argv.paths);
+            const { matchedCount, successCount } = await deployCommand(
+              client,
+              argv.paths,
+            );
 
             client.logger.info(
               `Successfully deployed ${successCount}/${matchedCount} (${(

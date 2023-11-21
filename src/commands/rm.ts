@@ -9,12 +9,17 @@ import { formatJson } from "../util";
  * @param {Lemna} client Lemna client
  * @param {string[]} names Function names
  */
-export async function removeCommand(client: Lemna, names: string[]): Promise<void> {
+export async function removeCommand(
+  client: Lemna,
+  names: string[],
+): Promise<void> {
   client.logger.warn(`Deleting functions: ${formatJson(names)}`);
 
   const result = await Promise.allSettled(
     names.map(async (name) => {
-      await client.lambdaClient.send(new DeleteFunctionCommand({ FunctionName: name }));
+      await client.lambdaClient.send(
+        new DeleteFunctionCommand({ FunctionName: name }),
+      );
       return name;
     }),
   );

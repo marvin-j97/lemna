@@ -7,7 +7,11 @@ module.exports = {
     sourceType: "module", // Allows for the use of imports
   },
   plugins: ["@typescript-eslint", "simple-import-sort", "prettier"],
-  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  extends: [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+  ],
   rules: {
     eqeqeq: "error",
     yoda: "error",
