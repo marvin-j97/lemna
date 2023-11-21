@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as s,R as n}from"./chunks/framework.GeVTwKgC.js";const m=JSON.parse('{"title":"Using the CLI","description":"","frontmatter":{},"headers":[],"relativePath":"cli.md","filePath":"cli.md"}'),l={name:"cli.md"},t=n("",28),o=[t];function i(p,c,d,r,h,u){return s(),a("div",null,o)}const b=e(l,[["render",i]]);export{m as __pageData,b as default};
