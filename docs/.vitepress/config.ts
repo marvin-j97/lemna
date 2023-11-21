@@ -8,7 +8,6 @@ export default defineConfig({
   titleTemplate: ":title · lemna",
 
   base: "/lemna/",
-  outDir: "../../.vitepress",
 
   description:
     "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
