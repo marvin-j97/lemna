@@ -58,13 +58,15 @@ export async function globFiles(
   globs: string[],
   cwd: string,
 ): Promise<string[]> {
-  const files = [];
-
-  for await (const file of fileVisitor(globs, cwd)) {
-    files.push(file);
-  }
-
-  return [...new Set(files)];
+  return [
+    ...new Set(
+      (
+        await Promise.all(
+          globs.map((item) => glob(item, { cwd, nodir: true, absolute: true })),
+        )
+      ).flat(),
+    ),
+  ];
 }
 
 /**
