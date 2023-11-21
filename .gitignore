@@ -110,3 +110,5 @@ lambda.zip
 lambda_builds
 unzip
 init_lambda
+/.vitepress
+/docs/.vitepress/cache
