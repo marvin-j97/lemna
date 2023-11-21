@@ -72,31 +72,30 @@ ${moduleFormat === "esm" ? "export { handler };" : "exports.handler = handler;"}
  * Monkey patch for streamifyResponse
  */
 function composeResponseStreamMonkeyPatch(): string {
-  return `import { Context } from "aws-lambda";
+  return `import type { Context } from "aws-lambda";
+import type { Writable } from "node:stream";
 
-  // NOTE: Help improve this type def! https://github.com/marvin-j97/lemna/blob/main/src/templates/typescript.ts#L74C1-L74C1
+// NOTE: Help improve this type def! https://github.com/marvin-j97/lemna/blob/main/src/templates/typescript.ts#L74C1-L74C1
 
-  // TODO: inherit from Node Stream: https://aws.amazon.com/de/blogs/compute/introducing-aws-lambda-response-streaming/
-  // The responseStream object implements Node's Writable Stream API
+// TODO: inherit from Node Stream: https://aws.amazon.com/de/blogs/compute/introducing-aws-lambda-response-streaming/
+// The responseStream object implements Node's Writable Stream API
 
-  type ResponseStream = {
-    write: (str: any) => void;
-    end: () => void;
-    setContentType: (resType: string) => void;
+type ResponseStream = Writable & {
+  setContentType: (contentType: string) => void;
+};
+
+declare global {
+  const awslambda: {
+    /**
+     * Read more at https://docs.aws.amazon.com/lambda/latest/dg/configuration-response-streaming.html
+     */
+    streamifyResponse: <T = unknown>(
+      fn: (event: T, responseStream: ResponseStream, context: Context) => Promise<unknown>,
+    ) => void;
   };
-  
-  declare global {
-    const awslambda: {
-      /**
-       * Read more at https://docs.aws.amazon.com/lambda/latest/dg/configuration-response-streaming.html
-       */
-      streamifyResponse: <T = unknown>(
-        fn: (event: T, responseStream: ResponseStream, context: Context) => Promise<unknown>,
-      ) => void;
-    };
-  }
-  
-  export default global;
+}
+
+export default global;
 `;
 }
 
