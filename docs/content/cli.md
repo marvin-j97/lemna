@@ -50,9 +50,7 @@ lemna deploy firstconfig.mjs secondconfig.mjs [...]
 ## List functions
 
 ```
-lemna lsnpx lemna init
-yarn lemna init
-pnpm lemna init
+lemna ls
 ```
 
 Example: Print the runtime of my functions
