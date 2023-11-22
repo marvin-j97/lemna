@@ -1,4 +1,4 @@
-### Prisma
+# Prisma
 
 If you use Prisma, you should use a Lambda layer containing the necessary Prisma binaries and setting:
 

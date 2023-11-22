@@ -1,4 +1,4 @@
-# Bundling
+# Bundling extra files
 
 If you want to add a file to the ZIP bundle, you can use `includeFiles`:
 
