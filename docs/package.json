@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "vue": "3.3.8",
-    "vitepress": "1.0.0-rc.29"
+    "vitepress": "1.1.0"
   },
   "pnpm": {
     "peerDependencyRules": {
