@@ -44,24 +44,14 @@ export async function composeZip({
   logger.debug(`Composing zip file`);
   const zip = new JSZip();
 
-  zip.file(
-    "package.json",
-    createReadStream(resolve(projectDir, "package.json")),
-  );
-  zip.file(
-    moduleFormat === "cjs" ? "index.js" : "index.mjs",
-    createReadStream(bundlePath),
-  );
+  zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));
+  zip.file(moduleFormat === "cjs" ? "index.js" : "index.mjs", createReadStream(bundlePath));
 
   for (const [base, patterns] of Object.entries(extraFiles ?? {})) {
     const files = await globFiles(patterns, projectDir);
 
     if (!files.length) {
-      logger.warn(
-        `No files found for "${base}" (glob patterns: ${JSON.stringify(
-          patterns,
-        )}`,
-      );
+      logger.warn(`No files found for "${base}" (glob patterns: ${JSON.stringify(patterns)}`);
     } else {
       const folder = resolve(globParent(files[0]));
 

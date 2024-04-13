@@ -42,9 +42,7 @@ export class Builder {
       this._client.logger.silly(`Build step, EXEC: ${cwd}:${step}`);
       const proc = spawnSync(step, { cwd, stdio: "inherit" });
       if (proc.status) {
-        throw new Error(
-          `Build step "${step}" failed with status code: ${proc.status}`,
-        );
+        throw new Error(`Build step "${step}" failed with status code: ${proc.status}`);
       }
     }
   }

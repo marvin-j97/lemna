@@ -139,12 +139,7 @@ export async function initializeLemna(client: Lemna): Promise<{
 
   const moduleFormat: ModuleFormat = useEsm ? "esm" : "cjs";
 
-  const { entryPoint } = await runTypescriptTemplate(
-    projectDir,
-    npmClient,
-    runtime,
-    moduleFormat,
-  );
+  const { entryPoint } = await runTypescriptTemplate(projectDir, npmClient, runtime, moduleFormat);
   const lemnaConfigPath = resolve(projectDir, "lemna.config.mjs");
   const config = composeLemnaConfig(functionName, entryPoint, moduleFormat);
 

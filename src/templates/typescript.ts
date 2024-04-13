@@ -122,19 +122,12 @@ export async function runTypescriptTemplate(
 
   // NOTE: TODO: ideally AWS provides types at some point
   const responseStreamMonkeyPatchFile = resolve(projectDir, "streamify.d.ts");
-  writeToFile(
-    responseStreamMonkeyPatchFile,
-    composeResponseStreamMonkeyPatch(),
-  );
+  writeToFile(responseStreamMonkeyPatchFile, composeResponseStreamMonkeyPatch());
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const nodeVersion = runtime.match(/^nodejs(\d+).x$/)![1];
 
-  const deps = [
-    "@types/aws-lambda",
-    "typescript",
-    `@types/node@${nodeVersion}`,
-  ];
+  const deps = ["@types/aws-lambda", "typescript", `@types/node@${nodeVersion}`];
 
   const cmd = `${getInstallCommand(npmClient)} -DE ${deps.join(" ")}`;
   execSync(cmd, { cwd: projectDir, stdio: "inherit" });

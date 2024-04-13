@@ -1,6 +1,6 @@
 {
   "name": "lemna",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,7 +10,7 @@
     "lemna": "cli.mjs"
   },
   "engines": {
-    "node": "18 || 20"
+    "node": "18 || 20 || 22"
   },
   "license": "MIT",
   "scripts": {
@@ -18,8 +18,10 @@
     "dev": "tsx src/bin.ts",
     "tc": "tsc",
     "build": "tsup --entry src/bin.ts --entry src/index.ts --format esm --dts --clean",
-    "lint": "eslint src --ext .ts",
-    "fmt": "eslint src --ext .ts --fix",
+    "lint": "biome check src",
+    "lint:fix": "biome check --apply-unsafe src",
+    "fmt": "biome format src --write",
+    "fmt:check": "biome format src",
     "test": "vitest run",
     "coverage": "vitest run --coverage"
   },
@@ -41,23 +43,16 @@
   },
   "homepage": "https://github.com/marvin-j97/lemna#readme",
   "devDependencies": {
+    "@biomejs/biome": "1.6.4",
     "@types/glob-parent": "5.1.3",
     "@types/inquirer": "9.0.7",
-    "@types/node": "20.12.2",
+    "@types/node": "20.12.7",
     "@types/yargs": "17.0.32",
-    "@typescript-eslint/eslint-plugin": "7.5.0",
-    "@typescript-eslint/parser": "7.5.0",
-    "@vitest/coverage-istanbul": "1.4.0",
-    "eslint": "8.57.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-jsdoc": "48.2.2",
-    "eslint-plugin-prettier": "5.1.3",
-    "eslint-plugin-simple-import-sort": "12.0.0",
-    "prettier": "3.2.5",
+    "@vitest/coverage-istanbul": "1.5.0",
     "tsup": "8.0.2",
-    "tsx": "4.7.1",
-    "typescript": "5.4.3",
-    "vitest": "1.4.0"
+    "tsx": "4.7.2",
+    "typescript": "5.4.5",
+    "vitest": "1.5.0"
   },
   "files": [
     "dist",
@@ -70,13 +65,13 @@
     }
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.540.0",
+    "@aws-sdk/client-lambda": "3.554.0",
     "chalk": "5.3.0",
     "dotenv": "16.4.5",
     "esbuild": "0.20.2",
-    "glob": "10.3.10",
+    "glob": "10.3.12",
     "glob-parent": "6.0.2",
-    "inquirer": "9.2.17",
+    "inquirer": "9.2.18",
     "jszip": "3.10.1",
     "skriva": "0.0.2",
     "skriva-transport-console": "0.0.2",

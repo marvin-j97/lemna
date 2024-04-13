@@ -9,9 +9,7 @@ import type { FunctionUrlSettings, RuntimeVersion } from "./config";
 /**
  * Format cors argument into AWS Cors object
  */
-export function formatCors(
-  cors: FunctionUrlSettings["cors"],
-): Cors | undefined {
+export function formatCors(cors: FunctionUrlSettings["cors"]): Cors | undefined {
   if (!cors) {
     return undefined;
   }
@@ -54,16 +52,11 @@ export function writeToFile(path: string, content: string): void {
 /**
  * Finds all files described by multiple glob patterns
  */
-export async function globFiles(
-  globs: string[],
-  cwd: string,
-): Promise<string[]> {
+export async function globFiles(globs: string[], cwd: string): Promise<string[]> {
   return [
     ...new Set(
       (
-        await Promise.all(
-          globs.map((item) => glob(item, { cwd, nodir: true, absolute: true })),
-        )
+        await Promise.all(globs.map((item) => glob(item, { cwd, nodir: true, absolute: true })))
       ).flat(),
     ),
   ];
@@ -72,10 +65,7 @@ export async function globFiles(
 /**
  * Visit files described by multiple glob expressions
  */
-export async function* fileVisitor(
-  globs: string[],
-  cwd = process.cwd(),
-): AsyncGenerator<string> {
+export async function* fileVisitor(globs: string[], cwd = process.cwd()): AsyncGenerator<string> {
   for (const globExp of globs) {
     const files = await glob(globExp, { cwd });
 
