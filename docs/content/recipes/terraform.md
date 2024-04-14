@@ -41,8 +41,8 @@ resource "aws_lambda_function" "my_function" {
   function_name    = "my-function"
   role             = var.lambda_arn
   handler          = "index.handler"
-  filename         = "path/to/output.zip"
-  source_code_hash = filebase64sha256("path/to/output.zip")
+  filename         = "/path/to/output.zip"
+  source_code_hash = filebase64sha256("/path/to/output.zip")
   runtime          = "nodejs20.x"
   description      = "Cool function"
   timeout          = 15
