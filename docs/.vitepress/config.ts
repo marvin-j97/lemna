@@ -9,8 +9,7 @@ export default defineConfig({
 
   base: "/lemna/",
 
-  description:
-    "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
+  description: "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
 
   markdown: {
     theme: {
@@ -43,12 +42,11 @@ export default defineConfig({
           { text: "Bundling extra files", link: "/recipes/bundle-files" },
           { text: "IAM policies", link: "/recipes/iam" },
           { text: "Using Prisma", link: "/recipes/prisma" },
+          { text: "Using Terraform", link: "/recipes/terraform" },
         ],
       },
     ],
 
-    socialLinks: [
-      { icon: "github", link: "https://github.com/marvin-j97/lemna" },
-    ],
+    socialLinks: [{ icon: "github", link: "https://github.com/marvin-j97/lemna" }],
   },
 });
