@@ -1,8 +1,8 @@
 import { LambdaClient, type LambdaClientConfig } from "@aws-sdk/client-lambda";
 
-import { Builder, type BuildResult } from "./builder";
+import { type BuildResult, Builder } from "./builder";
 import type { Config, FunctionSettings } from "./config";
-import { createLemnaLogger, type Logger, type LogLevel } from "./logger";
+import { type LogLevel, type Logger, createLemnaLogger } from "./logger";
 import { FunctionManager } from "./manager";
 
 /**

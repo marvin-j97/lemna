@@ -209,8 +209,7 @@ export class FunctionManager {
       }),
     );
 
-    // NOTE: We just created it so it definitely exists
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: We just created it so it definitely exists
     return FunctionUrl!;
   }
 
@@ -232,9 +231,8 @@ export class FunctionManager {
       if (error instanceof ResourceNotFoundException) {
         // OK
         return false;
-      } else {
-        throw error;
       }
+      throw error;
     }
   }
 
@@ -309,11 +307,10 @@ export class FunctionManager {
 
           // NOTE: Exit early because we're done
           return;
-        } else {
-          this._client.logger.error(
-            "Supply config.function.arn or LEMNA_ARN environment variable to automatically create function",
-          );
         }
+        this._client.logger.error(
+          "Supply config.function.arn or LEMNA_ARN environment variable to automatically create function",
+        );
       }
 
       this._client.logger.error(error);

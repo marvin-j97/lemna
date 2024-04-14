@@ -1,4 +1,4 @@
-import { Lemna } from "./lemna";
+import type { Lemna } from "./lemna";
 
 /**
  * Deploys a project

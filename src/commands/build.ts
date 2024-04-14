@@ -1,4 +1,4 @@
-import { Lemna } from "../lemna";
+import type { Lemna } from "../lemna";
 import { fileVisitor, formatJson } from "../util";
 
 type BuildItem = { zipFile: string; buildHash: string };
@@ -18,7 +18,7 @@ export async function buildCommand(
   matchedCount: number;
   errorCount: number;
 }> {
-  client.logger.silly(`Build paths:`);
+  client.logger.silly("Build paths:");
   client.logger.silly(formatJson(paths));
 
   let successCount = 0;
@@ -30,7 +30,8 @@ export async function buildCommand(
       const { buildHash, zipFile } = await client.buildAtPath(path);
       results.push({ buildHash, zipFile });
       successCount++;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      // biome-ignore lint/suspicious/noExplicitAny: Whatever
     } catch (error: any) {
       client.logger.warn(`Error building ${path}: ${error.message}`);
       client.logger.silly(error.stack);

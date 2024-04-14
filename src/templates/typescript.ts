@@ -3,7 +3,7 @@ import { mkdirSync } from "node:fs";
 import { relative, resolve } from "node:path";
 
 import type { ModuleFormat, RuntimeVersion } from "../config";
-import { getInstallCommand, type NPMClient } from "../npm_client";
+import { type NPMClient, getInstallCommand } from "../npm_client";
 import { formatJson, writeToFile } from "../util";
 
 /**
@@ -124,8 +124,7 @@ export async function runTypescriptTemplate(
   const responseStreamMonkeyPatchFile = resolve(projectDir, "streamify.d.ts");
   writeToFile(responseStreamMonkeyPatchFile, composeResponseStreamMonkeyPatch());
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const nodeVersion = runtime.match(/^nodejs(\d+).x$/)![1];
+  const nodeVersion = runtime.match(/^nodejs(\d+).x$/)?.[1];
 
   const deps = ["@types/aws-lambda", "typescript", `@types/node@${nodeVersion}`];
 

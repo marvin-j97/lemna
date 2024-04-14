@@ -6,13 +6,13 @@ import inquirer from "inquirer";
 import { runTypescriptTemplate } from "templates/typescript";
 
 import {
-  allSupportedNodeVersions,
   type Config,
   type ModuleFormat,
   type RuntimeVersion,
+  allSupportedNodeVersions,
 } from "./config";
-import { Lemna } from "./lemna";
-import { getInstallCommand, type NPMClient } from "./npm_client";
+import type { Lemna } from "./lemna";
+import { type NPMClient, getInstallCommand } from "./npm_client";
 import { formatJson, writeToFile } from "./util";
 
 /**

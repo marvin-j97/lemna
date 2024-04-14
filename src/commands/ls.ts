@@ -1,6 +1,6 @@
 import { type FunctionConfiguration, ListFunctionsCommand } from "@aws-sdk/client-lambda";
 
-import { Lemna } from "../lemna";
+import type { Lemna } from "../lemna";
 
 /**
  * Lists a page of functions, page size cannot be greater than 50

@@ -41,7 +41,7 @@ export async function composeZip({
   extraFiles,
   logger,
 }: ZipOptions): Promise<JSZip> {
-  logger.debug(`Composing zip file`);
+  logger.debug("Composing zip file");
   const zip = new JSZip();
 
   zip.file("package.json", createReadStream(resolve(projectDir, "package.json")));

@@ -106,7 +106,7 @@ export async function loadConfig(file: string, logger: Logger): Promise<Config> 
     throw new Error(`${path} is a directory`);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: dynamic import
   let content: any = await import(pathToFileURL(path).toString());
 
   if (content.default) {

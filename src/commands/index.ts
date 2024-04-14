@@ -1,6 +1,6 @@
 import { checkAWSKeys } from "../creds";
 import { Lemna } from "../lemna";
-import { createLemnaLogger, type LogLevel, logLevels } from "../logger";
+import { type LogLevel, createLemnaLogger, logLevels } from "../logger";
 
 export interface ICommandOptions {
   requiresCredentials: boolean;
@@ -29,7 +29,8 @@ export async function runCommand(
 
   try {
     await fn(client);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+    // biome-ignore lint/suspicious/noExplicitAny: Whatever
   } catch (error: any) {
     client.logger.error(`Error during operation: ${error.message}`);
     client.logger.silly(error.stack);

@@ -1,5 +1,5 @@
 import { deployWithConfigPath } from "../deploy";
-import { Lemna } from "../lemna";
+import type { Lemna } from "../lemna";
 import { fileVisitor, formatJson } from "../util";
 
 /**
@@ -16,7 +16,7 @@ export async function deployCommand(
   matchedCount: number;
   errorCount: number;
 }> {
-  client.logger.silly(`Deploy paths:`);
+  client.logger.silly("Deploy paths:");
   client.logger.silly(formatJson(paths));
 
   let successCount = 0;
@@ -26,7 +26,8 @@ export async function deployCommand(
     try {
       await deployWithConfigPath(client, path);
       successCount++;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      // biome-ignore lint/suspicious/noExplicitAny: Whatever
     } catch (error: any) {
       client.logger.warn(`Error deploying ${path}: ${error.message}`);
       client.logger.silly(error.stack);

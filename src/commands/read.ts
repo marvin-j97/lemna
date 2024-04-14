@@ -1,6 +1,6 @@
 import { GetFunctionCommand, type GetFunctionResponse } from "@aws-sdk/client-lambda";
 
-import { Lemna } from "../lemna";
+import type { Lemna } from "../lemna";
 
 /**
  * Get a function's information

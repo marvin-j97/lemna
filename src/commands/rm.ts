@@ -1,6 +1,6 @@
 import { DeleteFunctionCommand } from "@aws-sdk/client-lambda";
 
-import { Lemna } from "../lemna";
+import type { Lemna } from "../lemna";
 import { formatJson } from "../util";
 
 /**
@@ -24,7 +24,7 @@ export async function removeCommand(client: Lemna, names: string[]): Promise<voi
     .map((x) => (x as PromiseFulfilledResult<string>).value);
 
   if (deletedNames.length > 0) {
-    client.logger.info(`Deleted functions:`);
+    client.logger.info("Deleted functions:");
     for (const name of deletedNames) {
       client.logger.info(`- ${name}`);
     }
@@ -35,7 +35,7 @@ export async function removeCommand(client: Lemna, names: string[]): Promise<voi
     .map((x) => (x as PromiseRejectedResult).reason);
 
   if (errors.length > 0) {
-    client.logger.info(`Errors during deletion:`);
+    client.logger.info("Errors during deletion:");
     for (const reason of errors) {
       client.logger.error(`- ${reason}`);
     }

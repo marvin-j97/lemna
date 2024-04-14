@@ -1,9 +1,9 @@
 export type NPMClient = "npm" | "yarn" | "pnpm";
 
 const installCommands: Record<NPMClient, string> = {
-  npm: `npm i`,
-  pnpm: `pnpm add`,
-  yarn: `yarn add`,
+  npm: "npm i",
+  pnpm: "pnpm add",
+  yarn: "yarn add",
 };
 
 const execCommands: Record<string, (client: string) => string> = {

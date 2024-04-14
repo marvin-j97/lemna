@@ -93,7 +93,7 @@ export async function parseArgs(): Promise<void> {
                 `You have chosen Node.js version "${nodeVersion}" which has aws-sdk V3, NOT aws-sdk V2 built in.`,
               );
               client.logger.warn(
-                `Read more here: https://aws.amazon.com/de/blogs/developer/why-and-how-you-should-use-aws-sdk-for-javascript-v3-on-node-js-18/`,
+                "Read more here: https://aws.amazon.com/de/blogs/developer/why-and-how-you-should-use-aws-sdk-for-javascript-v3-on-node-js-18/",
               );
             }
             if (isEOL(nodeVersion)) {
