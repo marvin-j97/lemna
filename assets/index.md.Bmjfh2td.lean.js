@@ -1,0 +1,1 @@
+import{_ as a,c as n,o as e,a4 as i}from"./chunks/framework.ZZgEQSCk.js";const h=JSON.parse('{"title":"Lemna","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),l={name:"index.md"},s=i("",8),t=[s];function o(d,p,c,r,f,m){return e(),n("div",null,t)}const _=a(l,[["render",o]]);export{h as __pageData,_ as default};

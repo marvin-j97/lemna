@@ -1,1 +1,0 @@
-import{_ as e,o as a,c as s,R as l}from"./chunks/framework.3gsyVypa.js";const m=JSON.parse('{"title":"Using the CLI","description":"","frontmatter":{},"headers":[],"relativePath":"cli.md","filePath":"cli.md"}'),n={name:"cli.md"},t=l("",28),o=[t];function i(p,c,d,r,h,u){return a(),s("div",null,o)}const b=e(n,[["render",i]]);export{m as __pageData,b as default};
