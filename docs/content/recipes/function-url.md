@@ -11,7 +11,7 @@ Can be `none` or `iam`.
 
 ### `cors`
 
-CORS configuration. You can also use `cors: true` to set up a all-star "don't care" CORS config.
+CORS configuration. You can also use `cors: true` to set up an all-star wildcard "don't care" CORS config.
 
 ### `invokeMode`
 
