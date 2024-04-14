@@ -106,7 +106,7 @@ export async function initializeLemna(client: Lemna): Promise<{
         choices: allSupportedNodeVersions,
         type: "list",
         message: "Select runtime",
-        default: "nodejs18.x",
+        default: "nodejs20.x",
       },
       {
         name: "useEsm",
