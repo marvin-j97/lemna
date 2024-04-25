@@ -5,8 +5,8 @@ import { pathToFileURL } from "node:url";
 import type { BuildOptions } from "esbuild";
 import * as z from "zod";
 
-import { runtimeSchema } from "./node_version";
 import type { Logger } from "./logger";
+import { runtimeSchema } from "./node_version";
 import { formatJson } from "./util";
 
 const moduleFormatSchema = z.enum(["cjs", "esm"]);

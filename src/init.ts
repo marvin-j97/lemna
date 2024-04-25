@@ -3,12 +3,12 @@ import { existsSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 import inquirer from "inquirer";
-import { runTypescriptTemplate } from "templates/typescript";
 
 import type { Config, ModuleFormat, RuntimeVersion } from "./config";
 import type { Lemna } from "./lemna";
-import { allSupportedNodeRuntimes } from "node_version";
+import { allSupportedNodeRuntimes } from "./node_version";
 import { type NPMClient, getInstallCommand } from "./npm_client";
+import { runTypescriptTemplate } from "./templates/typescript";
 import { formatJson, writeToFile } from "./util";
 
 /**
