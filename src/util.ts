@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import type { Cors } from "@aws-sdk/client-lambda";
 import { glob } from "glob";
 
-import type { FunctionUrlSettings, RuntimeVersion } from "./config";
+import type { FunctionUrlSettings } from "./config";
 
 /**
  * Format cors argument into AWS Cors object
@@ -73,24 +73,6 @@ export async function* fileVisitor(globs: string[], cwd = process.cwd()): AsyncG
       yield file;
     }
   }
-}
-
-const HAS_V3_REGEX = /^nodejs(18|20|22).x$/;
-
-/**
- * Returns true if the runtime version has aws-sdk v3 built in
- */
-export function hasV3(version: RuntimeVersion): boolean {
-  return HAS_V3_REGEX.test(version);
-}
-
-/**
- * Returns true if the version has reached EOL
- *
- * EOL versions may still be supported by Lambda for some time
- */
-export function isEOL(version: RuntimeVersion): boolean {
-  return version === "nodejs16.x";
 }
 
 /**

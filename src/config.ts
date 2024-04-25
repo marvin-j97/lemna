@@ -5,12 +5,10 @@ import { pathToFileURL } from "node:url";
 import type { BuildOptions } from "esbuild";
 import * as z from "zod";
 
+import { runtimeSchema } from "./node_version";
 import type { Logger } from "./logger";
 import { formatJson } from "./util";
 
-export const allSupportedNodeVersions = ["nodejs16.x", "nodejs18.x", "nodejs20.x"] as const;
-
-const runtimeSchema = z.enum(allSupportedNodeVersions);
 const moduleFormatSchema = z.enum(["cjs", "esm"]);
 
 const functionUrlAuthTypeSchema = z.enum(["none", "iam"]);
