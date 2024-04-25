@@ -1,1 +1,0 @@
-import{_ as a,c as e,o as s,a4 as t}from"./chunks/framework.ZZgEQSCk.js";const m=JSON.parse('{"title":"Using the CLI","description":"","frontmatter":{},"headers":[],"relativePath":"cli.md","filePath":"cli.md"}'),n={name:"cli.md"},i=t("",28),l=[i];function o(p,c,d,h,u,r){return s(),e("div",null,l)}const b=a(n,[["render",o]]);export{m as __pageData,b as default};
