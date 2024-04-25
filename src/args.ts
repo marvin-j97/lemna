@@ -9,8 +9,9 @@ import { listCommand } from "./commands/ls";
 import { getFunctionCommand } from "./commands/read";
 import { removeCommand } from "./commands/rm";
 import { initializeLemna } from "./init";
+import { hasV3, isEOL } from "./node_version";
 import { getRunCommand } from "./npm_client";
-import { formatJson, hasV3, isEOL } from "./util";
+import { formatJson } from "./util";
 import version from "./version";
 
 /**

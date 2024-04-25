@@ -5,13 +5,9 @@ import { resolve } from "node:path";
 import inquirer from "inquirer";
 import { runTypescriptTemplate } from "templates/typescript";
 
-import {
-  type Config,
-  type ModuleFormat,
-  type RuntimeVersion,
-  allSupportedNodeVersions,
-} from "./config";
+import type { Config, ModuleFormat, RuntimeVersion } from "./config";
 import type { Lemna } from "./lemna";
+import { allSupportedNodeRuntimes } from "node_version";
 import { type NPMClient, getInstallCommand } from "./npm_client";
 import { formatJson, writeToFile } from "./util";
 
@@ -103,7 +99,7 @@ export async function initializeLemna(client: Lemna): Promise<{
       },
       {
         name: "runtime",
-        choices: allSupportedNodeVersions,
+        choices: allSupportedNodeRuntimes,
         type: "list",
         message: "Select runtime",
         default: "nodejs20.x",

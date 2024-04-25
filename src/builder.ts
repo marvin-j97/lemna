@@ -6,7 +6,8 @@ import { dirname, resolve } from "node:path";
 import { bundleCode } from "./bundle";
 import { type Config, loadConfig } from "./config";
 import type { Lemna } from "./lemna";
-import { formatJson, getTempFolderPath, isEOL } from "./util";
+import { isEOL } from "./node_version";
+import { formatJson, getTempFolderPath } from "./util";
 import { composeZip, saveZip } from "./zip";
 
 /**
