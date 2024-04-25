@@ -121,21 +121,23 @@ export async function parseArgs(): Promise<void> {
         });
       },
       async (argv) => {
+        const paths = [...new Set(argv.paths)];
+
         await runCommand(
           async (client) => {
-            const { results, matchedCount, successCount } = await buildCommand(client, argv.paths);
+            const { results, matchedCount, successCount } = await buildCommand(client, paths);
 
             console.log(formatJson({ built: results }));
 
-            client.logger.info(
-              `Successfully built ${successCount}/${matchedCount} (${(
-                (successCount / matchedCount) *
-                100
-              ).toFixed(0)}%) functions`,
-            );
-
             if (!matchedCount) {
-              throw new Error("No files matched the inputs");
+              client.logger.warn("No files matched the inputs");
+            } else {
+              client.logger.info(`Successfully built ${successCount}/${matchedCount} functions`);
+            }
+
+            if (successCount < matchedCount) {
+              client.logger.error("Failed to build some functions");
+              process.exit(1);
             }
           },
           { requiresCredentials: false },
@@ -152,19 +154,21 @@ export async function parseArgs(): Promise<void> {
         });
       },
       async (argv) => {
+        const paths = [...new Set(argv.paths)];
+
         await runCommand(
           async (client) => {
-            const { matchedCount, successCount } = await deployCommand(client, argv.paths);
-
-            client.logger.info(
-              `Successfully deployed ${successCount}/${matchedCount} (${(
-                (successCount / matchedCount) *
-                100
-              ).toFixed(0)}%) functions`,
-            );
+            const { matchedCount, successCount } = await deployCommand(client, paths);
 
             if (!matchedCount) {
-              throw new Error("No files matched the inputs");
+              client.logger.warn("No files matched the inputs");
+            } else {
+              client.logger.info(`Successfully deployed ${successCount}/${matchedCount} functions`);
+            }
+
+            if (successCount < matchedCount) {
+              client.logger.error("Failed to deploy some functions");
+              process.exit(1);
             }
           },
           { requiresCredentials: true },
