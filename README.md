@@ -7,7 +7,7 @@
   <a href="https://codecov.io/gh/marvin-j97/lemna">
     <img src="https://codecov.io/gh/marvin-j97/lemna/branch/main/graph/badge.svg?token=T6L95TZZXA"/>
   </a>
-  <img src="https://github.com/marvin-j97/lemna/actions/workflows/node.js.yml/badge.svg" alt="Build Status">
+  <img src="https://github.com/marvin-j97/lemna/actions/workflows/node.yml/badge.svg" alt="Build Status">
   <img src="https://img.shields.io/github/license/marvin-j97/lemna" alt="License">
 </p>
 
