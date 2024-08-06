@@ -4,5 +4,8 @@
   "prConcurrentLimit": 10,
   "prHourlyLimit": 10,
   "baseBranches": ["main"],
-  "labels": ["dependencies"]
+  "labels": ["dependencies"],
+  "schedule": [
+    "every weekend"
+  ]
 }
