@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 
-import type { ModuleFormat, } from "./config";
+import type { ModuleFormat } from "./config";
 import type { Logger } from "./logger";
 import { formatJson } from "./util";
 import LEMNA_VERSION from "./version";
