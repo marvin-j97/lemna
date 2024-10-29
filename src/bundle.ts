@@ -1,8 +1,7 @@
 import * as esbuild from "esbuild";
 
-import type { ModuleFormat, RuntimeVersion } from "./config";
+import type { ModuleFormat, } from "./config";
 import type { Logger } from "./logger";
-import { hasV3 } from "./node_version";
 import { formatJson } from "./util";
 import LEMNA_VERSION from "./version";
 
@@ -10,7 +9,6 @@ type BundleOptions = {
   input: string;
   output: string;
   esbuildOptions: Partial<esbuild.BuildOptions>;
-  version: RuntimeVersion;
   moduleFormat: ModuleFormat;
   logger: Logger;
 };
@@ -23,15 +21,13 @@ export async function bundleCode({
   input,
   output,
   esbuildOptions,
-  version,
   moduleFormat,
 }: BundleOptions): Promise<void> {
   logger.verbose(`Bundling ${input}`);
 
   const options: esbuild.BuildOptions = {
     // NOTE: AWS SDK is pre-installed on Lambda, so no need to bundle it
-    // NOTE: node 18 uses aws sdk v3, but <18 uses v2
-    external: hasV3(version) ? ["@aws-sdk/client-*", "@aws-sdk/lib-*"] : ["aws-sdk"],
+    external: ["@aws-sdk/client-*", "@aws-sdk/lib-*"],
     bundle: true,
     format: moduleFormat,
     platform: "node",

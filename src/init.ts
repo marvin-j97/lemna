@@ -28,7 +28,7 @@ function composeLemnaConfig(
       description: "Created by Lemna",
       handler: "index.handler",
       memorySize: 128,
-      runtime: "nodejs16.x",
+      runtime: "nodejs20.x",
       moduleFormat,
     },
     esbuild: {

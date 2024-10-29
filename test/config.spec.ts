@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Config, isValidConfig } from "../src/config";
+import { type Config, isValidConfig } from "../src/config";
 import { createLemnaLogger } from "../src/logger";
 
 const validConfigs: Config[] = [
@@ -8,7 +8,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs16.x",
+      runtime: "nodejs20.x",
       moduleFormat: "esm",
     },
     esbuild: { minify: false },
@@ -17,7 +17,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs16.x",
+      runtime: "nodejs20.x",
       moduleFormat: "esm",
     },
   },
@@ -25,7 +25,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs16.x",
+      runtime: "nodejs20.x",
       moduleFormat: "esm",
     },
     esbuild: { minify: true },

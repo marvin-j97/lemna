@@ -83,7 +83,6 @@ export class Builder {
     await bundleCode({
       input: entryPoint,
       output: bundleOutput,
-      version: config.function.runtime,
       moduleFormat: config.function.moduleFormat,
       esbuildOptions: config.esbuild ?? {},
       logger: this._client.logger,

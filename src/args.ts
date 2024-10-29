@@ -9,7 +9,7 @@ import { listCommand } from "./commands/ls";
 import { getFunctionCommand } from "./commands/read";
 import { removeCommand } from "./commands/rm";
 import { initializeLemna } from "./init";
-import { hasV3, isEOL } from "./node_version";
+import { isEOL } from "./node_version";
 import { getRunCommand } from "./npm_client";
 import { formatJson } from "./util";
 import version from "./version";
@@ -89,14 +89,6 @@ export async function parseArgs(): Promise<void> {
           async (client) => {
             const { projectDir, npmClient, nodeVersion } = await initializeLemna(client);
 
-            if (hasV3(nodeVersion)) {
-              client.logger.warn(
-                `You have chosen Node.js version "${nodeVersion}" which has aws-sdk V3, NOT aws-sdk V2 built in.`,
-              );
-              client.logger.warn(
-                "Read more here: https://aws.amazon.com/de/blogs/developer/why-and-how-you-should-use-aws-sdk-for-javascript-v3-on-node-js-18/",
-              );
-            }
             if (isEOL(nodeVersion)) {
               client.logger.warn(
                 `You have chosen Node.js version "${nodeVersion}" which has reached its end of life (EOL).`,
