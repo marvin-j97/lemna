@@ -50,6 +50,12 @@ function composeTsConfig(moduleFormat: ModuleFormat): unknown {
 function composeIndexFile(moduleFormat: ModuleFormat): string {
   return `import type { Handler } from "aws-lambda";
 
+// TODO: Use Handler<E> for strong typing
+// E being some Event type from "aws-lambda"
+//
+// Example: Use Handler<SQSEvent> when using SQS
+// |
+// ------------v
 const handler: Handler = async (event, context) => {
   console.log("Hello from Lemna");
   console.log("EVENT:");
