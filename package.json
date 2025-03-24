@@ -1,6 +1,6 @@
 {
   "name": "lemna",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Quickly scaffold and deploy AWS Lambda handlers powered by Typescript",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,7 +10,7 @@
     "lemna": "cli.mjs"
   },
   "engines": {
-    "node": "18 || 20 || 22"
+    "node": "18 || 20 || 22 || 24"
   },
   "license": "MIT",
   "scripts": {
