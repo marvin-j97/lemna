@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { RuntimeVersion } from "./config";
 
-export const allSupportedNodeRuntimes = ["nodejs18.x", "nodejs20.x", "nodejs22.x"] as const;
+export const allSupportedNodeRuntimes = ["nodejs20.x", "nodejs22.x", "nodejs24.x"] as const;
 
 export const runtimeSchema = z.enum(allSupportedNodeRuntimes);
 
