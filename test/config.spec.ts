@@ -34,7 +34,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs18.x",
+      runtime: "nodejs20.x",
       moduleFormat: "cjs",
     },
     esbuild: {},
