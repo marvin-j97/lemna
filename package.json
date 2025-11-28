@@ -10,7 +10,7 @@
     "lemna": "cli.mjs"
   },
   "engines": {
-    "node": "18 || 20 || 22 || 24"
+    "node": "20 || 22 || 24"
   },
   "license": "MIT",
   "scripts": {
