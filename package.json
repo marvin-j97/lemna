@@ -50,7 +50,7 @@
     "@types/node": "22.19.1",
     "@types/yargs": "17.0.33",
     "@vitest/coverage-istanbul": "3.2.4",
-    "tsup": "8.4.0",
+    "tsup": "8.5.1",
     "tsx": "4.19.3",
     "typescript": "5.9.3",
     "vitest": "3.2.4"
