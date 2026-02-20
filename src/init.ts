@@ -28,7 +28,7 @@ function composeLemnaConfig(
       description: "Created by Lemna",
       handler: "index.handler",
       memorySize: 128,
-      runtime: "nodejs20.x",
+      runtime: "nodejs24.x",
       moduleFormat,
     },
     esbuild: {
@@ -102,7 +102,7 @@ export async function initializeLemna(client: Lemna): Promise<{
         choices: allSupportedNodeRuntimes,
         type: "list",
         message: "Select runtime",
-        default: "nodejs22.x",
+        default: "nodejs24.x",
       },
       {
         name: "useEsm",
