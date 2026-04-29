@@ -8,7 +8,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs20.x",
+      runtime: "nodejs24.x",
       moduleFormat: "esm",
     },
     esbuild: { minify: false },
@@ -17,7 +17,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs20.x",
+      runtime: "nodejs24.x",
       moduleFormat: "esm",
     },
   },
@@ -25,7 +25,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs20.x",
+      runtime: "nodejs24.x",
       moduleFormat: "esm",
     },
     esbuild: { minify: true },
@@ -34,7 +34,7 @@ const validConfigs: Config[] = [
     entryPoint: "entrypoint",
     function: {
       name: "function name",
-      runtime: "nodejs20.x",
+      runtime: "nodejs24.x",
       moduleFormat: "cjs",
     },
     esbuild: {},
